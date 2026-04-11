@@ -90,7 +90,33 @@ export default function LandingPage() {
       <section id="products" className="py-32 overflow-hidden bg-surface-container-low/50 scroll-mt-12 md:scroll-mt-16">
         <div className="max-w-7xl mx-auto px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-            <div className="lg:col-span-7">
+            <div className="lg:col-span-5 order-1 lg:order-2">
+              <img src="/logo_horizontal.png" alt="RhumbNav" className="w-[300px] md:w-[450px] h-auto object-contain -mt-16 md:-mt-24 -ml-10 md:-ml-16 relative z-10" />
+              <div className="-mt-8 md:-mt-12 relative z-20">
+                <p className="text-on-surface-variant text-lg leading-relaxed mb-8">
+                  RhumbNav is a modern aviation platform built to simplify flight planning, navigation, and in-flight awareness in one seamless experience.
+                </p>
+                <ul className="space-y-4 mb-10">
+                  <li className="flex items-center gap-3 text-secondary">
+                    <CheckCircle2 className="text-primary w-5 h-5" />
+                    <span>License & Logbook</span>
+                  </li>
+                  <li className="flex items-center gap-3 text-secondary">
+                    <CheckCircle2 className="text-primary w-5 h-5" />
+                    <span>E6B Computer</span>
+                  </li>
+                  <li className="flex items-center gap-3 text-secondary">
+                    <CheckCircle2 className="text-primary w-5 h-5" />
+                    <span>VFR Nav, Flight Planning & More</span>
+                  </li>
+                </ul>
+                <Link to="/rhumbnav" className="font-bold text-primary flex items-center gap-2 group w-fit">
+                  Learn more about RhumbNav
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+                </Link>
+              </div>
+            </div>
+            <div className="lg:col-span-7 order-2 lg:order-1">
               <div className="relative w-full aspect-[16/10] flex items-center justify-center">
                 {/* Background Glow */}
                 <div className="absolute inset-0 bg-primary/20 blur-[100px] rounded-full -z-10"></div>
@@ -122,32 +148,6 @@ export default function LandingPage() {
                   {/* Phone Image */}
                   <img alt="RhumbNav Mobile Interface" className="w-full h-full object-contain" src="/FPL.jpeg" />
                 </motion.div>
-              </div>
-            </div>
-            <div className="lg:col-span-5">
-              <img src="/logo_horizontal.png" alt="RhumbNav" className="w-[300px] md:w-[450px] h-auto object-contain -mt-16 md:-mt-24 -ml-10 md:-ml-16 relative z-10" />
-              <div className="-mt-8 md:-mt-12 relative z-20">
-                <p className="text-on-surface-variant text-lg leading-relaxed mb-8">
-                  RhumbNav is a modern aviation platform built to simplify flight planning, navigation, and in-flight awareness in one seamless experience.
-                </p>
-                <ul className="space-y-4 mb-10">
-                  <li className="flex items-center gap-3 text-secondary">
-                    <CheckCircle2 className="text-primary w-5 h-5" />
-                    <span>License & Logbook</span>
-                  </li>
-                  <li className="flex items-center gap-3 text-secondary">
-                    <CheckCircle2 className="text-primary w-5 h-5" />
-                    <span>E6B Computer</span>
-                  </li>
-                  <li className="flex items-center gap-3 text-secondary">
-                    <CheckCircle2 className="text-primary w-5 h-5" />
-                    <span>VFR Nav, Flight Planning & More</span>
-                  </li>
-                </ul>
-                <Link to="/rhumbnav" className="font-bold text-primary flex items-center gap-2 group w-fit">
-                  Learn more about RhumbNav
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
-                </Link>
               </div>
             </div>
           </div>
