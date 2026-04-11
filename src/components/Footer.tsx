@@ -1,12 +1,23 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 export default function Footer() {
+  const location = useLocation();
+  const isHomeRoute = location.pathname === '/';
+
+  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, sectionId: string) => {
+    if (isHomeRoute) {
+      e.preventDefault();
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+      window.history.pushState(null, '', sectionId === 'home' ? '/' : `#${sectionId}`);
+    }
+  };
+
   return (
     <footer className="bg-slate-950 w-full py-12 px-8">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-12 mb-12">
           <div className="max-w-xs flex justify-center md:justify-start">
-            <Link to="/" className="block h-16 md:h-20">
+            <Link to="/" onClick={(e) => scrollToSection(e, 'home')} className="block h-16 md:h-20">
               <img src="/Logo_RhumbLabs2.png" alt="Rhumb Labs" className="h-full w-auto object-contain scale-[2.5] md:scale-[3.5] origin-center md:origin-left md:-translate-x-24" />
             </Link>
           </div>
@@ -14,7 +25,7 @@ export default function Footer() {
             <div>
               <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-6">Company</span>
               <ul className="space-y-3">
-                <li><Link to="/" className="text-slate-500 hover:text-slate-200 transition-colors text-sm uppercase tracking-widest">About Us</Link></li>
+                <li><Link to="/#about" onClick={(e) => scrollToSection(e, 'about')} className="text-slate-500 hover:text-slate-200 transition-colors text-sm uppercase tracking-widest">About Us</Link></li>
                 <li><Link to="/contact" className="text-slate-500 hover:text-slate-200 transition-colors text-sm uppercase tracking-widest">Contact</Link></li>
               </ul>
             </div>
