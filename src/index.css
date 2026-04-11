@@ -1,0 +1,86 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+
+@theme {
+  --color-surface-container-lowest: #000000;
+  --color-inverse-surface: #f9f9ff;
+  --color-on-error: #490006;
+  --color-secondary-dim: #bacae4;
+  --color-on-tertiary-fixed-variant: #003971;
+  --color-secondary: #c8d8f3;
+  --color-on-background: #e0e5f4;
+  --color-primary-fixed-dim: #00d4ec;
+  --color-outline-variant: #424854;
+  --color-on-secondary-container: #c1d1eb;
+  --color-on-primary: #005762;
+  --color-error-dim: #d7383b;
+  --color-tertiary-container: #599cf9;
+  --color-secondary-container: #38485d;
+  --color-secondary-fixed-dim: #bacae4;
+  --color-on-tertiary-container: #001d3f;
+  --color-primary-dim: #00d4ec;
+  --color-on-tertiary: #002a55;
+  --color-outline: #707583;
+  --color-secondary-fixed: #c8d8f3;
+  --color-on-error-container: #ffa8a3;
+  --color-on-primary-container: #004d57;
+  --color-on-secondary: #3c4c61;
+  --color-tertiary-fixed: #80b2ff;
+  --color-tertiary-dim: #5c9ffc;
+  --color-error-container: #9f0519;
+  --color-inverse-primary: #006976;
+  --color-surface: #080e18;
+  --color-surface-container-low: #0d131f;
+  --color-on-primary-fixed: #003840;
+  --color-surface-container-highest: #1e2635;
+  --color-on-surface-variant: #a6abb9;
+  --color-error: #ff716c;
+  --color-on-secondary-fixed: #29394e;
+  --color-tertiary-fixed-dim: #65a4ff;
+  --color-primary: #81ecff;
+  --color-tertiary: #70aaff;
+  --color-primary-fixed: #00e3fd;
+  --color-surface-variant: #1e2635;
+  --color-background: #080e18;
+  --color-surface-tint: #81ecff;
+  --color-on-secondary-fixed-variant: #46556b;
+  --color-on-primary-fixed-variant: #005762;
+  --color-surface-dim: #080e18;
+  --color-surface-bright: #232c3c;
+  --color-on-surface: #e0e5f4;
+  --color-inverse-on-surface: #4f5561;
+  --color-surface-container: #131a26;
+  --color-primary-container: #00e3fd;
+  --color-surface-container-high: #18202d;
+  --color-on-tertiary-fixed: #001835;
+
+  --font-manrope: "Manrope", sans-serif;
+  --font-inter: "Inter", sans-serif;
+  --font-headline: "Manrope", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-label: "Inter", sans-serif;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
+  scroll-behavior: smooth;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Manrope', sans-serif;
+}
+
+/* Legal Page Specifics */
+.legal-text p { margin-bottom: 1.5rem; line-height: 1.8; color: var(--color-on-surface-variant); }
+.legal-text h3 { color: var(--color-on-surface); font-weight: 700; margin-top: 3rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.875rem; }
+.legal-text h4 { color: var(--color-primary); font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; font-size: 1rem; }
+.glass-panel { background: rgba(13, 19, 31, 0.7); backdrop-filter: blur(24px); }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.active-link { color: var(--color-primary) !important; border-left: 2px solid var(--color-primary); }
+
+/* Landing Page Specifics */
+.cyan-glow {
+    box-shadow: 0 0 40px rgba(129, 236, 255, 0.08);
+}
