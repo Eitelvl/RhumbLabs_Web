@@ -9,11 +9,13 @@ import LegalPage from './pages/LegalPage';
 import ContactPage from './pages/ContactPage';
 import RhumbNavPage from './pages/RhumbNavPage';
 import ScrollToTop from './components/ScrollToTop';
+import ScrollToTopButton from './components/ScrollToTopButton';
 
 export default function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
+      <ScrollToTopButton />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/legal" element={<LegalPage />} />

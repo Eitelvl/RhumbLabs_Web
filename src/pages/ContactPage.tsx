@@ -44,7 +44,7 @@ export default function ContactPage() {
                   <Mail className="w-6 h-6 text-primary" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-slate-300 uppercase tracking-widest mb-1">Direct Line</h3>
+                  <h3 className="text-sm font-bold text-slate-300 uppercase tracking-widest mb-1">Contact</h3>
                   <p className="text-slate-400">support@rhumblabs.com</p>
                 </div>
               </div>

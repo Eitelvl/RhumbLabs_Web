@@ -87,7 +87,7 @@ export default function LandingPage() {
       </section>
 
       {/* Featured Product: RhumbNav */}
-      <section id="products" className="py-32 overflow-hidden bg-surface-container-low/50">
+      <section id="products" className="py-32 overflow-hidden bg-surface-container-low/50 scroll-mt-12 md:scroll-mt-16">
         <div className="max-w-7xl mx-auto px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
             <div className="lg:col-span-7">
@@ -125,10 +125,7 @@ export default function LandingPage() {
               </div>
             </div>
             <div className="lg:col-span-5">
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary text-xs font-bold tracking-widest uppercase rounded mb-2">
-                Coming Soon
-              </div>
-              <img src="/logo_horizontal.png" alt="RhumbNav" className="w-[300px] md:w-[450px] h-auto object-contain mb-4 -ml-2" />
+              <img src="/logo_horizontal.png" alt="RhumbNav" className="w-[300px] md:w-[450px] h-auto object-contain mb-2 -mt-16 md:-mt-24 -ml-10 md:-ml-16" />
               <p className="text-on-surface-variant text-lg leading-relaxed mb-8">
                 RhumbNav is a modern aviation platform built to simplify flight planning, navigation, and in-flight awareness in one seamless experience.
               </p>
@@ -156,7 +153,7 @@ export default function LandingPage() {
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-40 bg-surface">
+      <section id="about" className="py-40 bg-surface scroll-mt-12 md:scroll-mt-16">
         <div className="max-w-4xl mx-auto px-8 text-center">
           <h2 className="text-4xl font-bold mb-10">About Rhumb Labs</h2>
           <div className="h-1 w-24 bg-primary mx-auto mb-12"></div>

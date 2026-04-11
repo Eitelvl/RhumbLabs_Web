@@ -69,8 +69,8 @@ export default function TopBar({ onMobileMenuClick }: TopBarProps) {
               <Menu className="w-6 h-6" />
             </button>
           )}
-          <Link to="/" onClick={(e) => scrollToSection(e, 'home')} className="flex items-center h-12 md:h-16">
-            <img src="/Logo_RhumbLabs2.png" alt="Rhumb Labs" className="h-full w-auto object-contain scale-[2.5] md:scale-[3.5] origin-left -translate-x-10 md:-translate-x-16" />
+          <Link to="/" onClick={(e) => scrollToSection(e, 'home')} className="flex items-center h-12 md:h-16 mt-2 md:mt-4">
+            <img src="/Logo_RhumbLabs2.png" alt="Rhumb Labs" className="h-full w-auto object-contain scale-[2.5] md:scale-[3.5] origin-center md:origin-left md:-translate-x-24" />
           </Link>
         </div>
         <div className="hidden md:flex items-center gap-10">
