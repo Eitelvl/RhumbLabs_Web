@@ -85,19 +85,13 @@ export default function ContactPage() {
                 </div>
               ) : (
                 <form className="space-y-6" onSubmit={handleSubmit}>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Full Name</label>
-                      <input type="text" required className="w-full bg-surface-container-highest border border-outline-variant/20 rounded-lg px-4 py-3 text-slate-200 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all" placeholder="John Doe" />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Company</label>
-                      <input type="text" className="w-full bg-surface-container-highest border border-outline-variant/20 rounded-lg px-4 py-3 text-slate-200 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all" placeholder="Acme Corp" />
-                    </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Full Name</label>
+                    <input type="text" required className="w-full bg-surface-container-highest border border-outline-variant/20 rounded-lg px-4 py-3 text-slate-200 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all" placeholder="John Doe" />
                   </div>
                   <div className="space-y-2">
                     <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Email Address</label>
-                    <input type="email" required className="w-full bg-surface-container-highest border border-outline-variant/20 rounded-lg px-4 py-3 text-slate-200 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all" placeholder="john@acmecorp.com" />
+                    <input type="email" required className="w-full bg-surface-container-highest border border-outline-variant/20 rounded-lg px-4 py-3 text-slate-200 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all" placeholder="john@example.com" />
                   </div>
                   <div className="space-y-2">
                     <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Message</label>

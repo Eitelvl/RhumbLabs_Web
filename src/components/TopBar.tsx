@@ -7,6 +7,7 @@ export default function TopBar() {
   const location = useLocation();
   const isHomeRoute = location.pathname === '/';
   const isContactRoute = location.pathname === '/contact';
+  const isRhumbNavRoute = location.pathname === '/rhumbnav';
   
   const [activeSection, setActiveSection] = useState<string>('home');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -14,6 +15,8 @@ export default function TopBar() {
   useEffect(() => {
     if (!isHomeRoute) {
       if (isContactRoute) setActiveSection('contact');
+      else if (isRhumbNavRoute) setActiveSection('products');
+      else setActiveSection(''); // Clear selection for other routes like /legal
       return;
     }
 
