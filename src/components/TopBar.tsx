@@ -70,9 +70,9 @@ export default function TopBar() {
   return (
     <nav className="fixed top-0 w-full z-50 bg-slate-950/70 backdrop-blur-xl shadow-[0_20px_40px_rgba(0,229,255,0.08)]">
       <div className="flex justify-between items-center px-8 py-4 md:py-5 max-w-7xl mx-auto">
-        <div className="flex items-center gap-4">
-          <Link to="/" onClick={(e) => scrollToSection(e, 'home')} className="flex items-center h-12 md:h-16 mt-2 md:mt-4">
-            <img src="/Logo_RhumbLabs2.png" alt="Rhumb Labs" className="h-full w-auto object-contain scale-[2.5] md:scale-[3.5] origin-center md:origin-left md:-translate-x-24" />
+        <div className="flex items-center">
+          <Link to="/" onClick={(e) => scrollToSection(e, 'home')} className="flex items-center h-12 md:h-16">
+            <img src="/RL1.png" alt="Rhumb Labs" className="h-full w-auto object-left object-contain scale-[3] md:scale-[4] origin-left -translate-x-6 md:-translate-x-12" />
           </Link>
         </div>
 

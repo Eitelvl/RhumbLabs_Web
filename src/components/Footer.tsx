@@ -17,8 +17,8 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-12 mb-12">
           <div className="max-w-xs flex justify-center md:justify-start">
-            <Link to="/" onClick={(e) => scrollToSection(e, 'home')} className="block h-16 md:h-20">
-              <img src="/Logo_RhumbLabs2.png" alt="Rhumb Labs" className="h-full w-auto object-contain scale-[2.5] md:scale-[3.5] origin-center md:origin-left md:-translate-x-24" />
+            <Link to="/" onClick={(e) => scrollToSection(e, 'home')} className="flex items-center h-16 md:h-20">
+              <img src="/RL1.png" alt="Rhumb Labs" className="h-full w-auto object-left object-contain scale-[3] md:scale-[4] origin-center md:origin-left md:-translate-x-12" />
             </Link>
           </div>
           <div className="grid grid-cols-2 gap-12">

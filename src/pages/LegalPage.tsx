@@ -52,9 +52,11 @@ export default function LegalPage() {
         }`}
       >
         <div className="flex justify-between items-center mb-8">
-          <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center h-12">
-            <img src="/Logo_RhumbLabs2.png" alt="Rhumb Labs" className="h-full w-auto object-contain scale-[2.5] origin-left -translate-x-10" />
-          </Link>
+          <div className="flex items-center">
+            <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center h-12 md:h-16">
+              <img src="/RL1.png" alt="Rhumb Labs" className="h-full w-auto object-left object-contain scale-[3] md:scale-[4] origin-left -translate-x-6 md:-translate-x-12" />
+            </Link>
+          </div>
           <button onClick={() => setIsMobileMenuOpen(false)} className="text-[#c8d8f3] hover:text-[#81ecff]">
             <X className="w-6 h-6" />
           </button>
