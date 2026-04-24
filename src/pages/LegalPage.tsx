@@ -1,4 +1,4 @@
-import { AlertTriangle, Download, Gavel, X, ChevronDown } from 'lucide-react';
+import { AlertTriangle, Download, Gavel, X, ChevronDown, Menu } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import TopBar from '../components/TopBar';
@@ -36,6 +36,24 @@ export default function LegalPage() {
   return (
     <div className="bg-surface text-on-surface selection:bg-primary/30 min-h-screen">
       <TopBar />
+
+      {/* Mobile Legal Subheader */}
+      <div className="md:hidden fixed top-[72px] left-0 right-0 z-40 bg-surface/90 backdrop-blur-md border-b border-[#424854]/15 px-6 py-4 flex items-center justify-between shadow-sm">
+        <div className="flex flex-col">
+          <div className="flex items-center gap-2 mb-1">
+            <Gavel className="w-3.5 h-3.5 text-primary" />
+            <span className="text-[10px] font-bold text-primary uppercase tracking-widest">Privacy & Legal</span>
+          </div>
+          <span className="text-sm font-bold text-on-surface">RhumbNav Documents</span>
+        </div>
+        <button 
+          onClick={() => setIsMobileMenuOpen(true)}
+          className="text-xs bg-primary/10 text-primary px-4 py-2 rounded-full font-bold uppercase tracking-wider hover:bg-primary/20 transition-colors flex items-center gap-2"
+        >
+          <Menu className="w-3 h-3" />
+          Index
+        </button>
+      </div>
 
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
@@ -120,7 +138,7 @@ export default function LegalPage() {
         </div>
       </div>
 
-      <main className="pt-24 min-h-screen max-w-[1440px] mx-auto flex flex-col md:flex-row relative">
+      <main className="pt-[140px] md:pt-32 min-h-screen max-w-[1440px] mx-auto flex flex-col md:flex-row relative">
         {/* SideNavBar */}
         <aside className="hidden md:flex h-screen sticky top-20 w-80 flex-col gap-6 py-12 px-8 border-r border-[#424854]/15 bg-surface">
           <div className="mb-6">
