@@ -72,7 +72,7 @@ export default function TopBar() {
       <div className="flex justify-between items-center px-8 py-4 md:py-5 max-w-7xl mx-auto">
         <div className="flex items-center">
           <Link to="/" onClick={(e) => scrollToSection(e, 'home')} className="flex items-center h-12 md:h-16">
-            <img src="/RL1.png" alt="Rhumb Labs" className="h-full w-auto object-left object-contain scale-[3] md:scale-[4] origin-left -translate-x-6 md:-translate-x-12" />
+            <img src="/RL1.png" alt="Rhumb Labs" className="h-full w-auto object-left object-contain scale-[2] md:scale-[2.5] origin-left -translate-x-4 md:-translate-x-8" />
           </Link>
         </div>
 

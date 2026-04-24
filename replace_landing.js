@@ -1,93 +1,14 @@
-import { ArrowRight, AtSign, CheckCircle2, Globe, Apple, Monitor, ChevronLeft, ChevronRight } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import TopBar from '../components/TopBar';
-import Footer from '../components/Footer';
-import { motion } from 'motion/react';
+import fs from 'fs';
 
-// Custom Android Icon
-const AndroidIcon = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
-    <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4483-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993.0004.5511-.4482.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0223 3.503C15.5902 8.25 13.8533 7.85 12 7.85s-3.5902.4-5.1367 1.1004L4.841 5.4467a.416.416 0 00-.5676-.1521.416.416 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3435-4.1021-2.6892-7.5743-6.1185-9.4396"/>
-  </svg>
-);
+const lines = fs.readFileSync('src/pages/LandingPage.tsx', 'utf8').split('\n');
+const startIdx = lines.findIndex(l => l.includes('{/* Featured Product: RhumbNav */}'));
+const endIdx = lines.findIndex(l => l.includes('{/* About Section */}'));
 
-export default function LandingPage() {
-  const location = useLocation();
-  const [currentProduct, setCurrentProduct] = useState(0);
-
-  useEffect(() => {
-    if (location.hash) {
-      const id = location.hash.replace('#', '');
-      const element = document.getElementById(id);
-      if (element) {
-        setTimeout(() => {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
-      }
-    }
-  }, [location]);
-
-  return (
-    <div className="bg-surface text-on-surface min-h-screen overflow-x-hidden">
-      <TopBar />
-
-      {/* Hero Section */}
-      <section id="home" className="relative pt-40 pb-32 overflow-hidden px-8 min-h-[85vh] flex items-center">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[120px] -z-10"></div>
-        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-20 items-center w-full">
-          <div className="w-full lg:w-1/2 z-10">
-            <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className="text-6xl md:text-8xl font-extrabold tracking-tighter mb-8 leading-[1.05]"
-            >
-              Where experience <br/><span className="text-primary">comes first.</span>
-            </motion.h1>
-          </div>
-          
-          <div className="w-full lg:w-1/2 relative h-[500px] flex items-center justify-center">
-            {/* Decorative element */}
-            
-            
-            {/* iOS Card */}
-            <motion.div 
-              initial={{ opacity: 0, x: 50, y: -50 }}
-              animate={{ opacity: 1, x: 0, y: 0 }}
-              transition={{ duration: 1, delay: 0.4, type: "spring" }}
-              className="absolute top-4 left-4 md:top-10 md:left-10 glass-panel p-8 rounded-2xl border border-outline-variant/20 cyan-glow flex flex-col items-center justify-center gap-4 w-40 h-40 md:w-48 md:h-48 z-20 bg-surface/40 backdrop-blur-2xl"
-            >
-              <Apple className="w-12 h-12 md:w-16 md:h-16 text-slate-100" />
-              <span className="font-bold tracking-widest uppercase text-xs md:text-sm text-slate-300">iOS</span>
-            </motion.div>
-
-            {/* Android Card */}
-            <motion.div 
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.6, type: "spring" }}
-              className="absolute bottom-4 left-1/2 -translate-x-1/2 md:bottom-10 glass-panel p-8 rounded-2xl border border-outline-variant/20 cyan-glow flex flex-col items-center justify-center gap-4 w-48 h-48 md:w-56 md:h-56 z-30 bg-surface/50 backdrop-blur-2xl shadow-[0_0_40px_rgba(0,229,255,0.15)]"
-            >
-              <AndroidIcon className="w-16 h-16 md:w-20 md:h-20 text-[#3DDC84]" />
-              <span className="font-bold tracking-widest uppercase text-xs md:text-sm text-slate-300">Android</span>
-            </motion.div>
-
-            {/* Web Card */}
-            <motion.div 
-              initial={{ opacity: 0, x: -50, y: -50 }}
-              animate={{ opacity: 1, x: 0, y: 0 }}
-              transition={{ duration: 1, delay: 0.8, type: "spring" }}
-              className="absolute top-16 right-4 md:top-20 md:right-10 glass-panel p-8 rounded-2xl border border-outline-variant/20 cyan-glow flex flex-col items-center justify-center gap-4 w-40 h-40 md:w-48 md:h-48 z-10 bg-surface/40 backdrop-blur-2xl"
-            >
-              <Monitor className="w-12 h-12 md:w-16 md:h-16 text-primary" />
-              <span className="font-bold tracking-widest uppercase text-xs md:text-sm text-slate-300">Web</span>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Products */}
+if (startIdx !== -1 && endIdx !== -1) {
+    const before = lines.slice(0, startIdx);
+    const after = lines.slice(endIdx);
+    
+    const newContent = `      {/* Featured Products */}
       <section id="products" className="py-32 overflow-hidden bg-surface-container-low/50 scroll-mt-12 md:scroll-mt-16">
         <div className="max-w-7xl mx-auto px-8 relative">
           <div className="flex justify-between items-center mb-16">
@@ -112,8 +33,8 @@ export default function LandingPage() {
 
           <div className="relative w-full overflow-hidden">
             <motion.div 
-              className="flex w-full py-12 md:py-20"
-              animate={{ x: `-${100 * currentProduct}%` }}
+              className="flex w-full"
+              animate={{ x: \`-\${100 * currentProduct}%\` }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
             >
               {/* Product 1: RhumbNav */}
@@ -146,6 +67,7 @@ export default function LandingPage() {
                 </div>
                 <div className="lg:col-span-7 order-2 lg:order-1">
                   <div className="relative w-full aspect-[16/10] flex items-center justify-center">
+                    <div className="absolute inset-0 bg-primary/20 blur-[100px] rounded-full -z-10"></div>
                     <motion.div 
                       key="rhumbnav-tablet"
                       initial={{ opacity: 0, y: 30, rotate: -4 }}
@@ -177,23 +99,23 @@ export default function LandingPage() {
               {/* Product 2: Pogo */}
               <div className="w-full flex-shrink-0 grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
                 <div className="lg:col-span-5 order-1 lg:order-2">
-                  <img src="/Pogo2.png" alt="Pogo" className="w-[300px] md:w-[450px] h-auto object-contain -mt-16 md:-mt-24 -ml-10 md:-ml-16 relative z-10" />
-                  <div className="-mt-8 md:-mt-12 relative z-20">
+                  <h3 className="text-5xl md:text-6xl font-extrabold mb-6 tracking-tighter text-on-surface">Pogo</h3>
+                  <div className="relative z-20">
                     <p className="text-on-surface-variant text-lg leading-relaxed mb-8">
-                      Pogo es una app de escalada boulder diseñada para registrar tus sesiones, visualizar tu progreso y mantener la motivación a través de logros.
+                      Pogo is a new light EFB shaped by real flight experience, bringing flight planning, navigation, and in-flight awareness into one seamless experience.
                     </p>
                     <ul className="space-y-4 mb-10">
                       <li className="flex items-center gap-3 text-secondary">
                         <CheckCircle2 className="text-primary w-5 h-5" />
-                        <span>Registra tus sesiones de escalada</span>
+                        <span>Precision for every calculation</span>
                       </li>
                       <li className="flex items-center gap-3 text-secondary">
                         <CheckCircle2 className="text-primary w-5 h-5" />
-                        <span>Visualiza tu progreso y estadísticas</span>
+                        <span>Your documents, all in one place</span>
                       </li>
                       <li className="flex items-center gap-3 text-secondary">
                         <CheckCircle2 className="text-primary w-5 h-5" />
-                        <span>Desbloquea logros mientras mejoras</span>
+                        <span>Built for confident flying</span>
                       </li>
                     </ul>
                     <Link to="/pogo" className="font-bold text-primary flex items-center gap-2 group w-fit">
@@ -204,6 +126,7 @@ export default function LandingPage() {
                 </div>
                 <div className="lg:col-span-7 order-2 lg:order-1">
                   <div className="relative w-full aspect-[16/10] flex items-center justify-center">
+                    <div className="absolute inset-0 bg-primary/20 blur-[100px] rounded-full -z-10"></div>
                     <motion.div 
                       key="pogo-tablet"
                       initial={{ opacity: 0, y: 30, rotate: -4 }}
@@ -236,25 +159,10 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+`;
 
-      {/* About Section */}
-      <section id="about" className="py-40 bg-surface scroll-mt-12 md:scroll-mt-16">
-        <div className="max-w-4xl mx-auto px-8 text-center">
-          <h2 className="text-4xl font-bold mb-10">About Rhumb Labs</h2>
-          <div className="h-1 w-24 bg-primary mx-auto mb-12"></div>
-          <p className="text-2xl text-on-surface-variant font-light leading-relaxed mb-8">
-            Rhumb Labs is a digital product studio focused on building thoughtful, modern software experiences. We care about clarity, functionality, and creating tools that feel intuitive from the very first interaction.
-          </p>
-          <p className="text-xl text-outline leading-relaxed mb-12">
-            Our approach brings together design, clarity, and real-world usability to shape products that are simple, reliable, and built with purpose.
-          </p>
-          <Link to="/contact" className="inline-flex items-center justify-center h-16 px-12 bg-gradient-to-br from-primary to-primary-dim text-on-primary-container font-bold rounded-md hover:shadow-[0_0_25px_rgba(129,236,255,0.4)] transition-all text-xl mt-8">
-            Contact Us
-          </Link>
-        </div>
-      </section>
-
-      <Footer />
-    </div>
-  );
+    const finalContent = [...before, newContent, ...after].join('\n');
+    fs.writeFileSync('src/pages/LandingPage.tsx', finalContent);
+} else {
+    console.log("Could not find start or end index", startIdx, endIdx);
 }

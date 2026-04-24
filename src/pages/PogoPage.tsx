@@ -2,7 +2,7 @@ import TopBar from '../components/TopBar';
 import Footer from '../components/Footer';
 import { motion } from 'motion/react';
 
-export default function RhumbNavPage() {
+export default function PogoPage() {
   return (
     <div className="bg-surface text-on-surface min-h-screen overflow-x-hidden flex flex-col">
       <TopBar />
@@ -17,44 +17,52 @@ export default function RhumbNavPage() {
             transition={{ duration: 0.8 }}
             className="text-center"
           >
-            <img src="/logo_horizontal.png" alt="RhumbNav" className="w-[400px] md:w-[650px] lg:w-[800px] h-auto object-contain mx-auto mb-6" />
+            <img src="/Pogo2.png" alt="Pogo" className="w-[200px] md:w-[280px] lg:w-[350px] h-auto object-contain mx-auto mb-6" />
             <p className="text-2xl text-on-surface-variant max-w-3xl mx-auto leading-relaxed font-light mb-16">
-              RhumbNav is a new light EFB shaped by real flight experience, bringing flight planning, navigation, and in-flight awareness into one seamless experience.
+              Pogo es una app de escalada en bloque diseñada para ayudar a los escaladores a registrar cada sesión, entender su progreso y mantener la motivación a través de logros.
             </p>
 
             <div className="mt-20 space-y-32">
               {[
                 {
-                  title: "Precision for every calculation",
-                  description: "Flight calculations made faster, cleaner, and easier. From wind correction to fuel planning, RhumbNav gives you the numbers that matter—without the clutter.",
+                  title: "Registra cada sesión",
+                  description: "Registra tus sesiones de boulder, intentos, problemas completados, grados, tiempo de escalada y notas personales. Pogo mantiene tu historial organizado para que cada sesión sea parte de tu progreso.",
                   image: "/w&b2.jpeg",
                   secondaryImage: "/computer.jpeg",
                   imageType: "both",
                   phonePosition: "left"
                 },
                 {
-                  title: "Your documents, all in one place",
-                  description: "All your pilot credentials in one refined digital space. Stay on top of medicals, ratings, endorsements, and important records with ease.",
+                  title: "Visualiza tu progreso de forma clara",
+                  description: "Convierte tus datos de escalada en información visual y sencilla. Rastrea tus mejores grados, actividad mensual, sesiones totales, horas de escalada, tasa de éxito y tu mejora con el tiempo.",
                   image: "/pilotqr_horizontal.jpeg",
                   secondaryImage: "/license.jpeg",
                   imageType: "both",
                   phonePosition: "right"
                 },
                 {
-                  title: "Built for confident flying",
-                  description: "Purpose-built VFR navigation for pilots who value clarity in the cockpit. Plan smarter, stay oriented, and fly with greater confidence.",
+                  title: "Desbloquea logros",
+                  description: "Mantente motivado con hitos que reflejan tu verdadero progreso en la escalada. Celebra tu consistencia, nuevos grados completados, sesiones terminadas y récords personales.",
                   image: "/nav.jpeg",
                   secondaryImage: "/FPL.jpeg",
                   imageType: "both",
                   phonePosition: "right"
                 },
                 {
-                  title: "A better way to log flights",
-                  description: "A smarter way to track your flying life. Keep flight time, landings, approaches, and records organized in a logbook built for modern aviation.",
+                  title: "Construida para escalar mejor",
+                  description: "Pogo te ayuda a escalar con mayor intención, mostrándote lo que has logrado, dónde estás mejorando y los objetivos que puedes perseguir a continuación. Una forma más clara de entender tu progresión en el boulder.",
                   image: "/LogbookTablet.jpeg",
                   secondaryImage: "/allFlight.jpeg",
                   imageType: "both",
                   phonePosition: "right"
+                },
+                {
+                  title: "Una forma más inteligente de escalar",
+                  description: "Desde un registro rápido de sesiones hasta estadísticas a largo plazo, Pogo ofrece a los escaladores un espacio personal para registrar, analizar y crecer en el mundo del boulder.",
+                  image: "/w&b2.jpeg",
+                  secondaryImage: "/computer.jpeg",
+                  imageType: "both",
+                  phonePosition: "left"
                 }
               ].map((feature, index) => (
                 <div key={feature.title} className={`flex flex-col ${index % 2 === 1 ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center gap-16`}>

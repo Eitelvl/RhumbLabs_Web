@@ -18,7 +18,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-12 mb-12">
           <div className="max-w-xs flex justify-center md:justify-start">
             <Link to="/" onClick={(e) => scrollToSection(e, 'home')} className="flex items-center h-16 md:h-20">
-              <img src="/RL1.png" alt="Rhumb Labs" className="h-full w-auto object-left object-contain scale-[3] md:scale-[4] origin-center md:origin-left md:-translate-x-12" />
+              <img src="/RL1.png" alt="Rhumb Labs" className="h-full w-auto object-left object-contain scale-[2] md:scale-[2.5] origin-center md:origin-left md:-translate-x-8" />
             </Link>
           </div>
           <div className="grid grid-cols-2 gap-12">
@@ -32,7 +32,8 @@ export default function Footer() {
             <div>
               <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-6">Legal</span>
               <ul className="space-y-3">
-                <li><Link to="/legal" className="text-slate-500 hover:text-slate-200 transition-colors text-sm uppercase tracking-widest">RhumbNav</Link></li>
+                <li><Link to="/legal?app=rhumbnav" className="text-slate-500 hover:text-slate-200 transition-colors text-sm uppercase tracking-widest">RhumbNav</Link></li>
+                <li><Link to="/legal?app=pogo" className="text-slate-500 hover:text-slate-200 transition-colors text-sm uppercase tracking-widest">Pogo</Link></li>
               </ul>
             </div>
           </div>
