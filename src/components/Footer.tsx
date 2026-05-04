@@ -1,3 +1,4 @@
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 export default function Footer() {
@@ -13,37 +14,45 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-slate-950 w-full py-12 px-8">
+    <footer className="bg-black border-t border-white/[0.04] w-full py-16 px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-12 mb-12">
+        <div className="flex flex-col md:flex-row justify-between items-start gap-12 mb-16">
           <div className="max-w-xs flex justify-center md:justify-start">
-            <Link to="/" onClick={(e) => scrollToSection(e, 'home')} className="flex items-center h-16 md:h-20">
-              <img src="/RL1.png" alt="Rhumb Labs" className="h-full w-auto object-left object-contain scale-[2] md:scale-[2.5] origin-center md:origin-left md:-translate-x-8" />
+            <Link to="/" onClick={(e) => scrollToSection(e, 'home')} className="flex items-center group relative h-16 md:h-20 w-56 md:w-72 -ml-6 md:-ml-8">
+              <img src="/RL1.png" alt="Rhumb Labs" className="w-[200px] md:w-[280px] h-auto object-contain scale-[1.3] md:scale-[1.5] origin-left" />
             </Link>
           </div>
-          <div className="grid grid-cols-2 gap-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 md:gap-24 w-full md:w-auto">
             <div>
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-6">Company</span>
+              <span className="text-[11px] font-semibold text-white uppercase tracking-widest block mb-4">Company</span>
               <ul className="space-y-3">
-                <li><Link to="/#about" onClick={(e) => scrollToSection(e, 'about')} className="text-slate-500 hover:text-slate-200 transition-colors text-sm uppercase tracking-widest">About Us</Link></li>
-                <li><Link to="/contact" className="text-slate-500 hover:text-slate-200 transition-colors text-sm uppercase tracking-widest">Contact</Link></li>
+                <li><Link to="/#about" onClick={(e) => scrollToSection(e, 'about')} className="text-[#8A8F98] hover:text-white transition-colors text-[13px]">About Us</Link></li>
+                <li><Link to="/contact" className="text-[#8A8F98] hover:text-white transition-colors text-[13px]">Contact</Link></li>
               </ul>
             </div>
             <div>
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-6">Legal</span>
+              <span className="text-[11px] font-semibold text-white uppercase tracking-widest block mb-4">Products</span>
               <ul className="space-y-3">
-                <li><Link to="/legal?app=rhumbnav" className="text-slate-500 hover:text-slate-200 transition-colors text-sm uppercase tracking-widest">RhumbNav</Link></li>
-                <li><Link to="/legal?app=pogo" className="text-slate-500 hover:text-slate-200 transition-colors text-sm uppercase tracking-widest">Pogo</Link></li>
+                <li><Link to="/rhumbnav" className="text-[#8A8F98] hover:text-white transition-colors text-[13px]">RhumbNav</Link></li>
+                <li><Link to="/pogo" className="text-[#8A8F98] hover:text-white transition-colors text-[13px]">Pogo</Link></li>
+              </ul>
+            </div>
+            <div className="col-span-1 sm:col-span-2 lg:col-span-1">
+              <span className="text-[11px] font-semibold text-white uppercase tracking-widest block mb-4">Legal</span>
+              <ul className="space-y-3">
+                <li><Link to="/legal" className="text-[#8A8F98] hover:text-white transition-colors text-[13px]">Legal Center</Link></li>
               </ul>
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-center justify-center border-t border-slate-800/50 pt-8 gap-3">
-          <span className="text-slate-500 text-[10px] font-inter uppercase tracking-widest text-center">© 2026 Rhumb Labs. All rights reserved.</span>
-          <div className="flex items-center gap-3 text-slate-500 text-[10px] font-inter uppercase tracking-widest">
-            <Link to="/terms" className="hover:text-slate-200 transition-colors">Terms of Service</Link>
-            <span>&bull;</span>
-            <Link to="/privacy" className="hover:text-slate-200 transition-colors">Privacy Policy</Link>
+        <div className="flex flex-col md:flex-row items-center justify-between border-t border-white/[0.04] pt-8 gap-6 md:gap-4">
+          <span className="text-[#8A8F98] text-[13px]">© {new Date().getFullYear()} Rhumb Labs. All rights reserved.</span>
+          <div className="flex flex-wrap justify-center items-center gap-4 md:gap-6 text-[#8A8F98] text-[13px]">
+            <Link to="/legal/company-legal" className="hover:text-white transition-colors">Company Legal</Link>
+            <span className="text-white/20 hidden md:inline">·</span>
+            <Link to="/legal/company-privacy" className="hover:text-white transition-colors">Company Privacy</Link>
+            <span className="text-white/20 hidden md:inline">·</span>
+            <Link to="/contact" className="hover:text-white transition-colors">Contact</Link>
           </div>
         </div>
       </div>

@@ -1,23 +1,16 @@
-import { useState } from 'react';
+import React from 'react';
 import { motion } from 'motion/react';
 import TopBar from '../components/TopBar';
 import Footer from '../components/Footer';
-import { Mail, MapPin } from 'lucide-react';
+import { Mail, MapPin, ArrowUpRight } from 'lucide-react';
 
 export default function ContactPage() {
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitted(true);
-  };
-
   return (
     <div className="bg-surface text-on-surface min-h-screen flex flex-col">
       <TopBar />
       
-      <main className="flex-1 pt-40 pb-32 px-8">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20">
+      <main className="flex-1 pt-32 pb-32 px-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
           {/* Left Column - Info */}
           <div>
             <motion.div
@@ -25,10 +18,13 @@ export default function ContactPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
             >
-              <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter mb-8 leading-[1.05]">
-                Get in <span className="text-primary">touch.</span>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-outline-variant/30 bg-surface-container-low/50 text-[10px] uppercase font-bold text-slate-300 mb-8 tracking-widest">
+                <span>Connect</span>
+              </div>
+              <h1 className="text-5xl md:text-[5.5rem] font-medium tracking-tight mb-8 leading-[0.9] text-white">
+                Get in <span className="text-[#a1a1aa]">touch.</span>
               </h1>
-              <p className="text-xl text-on-surface-variant max-w-md leading-relaxed font-light mb-12">
+              <p className="text-xl text-[#a1a1aa] max-w-md leading-relaxed font-light mb-12">
                 For questions, ideas, feedback, support, or business inquiries, feel free to reach out to the Rhumb Labs team.
               </p>
             </motion.div>
@@ -40,69 +36,78 @@ export default function ContactPage() {
               className="space-y-8"
             >
               <div className="flex items-start gap-4">
-                <div className="p-3 bg-surface-container-highest rounded-lg border border-outline-variant/10">
-                  <Mail className="w-6 h-6 text-primary" />
+                <div className="p-3 bg-white/5 rounded-full border border-white/10">
+                  <Mail className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-slate-300 uppercase tracking-widest mb-1">Contact</h3>
-                  <p className="text-slate-400">support@rhumblabs.com</p>
+                  <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Contact</h3>
+                  <a href="mailto:support@rhumblabs.com" className="text-slate-200 font-medium hover:text-white transition-colors">support@rhumblabs.com</a>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="p-3 bg-surface-container-highest rounded-lg border border-outline-variant/10">
-                  <MapPin className="w-6 h-6 text-primary" />
+                <div className="p-3 bg-white/5 rounded-full border border-white/10">
+                  <MapPin className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-slate-300 uppercase tracking-widest mb-1">Based in</h3>
-                  <p className="text-slate-400">Santiago de Chile</p>
+                  <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Based in</h3>
+                  <p className="text-slate-200 font-medium">Santiago de Chile</p>
                 </div>
               </div>
             </motion.div>
           </div>
 
-          {/* Right Column - Form */}
+          {/* Right Column - Static Card */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
             className="relative"
           >
-            <div className="absolute inset-0 bg-primary/5 blur-[80px] -z-10 rounded-full"></div>
-            <div className="glass-panel p-8 md:p-12 rounded-2xl border border-outline-variant/20 cyan-glow bg-surface/40 backdrop-blur-2xl">
-              {isSubmitted ? (
-                <div className="text-center py-12">
-                  <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <Mail className="w-8 h-8 text-primary" />
-                  </div>
-                  <h3 className="text-2xl font-bold mb-4">Message Sent</h3>
-                  <p className="text-slate-400">We will get back to you as soon as possible.</p>
-                  <button 
-                    onClick={() => setIsSubmitted(false)}
-                    className="mt-8 px-6 py-2 border border-outline-variant/20 rounded-lg text-sm font-bold hover:bg-surface-container-highest transition-colors"
-                  >
-                    Send Another Message
-                  </button>
+            
+            <div className="linear-card p-8 md:p-12 rounded-3xl bg-black border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.8)]">
+              <div className="mb-8">
+                <h3 className="text-2xl font-bold text-white mb-4">Contact Rhumb Labs</h3>
+                <p className="text-[#a1a1aa] font-light leading-relaxed mb-6">
+                  For support, privacy requests, business inquiries, or app-related questions, you can reach the Rhumb Labs team by email.
+                </p>
+                
+                <div className="bg-white/5 border border-white/10 rounded-xl p-4 mb-8 flex items-center justify-between group hover:bg-white/10 transition-colors">
+                  <a href="mailto:support@rhumblabs.com" className="flex-1 text-lg font-medium text-white truncate pr-4">
+                    support@rhumblabs.com
+                  </a>
+                  <ArrowUpRight className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors shrink-0" />
                 </div>
-              ) : (
-                <form className="space-y-6" onSubmit={handleSubmit}>
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Full Name</label>
-                    <input type="text" required className="w-full bg-surface-container-highest border border-outline-variant/20 rounded-lg px-4 py-3 text-slate-200 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all" placeholder="John Doe" />
+
+                <a 
+                  href="mailto:support@rhumblabs.com"
+                  className="linear-button-primary w-full h-12 flex items-center justify-center text-sm tracking-wide font-medium rounded-xl mb-8"
+                >
+                  Send Email
+                </a>
+
+                <div className="space-y-4">
+                  <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Specific Inquiries</h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <a href="mailto:support@rhumblabs.com?subject=Privacy%20Request" className="flex items-center justify-between p-3 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/5 transition-colors group">
+                      <span className="text-sm text-slate-300 font-medium">Privacy Request</span>
+                      <ArrowUpRight className="w-4 h-4 text-slate-500 group-hover:text-slate-300 transition-colors" />
+                    </a>
+                    <a href="mailto:support@rhumblabs.com?subject=Business%20Inquiry" className="flex items-center justify-between p-3 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/5 transition-colors group">
+                      <span className="text-sm text-slate-300 font-medium">Business Inquiry</span>
+                      <ArrowUpRight className="w-4 h-4 text-slate-500 group-hover:text-slate-300 transition-colors" />
+                    </a>
+                    <a href="mailto:support@rhumblabs.com?subject=App%20Support" className="sm:col-span-2 flex items-center justify-between p-3 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/5 transition-colors group">
+                      <span className="text-sm text-slate-300 font-medium">App Support</span>
+                      <ArrowUpRight className="w-4 h-4 text-slate-500 group-hover:text-slate-300 transition-colors" />
+                    </a>
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Email Address</label>
-                    <input type="email" required className="w-full bg-surface-container-highest border border-outline-variant/20 rounded-lg px-4 py-3 text-slate-200 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all" placeholder="john@example.com" />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Message</label>
-                    <textarea rows={4} required className="w-full bg-surface-container-highest border border-outline-variant/20 rounded-lg px-4 py-3 text-slate-200 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all resize-none" placeholder="How can we help you?"></textarea>
-                  </div>
-                  <button type="submit" className="w-full h-14 mt-4 bg-gradient-to-br from-primary to-primary-dim text-on-primary-container font-bold rounded-lg hover:shadow-[0_0_20px_rgba(129,236,255,0.4)] transition-all text-lg tracking-wide">
-                    Submit
-                  </button>
-                </form>
-              )}
+                </div>
+              </div>
             </div>
+            
+            <p className="text-xs text-slate-500 mt-6 text-center max-w-sm mx-auto font-light leading-relaxed">
+              For privacy or data deletion requests, please include the app name and the email associated with your account, if applicable.
+            </p>
           </motion.div>
         </div>
       </main>

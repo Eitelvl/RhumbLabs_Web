@@ -1,137 +1,169 @@
 import TopBar from '../components/TopBar';
 import Footer from '../components/Footer';
-import { motion } from 'motion/react';
+import { motion, useScroll, useTransform } from 'motion/react';
+import { DeviceMockup } from '../components/DeviceMockup';
+import { Compass, BookText, Calculator, Map, Crosshair } from 'lucide-react';
+import { useRef } from 'react';
 
 export default function RhumbNavPage() {
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
+  const y1 = useTransform(scrollYProgress, [0, 1], [50, -50]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [-50, 50]);
+
   return (
-    <div className="bg-surface text-on-surface min-h-screen overflow-x-hidden flex flex-col">
+    <div className="bg-[#000000] text-white min-h-screen selection:bg-blue-500/30 selection:text-white">
       <TopBar />
       
-      <main className="flex-grow pt-24 md:pt-32 pb-32 px-8 relative">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[120px] -z-10"></div>
+      <main className="pt-32 pb-32 relative overflow-hidden" ref={containerRef}>
         
-        <div className="max-w-7xl mx-auto">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center"
-          >
-            <img src="/logo_horizontal.png" alt="RhumbNav" className="w-[400px] md:w-[650px] lg:w-[800px] h-auto object-contain mx-auto mb-6" />
-            <p className="text-2xl text-on-surface-variant max-w-3xl mx-auto leading-relaxed font-light mb-16">
-              RhumbNav is a new light EFB shaped by real flight experience, bringing flight planning, navigation, and in-flight awareness into one seamless experience.
-            </p>
+        {/* Background Effects */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1200px] h-[600px] bg-blue-600/10 rounded-[100%] blur-[120px] pointer-events-none opacity-50"></div>
 
-            <div className="mt-20 space-y-32">
-              {[
-                {
-                  title: "Precision for every calculation",
-                  description: "Flight calculations made faster, cleaner, and easier. From wind correction to fuel planning, RhumbNav gives you the numbers that matter—without the clutter.",
-                  image: "/w&b2.jpeg",
-                  secondaryImage: "/computer.jpeg",
-                  imageType: "both",
-                  phonePosition: "left"
-                },
-                {
-                  title: "Your documents, all in one place",
-                  description: "All your pilot credentials in one refined digital space. Stay on top of medicals, ratings, endorsements, and important records with ease.",
-                  image: "/pilotqr_horizontal.jpeg",
-                  secondaryImage: "/license.jpeg",
-                  imageType: "both",
-                  phonePosition: "right"
-                },
-                {
-                  title: "Built for confident flying",
-                  description: "Purpose-built VFR navigation for pilots who value clarity in the cockpit. Plan smarter, stay oriented, and fly with greater confidence.",
-                  image: "/nav.jpeg",
-                  secondaryImage: "/FPL.jpeg",
-                  imageType: "both",
-                  phonePosition: "right"
-                },
-                {
-                  title: "A better way to log flights",
-                  description: "A smarter way to track your flying life. Keep flight time, landings, approaches, and records organized in a logbook built for modern aviation.",
-                  image: "/LogbookTablet.jpeg",
-                  secondaryImage: "/allFlight.jpeg",
-                  imageType: "both",
-                  phonePosition: "right"
-                }
-              ].map((feature, index) => (
-                <div key={feature.title} className={`flex flex-col ${index % 2 === 1 ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center gap-16`}>
-                  <div className="flex-1 text-left">
-                    <h2 className="text-4xl md:text-5xl font-bold mb-6">{feature.title}</h2>
-                    <p className="text-xl text-on-surface-variant leading-relaxed">{feature.description}</p>
-                  </div>
-                  <div className="flex-1 w-full flex justify-center">
-                    {feature.imageType === 'both' ? (
-                      <div className="relative w-full max-w-2xl aspect-[16/10] flex items-center justify-center mt-8 mb-12">
-                        
-                        <motion.div 
-                          initial={{ opacity: 0, y: 30, rotate: index % 2 === 0 ? -4 : 4 }}
-                          whileInView={{ opacity: 1, y: 0, rotate: 0 }}
-                          viewport={{ once: true, margin: "-100px" }}
-                          transition={{ duration: 0.8, type: "spring" }}
-                          className={`absolute top-0 ${feature.phonePosition === 'left' ? 'right-0' : 'left-0'} w-[85%] rounded-[1.5rem] md:rounded-[2rem] border-[6px] md:border-[8px] border-slate-800 bg-slate-950 shadow-2xl overflow-hidden aspect-[16/10] z-10`}
-                        >
-                          <div className="absolute left-0 inset-y-0 w-4 md:w-6 bg-slate-800 flex justify-center items-center z-20">
-                             <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-slate-950 rounded-full"></div>
-                          </div>
-                          <img alt={`${feature.title} Tablet`} className="w-full h-full object-contain pl-4 md:pl-6" src={feature.image} />
-                        </motion.div>
-                        <motion.div 
-                          initial={{ opacity: 0, y: 50, x: feature.phonePosition === 'left' ? -20 : 20, rotate: index % 2 === 0 ? 8 : -8 }}
-                          whileInView={{ opacity: 1, y: 0, x: 0, rotate: index % 2 === 0 ? 4 : -4 }}
-                          viewport={{ once: true, margin: "-100px" }}
-                          transition={{ duration: 0.8, delay: 0.2, type: "spring" }}
-                          className={`absolute -bottom-8 md:-bottom-16 ${feature.phonePosition === 'left' ? 'left-0' : 'right-0'} w-[35%] rounded-[1.5rem] md:rounded-[2.5rem] border-[4px] md:border-[6px] border-slate-800 bg-slate-950 shadow-[0_30px_60px_rgba(0,0,0,0.8)] overflow-hidden aspect-[9/19] z-20`}
-                        >
-                          <img alt={`${feature.title} Phone`} className="w-full h-full object-contain" src={feature.secondaryImage} />
-                        </motion.div>
-                      </div>
-                    ) : feature.imageType === 'tablet' ? (
-                      <div className="relative w-full max-w-2xl aspect-[16/10] flex items-center justify-center">
-                        
-                        <motion.div 
-                          initial={{ opacity: 0, y: 30, rotate: index % 2 === 0 ? -4 : 4 }}
-                          whileInView={{ opacity: 1, y: 0, rotate: 0 }}
-                          viewport={{ once: true, margin: "-100px" }}
-                          transition={{ duration: 0.8, type: "spring" }}
-                          className="w-[90%] rounded-[1.5rem] md:rounded-[2rem] border-[6px] md:border-[8px] border-slate-800 bg-slate-950 shadow-2xl overflow-hidden aspect-[16/10] z-10 relative"
-                        >
-                          <div className="absolute left-0 inset-y-0 w-4 md:w-6 bg-slate-800 flex justify-center items-center z-20">
-                             <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-slate-950 rounded-full"></div>
-                          </div>
-                          <img alt={feature.title} className="w-full h-full object-contain pl-4 md:pl-6" src={feature.image} />
-                        </motion.div>
-                      </div>
-                    ) : (
-                      <div className="relative w-full max-w-sm aspect-[9/19] flex items-center justify-center">
-                        
-                        <motion.div 
-                          initial={{ opacity: 0, y: 30, rotate: index % 2 === 0 ? 6 : -6 }}
-                          whileInView={{ opacity: 1, y: 0, rotate: 0 }}
-                          viewport={{ once: true, margin: "-100px" }}
-                          transition={{ duration: 0.8, type: "spring" }}
-                          className="w-[75%] rounded-[2rem] md:rounded-[2.5rem] border-[4px] md:border-[6px] border-slate-800 bg-slate-950 shadow-[0_30px_60px_rgba(0,0,0,0.8)] overflow-hidden aspect-[9/19] z-20 relative"
-                        >
-                          <img alt={feature.title} className="w-full h-full object-contain" src={feature.image} />
-                        </motion.div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
+        <div className="max-w-[1400px] mx-auto px-6 lg:px-12 relative z-10">
+          
+          {/* Hero Section */}
+          <div className="flex flex-col items-center text-center mt-12 mb-32 md:mb-48">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, filter: "blur(10px)" }}
+              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              className="inline-flex items-center justify-center mb-8 relative h-20 md:h-28 w-64 md:w-96"
+            >
+              <img src="/logo_horizontal.png" alt="RhumbNav Logo" className="w-[240px] md:w-[360px] h-auto object-contain scale-[1.3] md:scale-[1.4] origin-center" />
+            </motion.div>
             
-            <div className="mt-40 flex justify-center">
-              <div className="inline-flex items-center gap-3 px-8 py-4 bg-surface-container-highest border border-outline-variant/20 rounded-full text-slate-300 font-bold tracking-wide">
-                <svg viewBox="0 0 24 24" className="w-6 h-6 fill-[#3DDC84]" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4483-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993.0004.5511-.4482.9997-.9993.9997zm-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997zm11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0216 3.503C15.5902 8.244 13.8533 7.85 12 7.85c-1.8533 0-3.5902.394-5.1375 1.1002L4.841 5.447a.416.416 0 00-.5676-.1521.416.416 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3432-4.1021-2.6889-7.5743-6.1185-9.44z"/>
-                </svg>
-                Coming Soon
-              </div>
-            </div>
-          </motion.div>
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.1 }}
+              className="text-5xl md:text-7xl lg:text-[6rem] font-bold tracking-tighter mb-8 leading-[1.05] text-white"
+            >
+              Flight simplified. <br className="hidden md:block"/> Navigation perfected.
+            </motion.h1>
+            
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-xl md:text-2xl text-[#8A8F98] max-w-3xl mx-auto leading-relaxed font-light mb-16"
+            >
+              RhumbNav is a new light EFB shaped by real flight experience, bringing flight planning, navigation, and in-flight awareness into one seamless experience.
+            </motion.p>
+            
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="inline-flex items-center gap-3 px-8 py-4 bg-white/5 border border-white/10 rounded-full text-white font-medium shadow-[0_0_40px_rgba(59,130,246,0.15)]"
+            >
+              <svg viewBox="0 0 24 24" className="w-6 h-6 fill-[#3DDC84]" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4483-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993.0004.5511-.4482.9997-.9993.9997zm-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997zm11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0216 3.503C15.5902 8.244 13.8533 7.85 12 7.85c-1.8533 0-3.5902.394-5.1375 1.1002L4.841 5.447a.416.416 0 00-.5676-.1521.416.416 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3432-4.1021-2.6889-7.5743-6.1185-9.44z"/>
+              </svg>
+              Coming Soon for Android
+            </motion.div>
+          </div>
+
+          {/* Epic Feature Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+             {/* Feature 1 - Left Column Tall */}
+             <motion.div 
+               whileHover={{ y: -5 }}
+               className="md:col-span-1 group relative rounded-[2.5rem] border border-white/10 bg-[#0a0b0d] overflow-hidden min-h-[600px] flex flex-col"
+             >
+                <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-sky-500/10 rounded-full blur-[80px] pointer-events-none translate-x-1/3 -translate-y-1/3"></div>
+                
+                <div className="p-10 md:p-14 z-10">
+                  <div className="w-14 h-14 rounded-2xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center mb-8">
+                     <Calculator className="w-6 h-6 text-sky-400" />
+                  </div>
+                  <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-6">Precision calculation</h2>
+                  <p className="text-[#8A8F98] text-lg font-light leading-relaxed">
+                    Flight calculations made faster, cleaner, and easier. From wind correction to fuel planning, RhumbNav gives you the numbers that matter—without the clutter.
+                  </p>
+                </div>
+
+                <div className="flex-1 w-full relative flex items-center justify-center overflow-hidden pb-10">
+                   <motion.div style={{ y: y1 }} className="flex justify-center items-center w-full">
+                      <DeviceMockup 
+                        type="phone"
+                        className="w-[50%] max-w-[280px] shadow-[0_20px_60px_rgba(0,0,0,0.6)]"
+                        imageSrc="/FPL.jpeg"
+                        alt="Precision Calculation"
+                      />
+                   </motion.div>
+                </div>
+             </motion.div>
+
+             {/* Feature 2 - Right Column Tall */}
+             <motion.div 
+               whileHover={{ y: -5 }}
+               className="md:col-span-1 group relative rounded-[2.5rem] border border-white/10 bg-[#0a0b0d] overflow-hidden min-h-[600px] flex flex-col pt-10"
+             >
+                <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-500/10 rounded-full blur-[80px] pointer-events-none -translate-x-1/3 translate-y-1/3"></div>
+
+                <div className="flex-1 w-full relative flex items-start justify-center overflow-hidden pt-10">
+                   <motion.div style={{ y: y2 }} className="flex justify-center items-start w-full relative">
+                      <DeviceMockup 
+                        type="phone"
+                        className="w-[50%] max-w-[280px] shadow-[0_20px_60px_rgba(0,0,0,0.8)] absolute left-1/2 -translate-x-1/2 top-10"
+                        imageSrc="/allFlight.jpeg"
+                        alt="Logbook Phone"
+                      />
+                   </motion.div>
+                </div>
+                
+                <div className="p-10 md:p-14 z-10 mt-auto bg-gradient-to-t from-[#0a0b0d] via-[#0a0b0d] to-transparent pt-20">
+                  <div className="w-14 h-14 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mb-8">
+                     <BookText className="w-6 h-6 text-blue-400" />
+                  </div>
+                  <h3 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">A better logbook</h3>
+                  <p className="text-[#8A8F98] text-lg font-light leading-relaxed">
+                    A smarter way to track your flying life. Keep flight time, landings, approaches, and records organized in a logbook built for modern aviation.
+                  </p>
+                </div>
+             </motion.div>
+
+             {/* Feature 3 - Wide bottom card */}
+             <motion.div 
+               whileHover={{ y: -5 }}
+               className="md:col-span-2 group relative rounded-[2.5rem] border border-white/10 bg-[#0a0b0d] overflow-hidden min-h-[500px] flex flex-col md:flex-row items-center"
+             >
+                <div className="flex-1 p-10 md:p-16 lg:p-20 z-10 order-2 md:order-1">
+                  <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-8">
+                     <Compass className="w-6 h-6 text-indigo-400" />
+                  </div>
+                  <h3 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">Built for confident flying</h3>
+                  <p className="text-[#8A8F98] text-lg md:text-xl font-light leading-relaxed">
+                    Purpose-built VFR navigation for pilots who value clarity in the cockpit. Plan smarter, stay oriented, and fly with greater confidence. All your credentials and documents seamlessly integrated.
+                  </p>
+                </div>
+                
+                <div className="flex-1 w-full relative h-[300px] md:h-[500px] flex items-center justify-center order-1 md:order-2 overflow-hidden overflow-y-visible">
+                   <DeviceMockup 
+                      type="phone"
+                      className="absolute right-[-10%] md:right-10 top-1/2 -translate-y-1/2 w-[70%] max-w-[300px] shadow-[0_30px_80px_rgba(0,0,0,0.8)]"
+                      imageSrc="/nav.jpeg"
+                      alt="Confident Flying Interface"
+                   />
+                </div>
+             </motion.div>
+          </div>
+
+          {/* Bottom Callout */}
+          <div className="mt-24 mb-10 p-12 md:p-20 rounded-[2.5rem] border border-white/10 bg-white/[0.02] text-center relative overflow-hidden backdrop-blur-xl">
+             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[300px] bg-sky-500/5 rounded-[100%] blur-[80px] pointer-events-none"></div>
+             <Crosshair className="w-12 h-12 text-slate-300 mx-auto mb-8 opacity-60" />
+             <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">Aviation in your pocket.</h2>
+             <p className="text-[#8A8F98] text-xl font-light leading-relaxed max-w-2xl mx-auto">
+               Experience modern flying without the clutter. Start navigating, planning, and logging with unprecedented clarity.
+             </p>
+          </div>
+
         </div>
       </main>
 
