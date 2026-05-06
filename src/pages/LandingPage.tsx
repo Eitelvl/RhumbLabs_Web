@@ -149,17 +149,17 @@ export default function LandingPage() {
                   </Link>
                 </div>
                 
-                <div className="lg:col-span-6 xl:col-span-7 flex justify-end items-center relative mt-16 md:mt-0 lg:mt-0 min-h-[400px] md:min-h-[500px]">
-                  <div className="relative w-full max-w-[800px] h-full flex justify-center items-center perspective-1000">
+                <div className="lg:col-span-6 xl:col-span-7 flex justify-end items-center relative mt-16 md:mt-0 lg:mt-0 min-h-[400px] md:min-h-[500px] overflow-visible">
+                  <div className="flex flex-row items-center justify-center w-[150%] md:w-[180%] lg:w-[190%] max-w-[950px] md:max-w-[1300px] mt-10 md:mt-0 z-10 relative left-0 md:left-[2%] lg:left-[4%]">
                     <DeviceMockup 
                       type="tablet"
-                      className="absolute right-0 md:right-10 top-20 md:top-0 w-[85%] md:w-[75%] z-10 shadow-[0_30px_100px_rgba(0,0,0,0.8)]"
+                      className="w-[75%] md:w-[73%] shadow-[0_30px_100px_rgba(0,0,0,0.8)] z-10"
                       imageSrc="/LogbookTablet.jpeg"
                       alt="RhumbNav Tablet Interface"
                     />
                     <DeviceMockup 
                       type="phone"
-                      className="absolute left-0 bottom-0 md:-bottom-10 w-[35%] md:w-[30%] max-w-[200px] md:max-w-[240px] z-20 shadow-[0_30px_80px_rgba(0,0,0,0.8)]"
+                      className="w-[31%] md:w-[32%] shadow-[-20px_30px_80px_rgba(0,0,0,0.8)] z-20 -ml-[8%] md:-ml-[6%]"
                       imageSrc="/FPL.jpeg"
                       alt="RhumbNav Mobile Interface"
                     />
