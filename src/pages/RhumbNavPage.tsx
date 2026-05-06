@@ -106,11 +106,11 @@ export default function RhumbNavPage() {
              >
                 <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-500/10 rounded-full blur-[80px] pointer-events-none -translate-x-1/3 translate-y-1/3"></div>
 
-                <div className="flex-1 w-full relative flex items-start justify-center overflow-hidden pt-10">
-                   <motion.div style={{ y: y2 }} className="flex justify-center items-start w-full relative">
+                <div className="flex-1 w-full relative flex items-start justify-center pt-12 pb-4 z-10">
+                   <motion.div style={{ y: y2 }} className="flex justify-center items-start w-full">
                       <DeviceMockup 
                         type="phone"
-                        className="w-[50%] max-w-[280px] shadow-[0_20px_60px_rgba(0,0,0,0.8)] absolute left-1/2 -translate-x-1/2 top-10"
+                        className="w-[60%] md:w-[65%] max-w-[260px] shadow-[0_20px_60px_rgba(0,0,0,0.8)]"
                         imageSrc="/allFlight.jpeg"
                         alt="Logbook Phone"
                       />
@@ -143,13 +143,21 @@ export default function RhumbNavPage() {
                   </p>
                 </div>
                 
-                <div className="flex-1 w-full relative h-[300px] md:h-[500px] flex items-center justify-center order-1 md:order-2 overflow-hidden overflow-y-visible">
-                   <DeviceMockup 
-                      type="phone"
-                      className="absolute right-[-10%] md:right-10 top-1/2 -translate-y-1/2 w-[70%] max-w-[300px] shadow-[0_30px_80px_rgba(0,0,0,0.8)]"
-                      imageSrc="/nav.jpeg"
-                      alt="Confident Flying Interface"
-                   />
+                <div className="flex-1 w-full relative h-[350px] md:h-[500px] flex items-center justify-center order-1 md:order-2 overflow-visible">
+                   <div className="flex flex-row items-center justify-center w-[115%] md:w-[125%] max-w-[580px] md:max-w-[720px] mt-10 md:mt-0 -ml-4 md:-ml-12 z-10 pr-4 md:pr-8">
+                     <DeviceMockup 
+                        type="tablet"
+                        className="w-[75%] md:w-[73%] shadow-[0_30px_80px_rgba(0,0,0,0.8)] z-10"
+                        imageSrc="/nav.jpeg"
+                        alt="Confident Flying Interface"
+                     />
+                     <DeviceMockup 
+                        type="phone"
+                        className="w-[31%] md:w-[32%] shadow-[-20px_20px_60px_rgba(0,0,0,0.8)] z-20 -ml-[8%] md:-ml-[6%]"
+                        imageSrc="/FPL.jpeg"
+                        alt="Flight Plan Interface"
+                     />
+                   </div>
                 </div>
              </motion.div>
           </div>
