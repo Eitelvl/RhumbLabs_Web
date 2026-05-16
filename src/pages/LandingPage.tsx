@@ -104,8 +104,7 @@ export default function LandingPage() {
           
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 md:mb-24">
             <div>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-white mb-6">Our Products</h2>
-              <p className="text-[#8A8F98] text-xl md:text-2xl font-light max-w-2xl">Digital tools crafted for precision, performance, and everyday usability.</p>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-white">Our Products</h2>
             </div>
           </div>
 

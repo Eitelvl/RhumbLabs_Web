@@ -43,7 +43,6 @@ export default function LegalPage() {
             <div className="space-y-2 flex-grow">
               <LegalLink to="/legal/company-legal" title="Company Legal" />
               <LegalLink to="/legal/company-privacy" title="Company Privacy" />
-              <LegalLink to="/contact" title="Contact Us" />
             </div>
           </motion.div>
 

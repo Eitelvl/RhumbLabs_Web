@@ -51,8 +51,6 @@ export default function Footer() {
             <Link to="/legal/company-legal" className="hover:text-white transition-colors">Company Legal</Link>
             <span className="text-white/20 hidden md:inline">·</span>
             <Link to="/legal/company-privacy" className="hover:text-white transition-colors">Company Privacy</Link>
-            <span className="text-white/20 hidden md:inline">·</span>
-            <Link to="/contact" className="hover:text-white transition-colors">Contact</Link>
           </div>
         </div>
       </div>
