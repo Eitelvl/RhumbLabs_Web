@@ -130,7 +130,7 @@ export default function LandingPage() {
                   </p>
                   
                   <div className="space-y-4 mb-12">
-                    {['Complete VFR Navigation', 'Digital Logbook & E6B', 'Real-time Weather & Briefings'].map(feature => (
+                    {['Complete VFR Navigation', 'Digital Logbook & Pilot Credentials', 'Real-time Weather & Airport Info', 'Advanced E6B Flight Computer'].map(feature => (
                       <div key={feature} className="flex items-center gap-4">
                         <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
                            <CheckCircle2 className="text-white w-5 h-5 opacity-70" />
@@ -183,7 +183,7 @@ export default function LandingPage() {
                      <DeviceMockup 
                         type="phone"
                         className="w-full z-20 shadow-[0_40px_100px_rgba(0,0,0,0.8)]"
-                        imageSrc="/Resumen.jpeg"
+                        imageSrc="/pogo/summary_v.jpeg"
                         alt="Pogo Mobile Interface"
                      />
                   </div>
@@ -191,7 +191,7 @@ export default function LandingPage() {
                 
                 <div className="lg:col-span-6 xl:col-span-5 order-1 lg:order-2 flex flex-col justify-center">
                   <div className="relative mb-6 self-start flex items-center h-16 md:h-20 w-56 md:w-72 -ml-12 md:-ml-16">
-                    <img src="/Pogo2.png" alt="Pogo" className="w-[240px] md:w-[320px] h-auto object-contain scale-[1.3] md:scale-[1.5] origin-left -translate-y-6" />
+                    <img src="/pogo/Pogo2.png" alt="Pogo" className="w-[240px] md:w-[320px] h-auto object-contain scale-[1.3] md:scale-[1.5] origin-left -translate-y-6" />
                   </div>
                   <h3 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight leading-tight">Climb higher, <br className="hidden lg:block"/>track smarter.</h3>
                   <p className="text-[#8A8F98] text-lg md:text-xl leading-relaxed mb-10 font-light max-w-lg">
@@ -199,7 +199,7 @@ export default function LandingPage() {
                   </p>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12">
-                    {['Track Grades', 'Performance Analytics', 'Achievement System', 'Session Logging'].map(feature => (
+                    {['Track Grades', 'Performance Analytics', 'Gym-Based Grades', 'Session Logging'].map(feature => (
                       <div key={feature} className="flex items-center gap-3">
                          <div className="w-2 h-2 rounded-full bg-white/20"></div>
                         <span className="text-white/80 font-medium">{feature}</span>

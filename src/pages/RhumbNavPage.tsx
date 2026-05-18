@@ -2,7 +2,7 @@ import TopBar from '../components/TopBar';
 import Footer from '../components/Footer';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { DeviceMockup } from '../components/DeviceMockup';
-import { Compass, BookText, Calculator, Map, Crosshair } from 'lucide-react';
+import { Compass, BookText, Calculator, Map, Crosshair, IdCard } from 'lucide-react';
 import { useRef } from 'react';
 
 export default function RhumbNavPage() {
@@ -92,7 +92,7 @@ export default function RhumbNavPage() {
                       <DeviceMockup 
                         type="phone"
                         className="w-[50%] max-w-[280px] shadow-[0_20px_60px_rgba(0,0,0,0.6)]"
-                        imageSrc="/FPL.jpeg"
+                        imageSrc="/computer.jpeg"
                         alt="Precision Calculation"
                       />
                    </motion.div>
@@ -128,7 +128,36 @@ export default function RhumbNavPage() {
                 </div>
              </motion.div>
 
-             {/* Feature 3 - Wide bottom card */}
+             {/* Feature 3 - Wide bottom card (Licenses) */}
+             <motion.div 
+               whileHover={{ y: -5 }}
+               className="md:col-span-2 group relative rounded-[2.5rem] border border-white/10 bg-[#0a0b0d] overflow-hidden min-h-[500px] flex flex-col md:flex-row items-center"
+             >
+                <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-emerald-500/10 rounded-full blur-[80px] pointer-events-none translate-x-1/3 translate-y-1/3"></div>
+                
+                <div className="flex-1 w-full relative h-[350px] md:h-[500px] flex items-start justify-center order-1 overflow-hidden pt-12 md:pt-20">
+                   <motion.div style={{ y: y1 }} className="flex flex-row items-start justify-center w-[100%] z-10">
+                     <DeviceMockup 
+                        type="phone"
+                        className="w-[70%] md:w-[65%] max-w-[340px] shadow-[0_30px_80px_rgba(0,0,0,0.8)] z-10"
+                        imageSrc="/license.jpeg"
+                        alt="Licenses Interface"
+                     />
+                   </motion.div>
+                </div>
+
+                <div className="flex-1 p-10 md:p-16 lg:p-20 z-10 order-2">
+                  <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-8">
+                     <IdCard className="w-6 h-6 text-emerald-400" />
+                  </div>
+                  <h3 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">Licenses and certificates, simplified</h3>
+                  <p className="text-[#8A8F98] text-lg md:text-xl font-light leading-relaxed">
+                    Carry your pilot licenses, medical certificates, and official documents directly on your device. Easily track expiration dates and always stay compliant, wherever you fly.
+                  </p>
+                </div>
+             </motion.div>
+
+             {/* Feature 4 - Wide bottom card (Navigation - reversed) */}
              <motion.div 
                whileHover={{ y: -5 }}
                className="md:col-span-2 group relative rounded-[2.5rem] border border-white/10 bg-[#0a0b0d] overflow-hidden min-h-[500px] flex flex-col md:flex-row items-center"

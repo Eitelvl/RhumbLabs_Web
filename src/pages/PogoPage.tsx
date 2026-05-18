@@ -2,7 +2,7 @@ import TopBar from '../components/TopBar';
 import Footer from '../components/Footer';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { DeviceMockup } from '../components/DeviceMockup';
-import { Activity, Trophy, TrendingUp, NotebookPen, Mountain } from 'lucide-react';
+import { Activity, MapPin, TrendingUp, NotebookPen, Mountain } from 'lucide-react';
 import { useRef } from 'react';
 
 export default function PogoPage() {
@@ -33,7 +33,7 @@ export default function PogoPage() {
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
               className="inline-flex items-center justify-center mb-8 relative h-20 md:h-28 w-64 md:w-80"
             >
-              <img src="/Pogo2.png" alt="Pogo Logo" className="w-[220px] md:w-[320px] h-auto object-contain scale-[1.3] md:scale-[1.5] origin-center" />
+              <img src="/pogo/Pogo2.png" alt="Pogo Logo" className="w-[220px] md:w-[320px] h-auto object-contain scale-[1.3] md:scale-[1.5] origin-center" />
             </motion.div>
             
             <motion.h1 
@@ -82,7 +82,7 @@ export default function PogoPage() {
                   </div>
                   <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">Log every session</h2>
                   <p className="text-[#8A8F98] text-lg md:text-xl font-light leading-relaxed max-w-xl">
-                    Registra tus sesiones de boulder, intentos, problemas completados, grados, tiempo de escalada y notas personales. Pogo mantiene tu historial organizado para que tu progresión sea tangible.
+                    Log your bouldering sessions, attempts, completed problems, grades, climbing time, and personal notes. Pogo keeps your history organized to make your progression tangible.
                   </p>
                 </div>
 
@@ -91,7 +91,7 @@ export default function PogoPage() {
                       <DeviceMockup 
                         type="phone"
                         className="w-[60%] md:w-[70%] max-w-[300px] shadow-[0_20px_60px_rgba(0,0,0,0.8)] rotate-[-4deg]"
-                        imageSrc="/Resumen.jpeg"
+                        imageSrc="/pogo/sesion_activa.jpeg"
                         alt="Log Session"
                       />
                    </motion.div>
@@ -109,14 +109,14 @@ export default function PogoPage() {
                   </div>
                   <h3 className="text-2xl md:text-3xl font-bold tracking-tight mb-4">Clear Progression</h3>
                   <p className="text-[#8A8F98] text-base md:text-lg font-light leading-relaxed">
-                    Convierte tus datos en gráficas visuales y poderosas. Rastrea tu actividad y mejora en el tiempo.
+                    Turn your data into powerful, visual graphs. Track your activity and improve over time.
                   </p>
                 </div>
                 <div className="flex-1 relative flex items-center justify-center mt-auto pb-10">
                    <DeviceMockup 
                       type="phone"
                       className="w-[50%] max-w-[250px] shadow-[0_20px_50px_rgba(0,0,0,0.6)]"
-                      imageSrc="/Resumen.jpeg"
+                      imageSrc="/pogo/summary_active_v.jpeg"
                       alt="Clear Progression"
                    />
                 </div>
@@ -129,19 +129,19 @@ export default function PogoPage() {
              >
                 <div className="p-10 md:p-14 z-10">
                   <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-8">
-                     <Trophy className="w-6 h-6 text-emerald-400" />
+                     <MapPin className="w-6 h-6 text-emerald-400" />
                   </div>
-                  <h3 className="text-2xl md:text-3xl font-bold tracking-tight mb-4">Unlock Achievements</h3>
+                  <h3 className="text-2xl md:text-3xl font-bold tracking-tight mb-4">Your Gym's Grades</h3>
                   <p className="text-[#8A8F98] text-base md:text-lg font-light leading-relaxed">
-                    Mantente motivado con hitos que reflejan tu verdadero progreso. Celebra cada nuevo grado.
+                    Configure your gym, use its real colors and grades, and log boulder, route, or mixed sessions with a scale adapted to where you climb.
                   </p>
                 </div>
                 <div className="flex-1 relative flex items-center justify-center mt-auto pb-10">
                    <DeviceMockup 
                       type="phone"
                       className="w-[50%] max-w-[250px] shadow-[0_20px_50px_rgba(0,0,0,0.6)]"
-                      imageSrc="/Resumen.jpeg"
-                      alt="Unlock Achievements"
+                      imageSrc="/pogo/gymdetalle.jpeg"
+                      alt="Your Gym's Grades"
                    />
                 </div>
              </motion.div>

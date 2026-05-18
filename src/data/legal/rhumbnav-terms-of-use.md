@@ -1,4 +1,4 @@
-# TERMS AND CONDITIONS OF USE
+# Terms of Use
 
 Last Update: 12/05/2026
 

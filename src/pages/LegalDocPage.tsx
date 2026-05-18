@@ -17,7 +17,7 @@ export default function LegalDocPage() {
   // Format the title from the path
   const rawTitle = pathParts[pathParts.length - 1] || 'Document';
   // format 'privacy-policy' -> 'Privacy Policy'
-  const title = rawTitle.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  const title = rawTitle.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ').replace(' Of ', ' of ');
   
   // Determine subtitle/context
   let subtitle = 'Rhumb Labs';
