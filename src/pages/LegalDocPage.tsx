@@ -60,15 +60,15 @@ export default function LegalDocPage() {
       <main className="flex-1 pt-32 pb-24 px-6 md:px-12 max-w-4xl mx-auto w-full">
         <Link 
           to="/legal" 
-          className="inline-flex items-center gap-2 text-sm text-[#a1a1aa] hover:text-white transition-colors mb-12"
+          className="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors mb-12"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Legal Center
         </Link>
         
         <header className="mb-12">
-          <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#a1a1aa] mb-4">
-            <Link to="/legal" className="hover:text-white transition-colors">Legal Center</Link>
+          <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-text-secondary mb-4">
+            <Link to="/legal" className="hover:text-text-primary transition-colors">Legal Center</Link>
             <ChevronRight className="w-3 h-3" />
             <span>{subtitle}</span>
           </div>
@@ -76,18 +76,18 @@ export default function LegalDocPage() {
 
         {loading ? (
           <div className="animate-pulse space-y-4">
-            <div className="h-10 bg-white/5 rounded w-1/3"></div>
-            <div className="h-4 bg-white/5 rounded w-1/4 mb-10"></div>
-            <div className="h-4 bg-white/5 rounded w-full"></div>
-            <div className="h-4 bg-white/5 rounded w-full"></div>
-            <div className="h-4 bg-white/5 rounded w-5/6"></div>
+            <div className="h-10 bg-card-element rounded w-1/3"></div>
+            <div className="h-4 bg-card-element rounded w-1/4 mb-10"></div>
+            <div className="h-4 bg-card-element rounded w-full"></div>
+            <div className="h-4 bg-card-element rounded w-full"></div>
+            <div className="h-4 bg-card-element rounded w-5/6"></div>
           </div>
         ) : content ? (
           <>
-            <div className="markdown-body prose prose-invert prose-slate max-w-none 
-                            prose-headings:text-white prose-p:text-[#a1a1aa] prose-li:text-[#a1a1aa]
+            <div className="markdown-body prose dark:prose-invert prose-slate max-w-none 
+                            prose-headings:text-text-primary prose-p:text-text-secondary prose-li:text-text-secondary
                             prose-a:text-[#11A8FD] hover:prose-a:text-[#11A8FD]/80
-                            prose-strong:text-white prose-strong:font-medium">
+                            prose-strong:text-text-primary prose-strong:font-medium">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>
                 {content}
               </ReactMarkdown>
@@ -107,13 +107,13 @@ export default function LegalDocPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="linear-card p-12 md:p-24 rounded-3xl bg-black border border-white/10 text-center relative overflow-hidden"
+            className="linear-card p-12 md:p-24 rounded-3xl bg-bg-primary border border-card-border text-center relative overflow-hidden"
           >
-            <div className="w-20 h-20 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-8 border border-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
-              <FileText className="w-10 h-10 text-[#a1a1aa]" />
+            <div className="w-20 h-20 bg-card-element rounded-2xl flex items-center justify-center mx-auto mb-8 border border-card-border shadow-[inset_0_1px_1px_var(--border-subtle)]">
+              <FileText className="w-10 h-10 text-text-secondary" />
             </div>
-            <h3 className="text-2xl font-bold text-white mb-4">{title}</h3>
-            <p className="text-lg text-[#a1a1aa] font-light mb-10 max-w-md mx-auto leading-relaxed">
+            <h3 className="text-2xl font-bold text-text-primary mb-4">{title}</h3>
+            <p className="text-lg text-text-secondary font-light mb-10 max-w-md mx-auto leading-relaxed">
               This document will be available soon. Please check back later or contact support if you have immediate questions.
             </p>
             <Link 

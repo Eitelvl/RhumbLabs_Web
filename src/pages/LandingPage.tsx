@@ -61,7 +61,7 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="bg-[#000000] text-white min-h-screen selection:bg-white/20 selection:text-white">
+    <div className="bg-bg-primary text-text-primary min-h-screen selection:bg-card-border selection:text-text-primary">
       <TopBar />
 
       {/* Modern Hero Section */}
@@ -75,22 +75,22 @@ export default function LandingPage() {
            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
            className="z-20 max-w-5xl mx-auto"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-sm font-medium text-slate-300 mb-10 shadow-xl">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-card-border bg-card-element backdrop-blur-md text-sm font-medium text-text-secondary mb-10 shadow-xl">
             <span className="w-2 h-2 rounded-full bg-green-400 shadow-[0_0_8px_rgba(74,222,128,0.8)] animate-pulse"></span>
             Building the next generation of software
           </div>
           
-          <h1 className="text-5xl md:text-7xl lg:text-[6rem] font-bold tracking-tighter mb-8 leading-[1.05] text-white font-headline">
+          <h1 className="text-5xl md:text-7xl lg:text-[6rem] font-bold tracking-tighter mb-8 leading-[1.05] text-text-primary font-headline">
             Digital products <br className="hidden md:block" />
-            <span className="text-[#8A8F98]">built with purpose.</span>
+            <span className="text-text-secondary">built with purpose.</span>
           </h1>
           
-          <p className="text-xl md:text-2xl text-[#8A8F98] font-light max-w-3xl mx-auto tracking-tight mb-12 leading-relaxed">
+          <p className="text-xl md:text-2xl text-text-secondary font-light max-w-3xl mx-auto tracking-tight mb-12 leading-relaxed">
             We focus on creating reliable, intuitive, and beautifully crafted software.
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-             <Link to="#products" className="group relative inline-flex items-center justify-center gap-2 h-14 px-8 rounded-full bg-white text-black font-medium transition-transform hover:scale-105 active:scale-95 shadow-[0_0_40px_rgba(255,255,255,0.2)]">
+             <Link to="#products" className="group relative inline-flex items-center justify-center gap-2 h-14 px-8 rounded-full bg-accent text-accent-foreground font-medium transition-transform hover:scale-105 active:scale-95 shadow-[0_0_40px_var(--shadow-btn)]">
                Our Products
                <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
              </Link>
@@ -99,12 +99,12 @@ export default function LandingPage() {
       </section>
 
       {/* Expanded Products Section */}
-      <section id="products" className="py-24 md:py-40 bg-[#000000] scroll-mt-20">
+      <section id="products" className="py-24 md:py-40 bg-bg-primary scroll-mt-20">
         <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
           
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 md:mb-24">
             <div>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-white">Our Products</h2>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-text-primary">Our Products</h2>
             </div>
           </div>
 
@@ -115,32 +115,32 @@ export default function LandingPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.8 }}
-              className="snap-center shrink-0 w-full max-w-[1300px] group relative rounded-[2rem] md:rounded-[3rem] border border-white/10 bg-[#0a0b0d] overflow-hidden"
+              className="snap-center shrink-0 w-full max-w-[1300px] group relative rounded-[2rem] md:rounded-[3rem] border border-card-border bg-bg-secondary overflow-hidden"
             >
               <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-blue-500/5 rounded-full blur-[100px] pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
               
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 p-8 md:p-16 lg:p-24 relative z-10">
-                <div className="lg:col-span-6 xl:col-span-5 flex flex-col justify-center">
+              <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 lg:gap-16 p-8 md:p-16 lg:p-24 relative z-10">
+                <div className="xl:col-span-5 flex flex-col justify-center">
                   <div className="relative mb-6 md:mb-8 self-start flex items-center h-16 md:h-20 w-64 md:w-80">
-                    <img src="/logo_horizontal.png" alt="RhumbNav" className="w-[220px] md:w-[300px] h-auto object-contain scale-[1.3] md:scale-[1.4] origin-left" />
+                    <img src="/logo_horizontal.png" alt="RhumbNav" className="white-logo w-[220px] md:w-[300px] h-auto object-contain scale-[1.3] md:scale-[1.4] origin-left" />
                   </div>
-                  <h3 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight leading-tight">Aviation precision <br className="hidden lg:block"/>in your pocket.</h3>
-                  <p className="text-[#8A8F98] text-lg md:text-xl leading-relaxed mb-10 font-light max-w-lg">
+                  <h3 className="text-4xl md:text-5xl font-bold text-text-primary mb-6 tracking-tight leading-tight">Aviation precision <br className="hidden xl:block"/>in your pocket.</h3>
+                  <p className="text-text-secondary text-lg md:text-xl leading-relaxed mb-10 font-light max-w-lg">
                     The all-in-one flight planning, navigation, and logbook platform designed exclusively for modern pilots. Beautifully complex, incredibly simple to use.
                   </p>
                   
                   <div className="space-y-4 mb-12">
                     {['Complete VFR Navigation', 'Digital Logbook & Pilot Credentials', 'Real-time Weather & Airport Info', 'Advanced E6B Flight Computer'].map(feature => (
                       <div key={feature} className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
-                           <CheckCircle2 className="text-white w-5 h-5 opacity-70" />
+                        <div className="w-10 h-10 rounded-full bg-card-element border border-card-border flex items-center justify-center shrink-0">
+                           <CheckCircle2 className="text-text-primary w-5 h-5 opacity-70" />
                         </div>
-                        <span className="text-white/80 font-medium">{feature}</span>
+                        <span className="text-text-secondary font-medium">{feature}</span>
                       </div>
                     ))}
                   </div>
                   
-                  <Link to="/rhumbnav" className="inline-flex items-center justify-center gap-2 h-14 px-8 rounded-full bg-white text-black font-medium w-fit hover:bg-[#e0e5f4] transition-colors relative overflow-hidden group/btn">
+                  <Link to="/rhumbnav" className="inline-flex items-center justify-center gap-2 h-14 px-8 rounded-full bg-accent text-accent-foreground font-medium w-fit hover:opacity-80 hover:bg-accent transition-colors relative overflow-hidden group/btn">
                     <span className="relative z-10 flex items-center gap-2">
                        Discover RhumbNav
                        <ArrowRight className="w-5 h-5 transition-transform group-hover/btn:translate-x-1" />
@@ -148,17 +148,17 @@ export default function LandingPage() {
                   </Link>
                 </div>
                 
-                <div className="lg:col-span-6 xl:col-span-7 flex justify-end items-center relative mt-16 md:mt-0 lg:mt-0 min-h-[400px] md:min-h-[500px] overflow-visible">
-                  <div className="flex flex-row items-center justify-center w-[150%] md:w-[180%] lg:w-[190%] max-w-[950px] md:max-w-[1300px] mt-10 md:mt-0 z-10 relative left-0 md:left-[2%] lg:left-[4%]">
+                <div className="xl:col-span-7 flex justify-center xl:justify-end items-center relative mt-16 md:mt-24 xl:mt-0 min-h-[400px] md:min-h-[500px] xl:min-h-0 overflow-visible">
+                  <div className="flex flex-row items-center justify-center w-[150%] md:w-[100%] xl:w-[190%] max-w-[950px] xl:max-w-[1300px] mt-10 md:mt-0 z-10 relative left-0 xl:left-[4%]">
                     <DeviceMockup 
                       type="tablet"
-                      className="w-[75%] md:w-[73%] shadow-[0_30px_100px_rgba(0,0,0,0.8)] z-10"
+                      className="w-[75%] md:w-[73%] shadow-[0_30px_100px_var(--shadow-heavy)] z-10"
                       imageSrc="/LogbookTablet.jpeg"
                       alt="RhumbNav Tablet Interface"
                     />
                     <DeviceMockup 
                       type="phone"
-                      className="w-[31%] md:w-[32%] shadow-[-20px_30px_80px_rgba(0,0,0,0.8)] z-20 -ml-[8%] md:-ml-[6%]"
+                      className="w-[31%] md:w-[32%] shadow-[-20px_30px_80px_var(--shadow-heavy)] z-20 -ml-[8%] md:-ml-[6%]"
                       imageSrc="/FPL.jpeg"
                       alt="RhumbNav Mobile Interface"
                     />
@@ -173,41 +173,41 @@ export default function LandingPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.8 }}
-              className="snap-center shrink-0 w-full max-w-[1300px] group relative rounded-[2rem] md:rounded-[3rem] border border-white/10 bg-[#0a0b0d] overflow-hidden"
+              className="snap-center shrink-0 w-full max-w-[1300px] group relative rounded-[2rem] md:rounded-[3rem] border border-card-border bg-bg-secondary overflow-hidden"
             >
               <div className="absolute top-0 left-0 w-[800px] h-[800px] bg-purple-500/5 rounded-full blur-[100px] pointer-events-none -translate-y-1/2 -translate-x-1/3"></div>
               
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 p-8 md:p-16 lg:p-24 relative z-10">
-                <div className="lg:col-span-6 xl:col-span-7 order-2 lg:order-1 flex justify-center lg:justify-start items-center relative mt-16 md:mt-0">
-                   <div className="relative w-full max-w-[320px] lg:max-w-[380px] aspect-[9/19] flex justify-center items-center">
+              <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 lg:gap-16 p-8 md:p-16 lg:p-24 relative z-10">
+                <div className="xl:col-span-7 order-2 xl:order-1 flex justify-center xl:justify-start items-center relative mt-16 md:mt-24 xl:mt-0">
+                   <div className="relative w-full max-w-[320px] md:max-w-[450px] xl:max-w-[380px] aspect-[9/19] flex justify-center items-center">
                      <DeviceMockup 
                         type="phone"
-                        className="w-full z-20 shadow-[0_40px_100px_rgba(0,0,0,0.8)]"
+                        className="w-full z-20 shadow-[0_40px_100px_var(--shadow-heavy)]"
                         imageSrc="/pogo/summary_v.jpeg"
                         alt="Pogo Mobile Interface"
                      />
                   </div>
                 </div>
                 
-                <div className="lg:col-span-6 xl:col-span-5 order-1 lg:order-2 flex flex-col justify-center">
+                <div className="xl:col-span-5 order-1 xl:order-2 flex flex-col justify-center">
                   <div className="relative mb-6 self-start flex items-center h-16 md:h-20 w-56 md:w-72 -ml-12 md:-ml-16">
-                    <img src="/pogo/Pogo2.png" alt="Pogo" className="w-[240px] md:w-[320px] h-auto object-contain scale-[1.3] md:scale-[1.5] origin-left -translate-y-6" />
+                    <img src="/pogo/Pogo2.png" alt="Pogo" className="white-logo w-[240px] md:w-[320px] h-auto object-contain scale-[1.3] md:scale-[1.5] origin-left -translate-y-6" />
                   </div>
-                  <h3 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight leading-tight">Climb higher, <br className="hidden lg:block"/>track smarter.</h3>
-                  <p className="text-[#8A8F98] text-lg md:text-xl leading-relaxed mb-10 font-light max-w-lg">
+                  <h3 className="text-4xl md:text-5xl font-bold text-text-primary mb-6 tracking-tight leading-tight">Climb higher, <br className="hidden xl:block"/>track smarter.</h3>
+                  <p className="text-text-secondary text-lg md:text-xl leading-relaxed mb-10 font-light max-w-lg">
                     Log your bouldering sessions, visualize your progress over time, and stay motivated. Built specifically for the climbing community.
                   </p>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12">
                     {['Track Grades', 'Performance Analytics', 'Gym-Based Grades', 'Session Logging'].map(feature => (
                       <div key={feature} className="flex items-center gap-3">
-                         <div className="w-2 h-2 rounded-full bg-white/20"></div>
-                        <span className="text-white/80 font-medium">{feature}</span>
+                         <div className="w-2 h-2 rounded-full bg-card-border"></div>
+                        <span className="text-text-secondary font-medium">{feature}</span>
                       </div>
                     ))}
                   </div>
                   
-                  <Link to="/pogo" className="inline-flex items-center justify-center gap-2 h-14 px-8 rounded-full bg-white text-black font-medium w-fit hover:bg-[#e0e5f4] transition-colors group">
+                  <Link to="/pogo" className="inline-flex items-center justify-center gap-2 h-14 px-8 rounded-full bg-accent text-accent-foreground font-medium w-fit hover:opacity-80 hover:bg-accent transition-colors group">
                     Explore Pogo
                     <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                   </Link>
@@ -222,7 +222,7 @@ export default function LandingPage() {
                 setActiveCard(0); 
                 carouselRef.current?.scrollTo({ left: 0, behavior: 'smooth' }); 
               }} 
-              className={`h-2.5 rounded-full transition-all duration-300 ${activeCard === 0 ? 'bg-white w-8' : 'bg-white/30 hover:bg-white/50 w-2.5'}`} 
+              className={`h-2.5 rounded-full transition-all duration-300 ${activeCard === 0 ? 'bg-accent w-8' : 'bg-card-border hover:bg-border-subtle w-2.5'}`} 
               aria-label="View RhumbNav card"
             />
             <button 
@@ -230,7 +230,7 @@ export default function LandingPage() {
                 setActiveCard(1); 
                 carouselRef.current?.scrollTo({ left: carouselRef.current?.scrollWidth || 0, behavior: 'smooth' }); 
               }} 
-              className={`h-2.5 rounded-full transition-all duration-300 ${activeCard === 1 ? 'bg-white w-8' : 'bg-white/30 hover:bg-white/50 w-2.5'}`} 
+              className={`h-2.5 rounded-full transition-all duration-300 ${activeCard === 1 ? 'bg-accent w-8' : 'bg-card-border hover:bg-border-subtle w-2.5'}`} 
               aria-label="View Pogo card"
             />
           </div>
@@ -239,18 +239,18 @@ export default function LandingPage() {
       </section>
 
       {/* Modern About / Manifesto Section */}
-      <section id="about" className="py-32 md:py-48 relative border-t border-white/5 scroll-mt-20">
-         <div className="absolute inset-0 bg-[#050505]"></div>
+      <section id="about" className="py-32 md:py-48 relative border-t border-border-subtle scroll-mt-20">
+         <div className="absolute inset-0 bg-bg-secondary opacity-50"></div>
          <div className="max-w-4xl mx-auto px-6 lg:px-12 text-center relative z-10">
-           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-white mb-10">
+           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-text-primary mb-10">
              Crafting Software <br className="hidden md:block"/> with intention.
            </h2>
            
-           <p className="text-xl md:text-3xl text-[#8A8F98] font-light leading-snug mb-16 text-balance">
+           <p className="text-xl md:text-3xl text-text-secondary font-light leading-snug mb-16 text-balance">
              We care deeply about clarity, functionality, and creating tools that feel intuitive from the very first tap. By bringing together design and robust engineering, we shape digital products that are simple, reliable, and built with purpose.
            </p>
            
-           <Link to="/contact" className="inline-flex items-center justify-center gap-2 h-14 px-10 rounded-full bg-white/5 border border-white/10 text-white font-medium hover:bg-white/10 transition-colors">
+           <Link to="/contact" className="inline-flex items-center justify-center gap-2 h-14 px-10 rounded-full bg-card-element border border-card-border text-text-primary font-medium hover:bg-card-border transition-colors">
              Get in touch
            </Link>
          </div>
