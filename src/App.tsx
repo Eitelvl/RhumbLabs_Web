@@ -15,8 +15,11 @@ import TermsPage from './pages/TermsPage';
 import ScrollToTop from './components/ScrollToTop';
 
 export default function App() {
+  // Use Vite's BASE_URL and strip any trailing slash. Note: If BASE_URL is just '/', it remains '/'
+  const basename = import.meta.env.BASE_URL ? import.meta.env.BASE_URL.replace(/\/$/, '') : '/';
+
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<LandingPage />} />

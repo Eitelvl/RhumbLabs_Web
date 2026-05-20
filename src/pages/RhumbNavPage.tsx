@@ -34,7 +34,8 @@ export default function RhumbNavPage() {
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
               className="inline-flex items-center justify-center mb-8 relative h-20 md:h-28 w-64 md:w-96"
             >
-              <img src="/logo_horizontal.png" alt="RhumbNav Logo" className="white-logo w-[240px] md:w-[360px] h-auto object-contain scale-[1.3] md:scale-[1.4] origin-center" />
+              <img src={`${import.meta.env.BASE_URL}pogo/RN2.png`} alt="RhumbNav Logo" className="show-in-light w-[240px] md:w-[360px] h-auto object-contain scale-[1.3] md:scale-[1.4] origin-center" />
+              <img src={`${import.meta.env.BASE_URL}logo_horizontal.png`} alt="RhumbNav Logo" className="show-in-dark w-[240px] md:w-[360px] h-auto object-contain scale-[1.3] md:scale-[1.4] origin-center" />
             </motion.div>
             
             <motion.h1 
@@ -92,7 +93,7 @@ export default function RhumbNavPage() {
                       <DeviceMockup 
                         type="phone"
                         className="w-[50%] max-w-[280px] shadow-[0_20px_60px_var(--shadow-medium)]"
-                        imageSrc="/computer.jpeg"
+                        imageSrc={`${import.meta.env.BASE_URL}computer.jpeg`}
                         alt="Precision Calculation"
                       />
                    </motion.div>
@@ -111,7 +112,7 @@ export default function RhumbNavPage() {
                       <DeviceMockup 
                         type="phone"
                         className="w-[60%] md:w-[65%] max-w-[260px] shadow-[0_20px_60px_var(--shadow-heavy)]"
-                        imageSrc="/allFlight.jpeg"
+                        imageSrc={`${import.meta.env.BASE_URL}allFlight.jpeg`}
                         alt="Logbook Phone"
                       />
                    </motion.div>
@@ -140,7 +141,7 @@ export default function RhumbNavPage() {
                      <DeviceMockup 
                         type="phone"
                         className="w-[70%] md:w-[65%] max-w-[340px] shadow-[0_30px_80px_var(--shadow-heavy)] z-10"
-                        imageSrc="/license.jpeg"
+                        imageSrc={`${import.meta.env.BASE_URL}license.jpeg`}
                         alt="Licenses Interface"
                      />
                    </motion.div>
@@ -177,13 +178,13 @@ export default function RhumbNavPage() {
                      <DeviceMockup 
                         type="tablet"
                         className="w-[75%] md:w-[73%] shadow-[0_30px_80px_var(--shadow-heavy)] z-10"
-                        imageSrc="/nav.jpeg"
+                        imageSrc={`${import.meta.env.BASE_URL}nav.jpeg`}
                         alt="Confident Flying Interface"
                      />
                      <DeviceMockup 
                         type="phone"
                         className="w-[31%] md:w-[32%] shadow-[-20px_20px_60px_var(--shadow-heavy)] z-20 -ml-[8%] md:-ml-[6%]"
-                        imageSrc="/FPL.jpeg"
+                        imageSrc={`${import.meta.env.BASE_URL}FPL.jpeg`}
                         alt="Flight Plan Interface"
                      />
                    </div>

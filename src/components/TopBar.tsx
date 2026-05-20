@@ -89,9 +89,8 @@ export default function TopBar() {
       <div className="flex justify-between items-center px-6 md:px-12 max-w-7xl mx-auto">
         <div className="flex items-center">
           <Link to="/" onClick={(e) => scrollToSection(e, 'home')} className="logo-container flex items-center group relative h-12 w-48 md:w-64 -ml-4 md:-ml-6">
-            <img src="/pogo/RL1N.png" alt="Rhumb Labs" className="show-in-light w-[150px] md:w-[200px] h-auto object-contain scale-[1.1] md:scale-[1.2] origin-left translate-y-0.5" />
-            <img src="/pogo/RL1.png" alt="Rhumb Labs" className="show-in-dark w-[150px] md:w-[200px] h-auto object-contain scale-[1.1] md:scale-[1.2] origin-left translate-y-0.5" />
-
+            <img src={`${import.meta.env.BASE_URL}pogo/RL1N.png`} alt="Rhumb Labs" className="show-in-light w-[150px] md:w-[200px] h-auto object-contain scale-[1.1] md:scale-[1.2] origin-left translate-y-0.5" />
+            <img src={`${import.meta.env.BASE_URL}pogo/RL1.png`} alt="Rhumb Labs" className="show-in-dark w-[150px] md:w-[200px] h-auto object-contain scale-[1.1] md:scale-[1.2] origin-left translate-y-0.5" />
           </Link>
         </div>
 
@@ -138,9 +137,9 @@ export default function TopBar() {
             className="md:hidden bg-bg-secondary border-b border-border-subtle overflow-hidden"
           >
             <div className="py-6 px-6 flex flex-col gap-4">
-              <Link to="/#home" onClick={(e) => scrollToSection(e, 'home')} className="text-xl font-medium text-text-secondary hover:text-text-primary">Home</Link>
-              <Link to="/#products" onClick={(e) => scrollToSection(e, 'products')} className="text-xl font-medium text-text-secondary hover:text-text-primary">Products</Link>
-              <Link to="/#about" onClick={(e) => scrollToSection(e, 'about')} className="text-xl font-medium text-text-secondary hover:text-text-primary">About</Link>
+              <a href={`${basename}/#home`} onClick={(e) => scrollToSection(e, 'home')} className="text-xl font-medium text-text-secondary hover:text-text-primary">Home</a>
+              <a href={`${basename}/#products`} onClick={(e) => scrollToSection(e, 'products')} className="text-xl font-medium text-text-secondary hover:text-text-primary">Products</a>
+              <a href={`${basename}/#about`} onClick={(e) => scrollToSection(e, 'about')} className="text-xl font-medium text-text-secondary hover:text-text-primary">About</a>
               <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)} className="text-xl font-medium text-text-secondary hover:text-text-primary">Contact</Link>
             </div>
           </motion.div>

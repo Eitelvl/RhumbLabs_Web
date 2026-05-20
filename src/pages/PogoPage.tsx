@@ -33,7 +33,8 @@ export default function PogoPage() {
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
               className="inline-flex items-center justify-center mb-8 relative h-20 md:h-28 w-64 md:w-80"
             >
-              <img src="/pogo/Pogo2.png" alt="Pogo Logo" className="white-logo w-[220px] md:w-[320px] h-auto object-contain scale-[1.3] md:scale-[1.5] origin-center" />
+              <img src={`${import.meta.env.BASE_URL}pogo/Pogo5.png`} alt="Pogo Logo" className="show-in-light w-[220px] md:w-[320px] h-auto object-contain scale-[1.3] md:scale-[1.5] origin-center" />
+              <img src={`${import.meta.env.BASE_URL}pogo/Pogo2.png`} alt="Pogo Logo" className="show-in-dark w-[220px] md:w-[320px] h-auto object-contain scale-[1.3] md:scale-[1.5] origin-center" />
             </motion.div>
             
             <motion.h1 
@@ -91,7 +92,7 @@ export default function PogoPage() {
                       <DeviceMockup 
                         type="phone"
                         className="w-[60%] md:w-[70%] max-w-[300px] shadow-[0_20px_60px_var(--shadow-heavy)] rotate-[-4deg]"
-                        imageSrc="/pogo/sesion_activa.jpeg"
+                        imageSrc={`${import.meta.env.BASE_URL}pogo/sesion_activa.jpeg`}
                         alt="Log Session"
                       />
                    </motion.div>
@@ -116,7 +117,7 @@ export default function PogoPage() {
                    <DeviceMockup 
                       type="phone"
                       className="w-[50%] max-w-[250px] shadow-[0_20px_50px_var(--shadow-medium)]"
-                      imageSrc="/pogo/summary_active_v.jpeg"
+                      imageSrc={`${import.meta.env.BASE_URL}pogo/summary_active_v.jpeg`}
                       alt="Clear Progression"
                    />
                 </div>
@@ -140,7 +141,7 @@ export default function PogoPage() {
                    <DeviceMockup 
                       type="phone"
                       className="w-[50%] max-w-[250px] shadow-[0_20px_50px_var(--shadow-medium)]"
-                      imageSrc="/pogo/gymdetalle.jpeg"
+                      imageSrc={`${import.meta.env.BASE_URL}pogo/gymdetalle.jpeg`}
                       alt="Your Gym's Grades"
                    />
                 </div>

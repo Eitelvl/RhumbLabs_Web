@@ -122,7 +122,8 @@ export default function LandingPage() {
               <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 lg:gap-16 p-8 md:p-16 lg:p-24 relative z-10">
                 <div className="xl:col-span-5 flex flex-col justify-center">
                   <div className="relative mb-6 md:mb-8 self-start flex items-center h-16 md:h-20 w-64 md:w-80">
-                    <img src="/logo_horizontal.png" alt="RhumbNav" className="white-logo w-[220px] md:w-[300px] h-auto object-contain scale-[1.3] md:scale-[1.4] origin-left" />
+                    <img src={`${import.meta.env.BASE_URL}pogo/RN2.png`} alt="RhumbNav" className="show-in-light w-[220px] md:w-[300px] h-auto object-contain scale-[1.3] md:scale-[1.4] origin-left" />
+                    <img src={`${import.meta.env.BASE_URL}logo_horizontal.png`} alt="RhumbNav" className="show-in-dark w-[220px] md:w-[300px] h-auto object-contain scale-[1.3] md:scale-[1.4] origin-left" />
                   </div>
                   <h3 className="text-4xl md:text-5xl font-bold text-text-primary mb-6 tracking-tight leading-tight">Aviation precision <br className="hidden xl:block"/>in your pocket.</h3>
                   <p className="text-text-secondary text-lg md:text-xl leading-relaxed mb-10 font-light max-w-lg">
@@ -153,13 +154,13 @@ export default function LandingPage() {
                     <DeviceMockup 
                       type="tablet"
                       className="w-[75%] md:w-[73%] shadow-[0_30px_100px_var(--shadow-heavy)] z-10"
-                      imageSrc="/LogbookTablet.jpeg"
+                      imageSrc={`${import.meta.env.BASE_URL}LogbookTablet.jpeg`}
                       alt="RhumbNav Tablet Interface"
                     />
                     <DeviceMockup 
                       type="phone"
                       className="w-[31%] md:w-[32%] shadow-[-20px_30px_80px_var(--shadow-heavy)] z-20 -ml-[8%] md:-ml-[6%]"
-                      imageSrc="/FPL.jpeg"
+                      imageSrc={`${import.meta.env.BASE_URL}FPL.jpeg`}
                       alt="RhumbNav Mobile Interface"
                     />
                   </div>
@@ -183,7 +184,7 @@ export default function LandingPage() {
                      <DeviceMockup 
                         type="phone"
                         className="w-full z-20 shadow-[0_40px_100px_var(--shadow-heavy)]"
-                        imageSrc="/pogo/summary_v.jpeg"
+                        imageSrc={`${import.meta.env.BASE_URL}pogo/summary_v.jpeg`}
                         alt="Pogo Mobile Interface"
                      />
                   </div>
@@ -191,7 +192,8 @@ export default function LandingPage() {
                 
                 <div className="xl:col-span-5 order-1 xl:order-2 flex flex-col justify-center">
                   <div className="relative mb-6 self-start flex items-center h-16 md:h-20 w-56 md:w-72 -ml-12 md:-ml-16">
-                    <img src="/pogo/Pogo2.png" alt="Pogo" className="white-logo w-[240px] md:w-[320px] h-auto object-contain scale-[1.3] md:scale-[1.5] origin-left -translate-y-6" />
+                    <img src={`${import.meta.env.BASE_URL}pogo/Pogo5.png`} alt="Pogo" className="show-in-light w-[240px] md:w-[320px] h-auto object-contain scale-[1.3] md:scale-[1.5] origin-left -translate-y-6" />
+                    <img src={`${import.meta.env.BASE_URL}pogo/Pogo2.png`} alt="Pogo" className="show-in-dark w-[240px] md:w-[320px] h-auto object-contain scale-[1.3] md:scale-[1.5] origin-left -translate-y-6" />
                   </div>
                   <h3 className="text-4xl md:text-5xl font-bold text-text-primary mb-6 tracking-tight leading-tight">Climb higher, <br className="hidden xl:block"/>track smarter.</h3>
                   <p className="text-text-secondary text-lg md:text-xl leading-relaxed mb-10 font-light max-w-lg">

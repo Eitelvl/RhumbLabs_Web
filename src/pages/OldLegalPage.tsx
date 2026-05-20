@@ -86,8 +86,8 @@ export default function LegalPage() {
         <div className="flex justify-between items-center mb-8">
           <div className="flex items-center">
             <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center h-12 md:h-16">
-              <img src="/pogo/RL1N.png" alt="Rhumb Labs" className="show-in-light h-full w-auto object-left object-contain scale-[2] md:scale-[2.5] origin-left -translate-x-4 md:-translate-x-8" />
-              <img src="/pogo/RL1.png" alt="Rhumb Labs" className="show-in-dark h-full w-auto object-left object-contain scale-[2] md:scale-[2.5] origin-left -translate-x-4 md:-translate-x-8" />
+              <img src={`${import.meta.env.BASE_URL}pogo/RL1N.png`} alt="Rhumb Labs" className="show-in-light h-full w-auto object-left object-contain scale-[2] md:scale-[2.5] origin-left -translate-x-4 md:-translate-x-8" />
+              <img src={`${import.meta.env.BASE_URL}pogo/RL1.png`} alt="Rhumb Labs" className="show-in-dark h-full w-auto object-left object-contain scale-[2] md:scale-[2.5] origin-left -translate-x-4 md:-translate-x-8" />
 
             </Link>
           </div>
