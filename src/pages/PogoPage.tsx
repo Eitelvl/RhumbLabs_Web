@@ -81,7 +81,7 @@ export default function PogoPage() {
                   <div className="w-14 h-14 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-8">
                      <NotebookPen className="w-6 h-6 text-purple-400" />
                   </div>
-                  <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">Log every session</h2>
+                  <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6"></h2>
                   <p className="text-text-secondary text-lg md:text-xl font-light leading-relaxed max-w-xl">
                     Log your bouldering sessions, attempts, completed problems, grades, climbing time, and personal notes. Pogo keeps your history organized to make your progression tangible.
                   </p>

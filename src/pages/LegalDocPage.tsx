@@ -68,7 +68,7 @@ export default function LegalDocPage() {
         
         <header className="mb-12">
           <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-text-secondary mb-4">
-            <Link to="/legal" className="hover:text-text-primary transition-colors">Legal Center</Link>
+            <Link to="/legal" className="hover:text-text-primary transition-colors"></Link>
             <ChevronRight className="w-3 h-3" />
             <span>{subtitle}</span>
           </div>
