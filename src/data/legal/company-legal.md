@@ -1,6 +1,6 @@
 # Company Legal Information
 
-**Effective Date:** January 1, 2024
+**Effective Date:** June 9, 2026
 
 Rhumb Labs is committed to operating with transparency and adhering to all applicable laws and regulations. This document outlines general legal information regarding our corporate entity and operations.
 
@@ -23,4 +23,4 @@ These terms and your use of our products are governed by the applicable laws of 
 We may update this legal information periodically. The latest version will always be available on our website.
 
 ## Contact Information
-If you have any questions or concerns regarding our legal information, please contact us through our website.
+If you have any questions or concerns regarding our legal information, please contact us at [support@rhumblabs.com](mailto:support@rhumblabs.com) or through our website.
