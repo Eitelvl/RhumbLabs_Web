@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import { Link } from 'react-router-dom';
 import TopBar from '../components/TopBar';
 import Footer from '../components/Footer';
 import { Mail, MapPin, ArrowUpRight } from 'lucide-react';
@@ -100,6 +101,10 @@ export default function ContactPage() {
                       <span className="text-sm text-text-secondary font-medium">App Support</span>
                       <ArrowUpRight className="w-4 h-4 text-text-secondary group-hover:text-text-secondary transition-colors" />
                     </a>
+                    <Link to="/pogo/delete-account" className="sm:col-span-2 flex items-center justify-between p-3 rounded-lg border border-red-500/20 bg-red-500/5 hover:bg-red-500/10 transition-colors group">
+                      <span className="text-sm text-red-400 font-medium tracking-wide">Delete my Pogo account</span>
+                      <ArrowUpRight className="w-4 h-4 text-red-400 group-hover:text-red-300 transition-colors" />
+                    </Link>
                   </div>
                 </div>
               </div>

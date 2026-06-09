@@ -10,6 +10,7 @@ import LegalDocPage from './pages/LegalDocPage';
 import ContactPage from './pages/ContactPage';
 import RhumbNavPage from './pages/RhumbNavPage';
 import PogoPage from './pages/PogoPage';
+import PogoDeleteAccountPage from './pages/PogoDeleteAccountPage';
 import PrivacyPage from './pages/PrivacyPage';
 import TermsPage from './pages/TermsPage';
 import ScrollToTop from './components/ScrollToTop';
@@ -29,6 +30,7 @@ export default function App() {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/rhumbnav" element={<RhumbNavPage />} />
         <Route path="/pogo" element={<PogoPage />} />
+        <Route path="/pogo/delete-account" element={<PogoDeleteAccountPage />} />
       </Routes>
     </BrowserRouter>
   );

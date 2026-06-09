@@ -132,9 +132,9 @@ export default function PogoPage() {
                   <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-8">
                      <MapPin className="w-6 h-6 text-emerald-400" />
                   </div>
-                  <h3 className="text-2xl md:text-3xl font-bold tracking-tight mb-4">Your Gym's Grades</h3>
+                  <h3 className="text-2xl md:text-3xl font-bold tracking-tight mb-4">Unlock Achievements</h3>
                   <p className="text-text-secondary text-base md:text-lg font-light leading-relaxed">
-                    Configure your gym, use its real colors and grades, and log boulder, route, or mixed sessions with a scale adapted to where you climb.
+                    Push your limits and unlock achievements. Log boulder, route, or mixed sessions with a scale adapted to where you climb.
                   </p>
                 </div>
                 <div className="flex-1 relative flex items-center justify-center mt-auto pb-10">
@@ -142,7 +142,7 @@ export default function PogoPage() {
                       type="phone"
                       className="w-[50%] max-w-[250px] shadow-[0_20px_50px_var(--shadow-medium)]"
                       imageSrc={`${import.meta.env.BASE_URL}pogo/gymdetalle.jpeg`}
-                      alt="Your Gym's Grades"
+                      alt="Unlock Achievements"
                    />
                 </div>
              </motion.div>

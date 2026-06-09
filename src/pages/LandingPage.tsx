@@ -86,7 +86,7 @@ export default function LandingPage() {
           </h1>
           
           <p className="text-xl md:text-2xl text-text-secondary font-light max-w-3xl mx-auto tracking-tight mb-12 leading-relaxed">
-            Desarrollo de aplicaciones móviles y soluciones SaaS. We focus on creating reliable, intuitive, and beautifully crafted software.
+            We focus on creating reliable, intuitive, and beautifully crafted software.
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -201,7 +201,7 @@ export default function LandingPage() {
                   </p>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12">
-                    {['Track Grades', 'Performance Analytics', 'Gym-Based Grades', 'Session Logging'].map(feature => (
+                    {['Track Grades', 'Performance Analytics', 'Unlock Achievements', 'Session Logging'].map(feature => (
                       <div key={feature} className="flex items-center gap-3">
                          <div className="w-2 h-2 rounded-full bg-card-border"></div>
                         <span className="text-text-secondary font-medium">{feature}</span>
