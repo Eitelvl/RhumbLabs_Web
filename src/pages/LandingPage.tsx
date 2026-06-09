@@ -15,6 +15,7 @@ const AndroidIcon = ({ className }: { className?: string }) => (
 export default function LandingPage() {
   const location = useLocation();
   const [activeCard, setActiveCard] = useState(0);
+  const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
   const carouselRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -30,6 +31,8 @@ export default function LandingPage() {
   }, [location]);
 
   useEffect(() => {
+    if (!autoScrollEnabled) return;
+
     const interval = setInterval(() => {
       setActiveCard(prev => {
         const next = prev === 0 ? 1 : 0;
@@ -43,10 +46,16 @@ export default function LandingPage() {
         }
         return next;
       });
-    }, 10000);
+    }, 20000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [autoScrollEnabled]);
+
+  const stopAutoScroll = () => {
+    if (autoScrollEnabled) {
+      setAutoScrollEnabled(false);
+    }
+  };
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const scrollLeft = e.currentTarget.scrollLeft;
@@ -108,7 +117,17 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div id="products-carousel" ref={carouselRef} onScroll={handleScroll} className="flex overflow-x-auto snap-x snap-mandatory gap-8 pb-4 no-scrollbar scroll-smooth -mx-6 px-6 lg:-mx-12 lg:px-12" style={{ scrollbarWidth: 'none' }}>
+          <div 
+            id="products-carousel" 
+            ref={carouselRef} 
+            onScroll={handleScroll} 
+            onPointerDown={stopAutoScroll}
+            onTouchStart={stopAutoScroll}
+            onWheel={stopAutoScroll}
+            onKeyDown={stopAutoScroll}
+            className="flex overflow-x-auto snap-x snap-mandatory gap-8 pb-4 no-scrollbar scroll-smooth -mx-6 px-6 lg:-mx-12 lg:px-12" 
+            style={{ scrollbarWidth: 'none' }}
+          >
             {/* RhumbNav - Epic Layout */}
             <motion.div 
               initial={{ opacity: 0, y: 40 }}
