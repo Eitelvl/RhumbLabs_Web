@@ -68,11 +68,14 @@ export default function TopBar() {
   }, [isHomeRoute, isContactRoute, isRhumbNavRoute, isPogoRoute]);
 
   const scrollToSection = (e: React.MouseEvent, sectionId: string) => {
+    setIsMobileMenuOpen(false);
+
     if (isHomeRoute) {
       e.preventDefault();
-      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
-      window.history.pushState(null, '', sectionId === 'home' ? '/' : `#${sectionId}`);
-      setIsMobileMenuOpen(false);
+      setTimeout(() => {
+        document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+        window.history.pushState(null, '', sectionId === 'home' ? '/' : `#${sectionId}`);
+      }, 50);
     }
   };
 
@@ -138,9 +141,9 @@ export default function TopBar() {
             className="md:hidden bg-bg-secondary border-b border-border-subtle overflow-hidden"
           >
             <div className="py-6 px-6 flex flex-col gap-4">
-              <a href={`${basename}/#home`} onClick={(e) => scrollToSection(e, 'home')} className="text-xl font-medium text-text-secondary hover:text-text-primary">Home</a>
-              <a href={`${basename}/#products`} onClick={(e) => scrollToSection(e, 'products')} className="text-xl font-medium text-text-secondary hover:text-text-primary">Products</a>
-              <a href={`${basename}/#about`} onClick={(e) => scrollToSection(e, 'about')} className="text-xl font-medium text-text-secondary hover:text-text-primary">About</a>
+              <Link to="/#home" onClick={(e) => scrollToSection(e, 'home')} className="text-xl font-medium text-text-secondary hover:text-text-primary">Home</Link>
+              <Link to="/#products" onClick={(e) => scrollToSection(e, 'products')} className="text-xl font-medium text-text-secondary hover:text-text-primary">Products</Link>
+              <Link to="/#about" onClick={(e) => scrollToSection(e, 'about')} className="text-xl font-medium text-text-secondary hover:text-text-primary">About</Link>
               <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)} className="text-xl font-medium text-text-secondary hover:text-text-primary">Contact</Link>
             </div>
           </motion.div>

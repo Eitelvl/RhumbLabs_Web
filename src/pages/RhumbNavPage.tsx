@@ -174,16 +174,16 @@ export default function RhumbNavPage() {
                 </div>
                 
                 <div className="flex-1 w-full relative h-[350px] md:h-[500px] flex items-center justify-center order-1 md:order-2 overflow-visible">
-                   <div className="flex flex-row items-center justify-center w-[115%] md:w-[125%] max-w-[580px] md:max-w-[720px] mt-10 md:mt-0 -ml-4 md:-ml-12 z-10 pr-4 md:pr-8">
+                   <div className="flex flex-row items-center justify-center w-full md:w-[125%] max-w-[580px] md:max-w-[720px] mt-10 md:mt-0 md:-ml-12 z-10 md:pr-8">
                      <DeviceMockup 
                         type="tablet"
-                        className="w-[75%] md:w-[73%] shadow-[0_30px_80px_var(--shadow-heavy)] z-10"
+                        className="hidden md:block w-[75%] md:w-[73%] shadow-[0_30px_80px_var(--shadow-heavy)] z-10"
                         imageSrc={`${import.meta.env.BASE_URL}nav.jpeg`}
                         alt="Confident Flying Interface"
                      />
                      <DeviceMockup 
                         type="phone"
-                        className="w-[31%] md:w-[32%] shadow-[-20px_20px_60px_var(--shadow-heavy)] z-20 -ml-[8%] md:-ml-[6%]"
+                        className="w-[70%] max-w-[280px] md:w-[32%] md:max-w-none shadow-[0_30px_80px_var(--shadow-heavy)] md:shadow-[-20px_20px_60px_var(--shadow-heavy)] z-20 md:-ml-[6%]"
                         imageSrc={`${import.meta.env.BASE_URL}FPL.jpeg`}
                         alt="Flight Plan Interface"
                      />

@@ -150,16 +150,16 @@ export default function LandingPage() {
                 </div>
                 
                 <div className="xl:col-span-7 flex justify-center xl:justify-end items-center relative mt-16 md:mt-24 xl:mt-0 min-h-[400px] md:min-h-[500px] xl:min-h-0 overflow-visible">
-                  <div className="flex flex-row items-center justify-center w-[150%] md:w-[100%] xl:w-[190%] max-w-[950px] xl:max-w-[1300px] mt-10 md:mt-0 z-10 relative left-0 xl:left-[4%]">
+                  <div className="flex flex-row items-center justify-center w-full md:w-[100%] xl:w-[190%] max-w-[950px] xl:max-w-[1300px] mt-10 md:mt-0 z-10 relative left-0 xl:left-[4%]">
                     <DeviceMockup 
                       type="tablet"
-                      className="w-[75%] md:w-[73%] shadow-[0_30px_100px_var(--shadow-heavy)] z-10"
+                      className="hidden md:block w-[75%] md:w-[73%] shadow-[0_30px_100px_var(--shadow-heavy)] z-10"
                       imageSrc={`${import.meta.env.BASE_URL}LogbookTablet.jpeg`}
                       alt="RhumbNav Tablet Interface"
                     />
                     <DeviceMockup 
                       type="phone"
-                      className="w-[31%] md:w-[32%] shadow-[-20px_30px_80px_var(--shadow-heavy)] z-20 -ml-[8%] md:-ml-[6%]"
+                      className="w-[80%] max-w-[280px] md:w-[32%] md:max-w-none shadow-[0_30px_80px_var(--shadow-heavy)] md:shadow-[-20px_30px_80px_var(--shadow-heavy)] z-20 md:-ml-[6%]"
                       imageSrc={`${import.meta.env.BASE_URL}FPL.jpeg`}
                       alt="RhumbNav Mobile Interface"
                     />
@@ -191,9 +191,9 @@ export default function LandingPage() {
                 </div>
                 
                 <div className="xl:col-span-5 order-1 xl:order-2 flex flex-col justify-center">
-                  <div className="relative mb-6 self-start flex items-center h-16 md:h-20 w-56 md:w-72 -ml-12 md:-ml-16">
-                    <img src={`${import.meta.env.BASE_URL}pogo/Pogo5.png`} alt="Pogo" className="show-in-light w-[240px] md:w-[320px] h-auto object-contain scale-[1.3] md:scale-[1.5] origin-left -translate-y-6" />
-                    <img src={`${import.meta.env.BASE_URL}pogo/Pogo2.png`} alt="Pogo" className="show-in-dark w-[240px] md:w-[320px] h-auto object-contain scale-[1.3] md:scale-[1.5] origin-left -translate-y-6" />
+                  <div className="relative mb-6 self-start flex items-center h-16 md:h-20 w-48 md:w-64">
+                    <img src={`${import.meta.env.BASE_URL}pogo/Pogo5.png`} alt="Pogo" className="show-in-light w-full h-auto object-contain origin-left" />
+                    <img src={`${import.meta.env.BASE_URL}pogo/Pogo2.png`} alt="Pogo" className="show-in-dark w-full h-auto object-contain origin-left" />
                   </div>
                   <h3 className="text-4xl md:text-5xl font-bold text-text-primary mb-6 tracking-tight leading-tight">Climb higher, <br className="hidden xl:block"/>track smarter.</h3>
                   <p className="text-text-secondary text-lg md:text-xl leading-relaxed mb-10 font-light max-w-lg">
