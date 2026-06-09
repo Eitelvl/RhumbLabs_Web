@@ -4,7 +4,7 @@ Last update: 12/05/2026
 
 Effective Date: Upon publication of the Application
 
-This Privacy Policy describes how Rhumb Labs (the "Company"), RUT: 78.415.842-k, with registered address at Javiera Carrera Norte 241, La Reina, Santiago de Chile, collects, uses, stores, and protects the personal data of users of the mobile application RhumbNav (the "Application").
+This Privacy Policy describes how Rhumb Labs, RUT: 78.415.842-K (the "Company"), based in Santiago, Chile, collects, uses, stores, and protects the personal data of users of the mobile application RhumbNav (the "Application").
 
 The Company is the data controller responsible for the personal data processed through the Application and can be contacted at: support@rhumblabs.com
 
@@ -548,7 +548,7 @@ Contact Information The data controller responsible for personal data processed 
 
 Rhumb Labs
 RUT: 78.415.842-k
-Adress: Javiera Carrera Norte 241, La Reina, Santiago de Chile.
+Address: Santiago, Chile.
 
 For any questions, requests, or concerns regarding this Privacy Policy or the processing of personal data, the User may contact the Company through: support@rhumblabs.com
 

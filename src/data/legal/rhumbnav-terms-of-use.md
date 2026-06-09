@@ -4,7 +4,7 @@ Last Update: 12/05/2026
 
 Effective Date: Upon publication of the Application
 
-These Terms and Conditions (“Terms”) govern the access to and use of the mobile application RhumbNav (the “Application”), operated by Rhumb Labs (the “Company”), RUT: 78.415.842-K, with registered address at: Javiera Carrera Norte 241, La Reina, Santiago de Chile.
+These Terms and Conditions (“Terms”) govern the access to and use of the mobile application RhumbNav (the “Application”), operated by Rhumb Labs (the “Company”), RUT: 78.415.842-K, based in Santiago, Chile.
 
 By accessing and using the Application, the user (“User”) agrees to be bound by these Terms.
 
