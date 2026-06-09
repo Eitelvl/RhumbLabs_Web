@@ -77,16 +77,16 @@ export default function LandingPage() {
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-card-border bg-card-element backdrop-blur-md text-sm font-medium text-text-secondary mb-10 shadow-xl">
             <span className="w-2 h-2 rounded-full bg-green-400 shadow-[0_0_8px_rgba(74,222,128,0.8)] animate-pulse"></span>
-            Building the next generation of software
+            Building the next generation of software at RhumbLabs
           </div>
           
           <h1 className="text-5xl md:text-7xl lg:text-[6rem] font-bold tracking-tighter mb-8 leading-[1.05] text-text-primary font-headline">
-            Digital products <br className="hidden md:block" />
-            <span className="text-text-secondary">built with purpose.</span>
+            RhumbLabs <br className="hidden md:block" />
+            <span className="text-text-secondary">digital products.</span>
           </h1>
           
           <p className="text-xl md:text-2xl text-text-secondary font-light max-w-3xl mx-auto tracking-tight mb-12 leading-relaxed">
-            We focus on creating reliable, intuitive, and beautifully crafted software.
+            Desarrollo de aplicaciones móviles y soluciones SaaS. We focus on creating reliable, intuitive, and beautifully crafted software.
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

@@ -1,6 +1,6 @@
 {
   "name": "RhumbLabs",
-  "description": "Pagina web RhumbLabs",
+  "description": "Desarrollo de aplicaciones móviles y soluciones SaaS",
   "requestFramePermissions": [],
-  "majorCapabilities": []
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

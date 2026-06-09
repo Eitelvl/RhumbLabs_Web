@@ -8,7 +8,7 @@ This Privacy Policy describes how Rhumb Labs (the "Company"), RUT: 78.415.842-k,
 
 The Company is the data controller responsible for the personal data processed through the Application and can be contacted at: support@rhumblabs.com
 
-By using the Application, the User acknowledges having read and understood this Privacy Policy. This Privacy Policy forms an integral part of the Terms and Conditions of Use of the Application.
+By using the Application, the User acknowledges having read and understood this Privacy Policy. This Privacy Policy forms an integral part of the Terms of Use of the Application.
 
 This Privacy Policy applies to all Users of the Application, regardless of their country of residence. Where applicable, the Company complies with the requirements of the Chilean Personal Data Protection Law (Ley 21.663), the European General Data Protection Regulation (GDPR), and other applicable data protection regulations.
 
@@ -105,7 +105,7 @@ The Company does not:
 The Company processes personal data on the following legal bases, in accordance with Chilean Law 21.663 and, where applicable, the GDPR.
 
 **3.1 Performance of a Contract**
-The following data is processed because it is necessary to provide the services described in the Terms and Conditions:
+The following data is processed because it is necessary to provide the services described in the Terms of Use:
 - Registration and account data
 - Pilot profile and license data
 - Flight and operational data
@@ -178,7 +178,7 @@ The Company shares personal data with the following third-party service provider
 **4.8 CheckWX**
 - **Purpose:** Provision of real-time weather data including METARs, TAFs, and other aeronautical meteorological information.
 - **Data shared:** Airport ICAO codes or identifiers manually entered by the User to retrieve weather information. No GPS location data is transmitted to CheckWX. The Company does not share personal identifying information with CheckWX.
-- *Note: Weather data provided through CheckWX is for reference purposes only and does not constitute an official meteorological briefing, as stated in the Aviation Disclaimer of the Terms and Conditions.*
+- *Note: Weather data provided through CheckWX is for reference purposes only and does not constitute an official meteorological briefing, as stated in the Aviation Disclaimer of the Terms of Use.*
 - **Privacy Policy:** https://checkwxapi.com/privacy
 
 **4.9 Firebase Analytics**
@@ -267,7 +267,7 @@ The Company retains personal data only for as long as necessary to fulfil the pu
 - Payment card information is not stored by the Company. Retention of payment card data is governed exclusively by Google LLC and Apple Inc. under their respective privacy policies.
 
 **6.7 Data Retained for Legal, Security, or Fraud Prevention Purposes**
-- As stated in the User Accounts and Termination sections of the Terms and Conditions, and in particular in accordance with Section 17 of the Terms and Conditions governing account termination, certain data may be retained beyond the standard periods described above where necessary for legal proceedings, security investigations, or fraud prevention.
+- As stated in the User Accounts and Termination sections of the Terms of Use, and in particular in accordance with Section 17 of the Terms of Use governing account termination, certain data may be retained beyond the standard periods described above where necessary for legal proceedings, security investigations, or fraud prevention.
 - In such cases, data will be retained for no longer than 2 years from the date of account deletion or termination, after which it will be permanently deleted.
 - Retention beyond standard periods is permitted only where strictly necessary for legal obligations, security investigations, fraud prevention, technical backups, regulatory compliance, or legal defense purposes.
 
@@ -317,7 +317,7 @@ In the event of a personal data breach that is likely to result in a risk to the
 - Notify the competent supervisory authority where required by law, including the authority designated under Chilean Law 21.663.
 - Provide affected Users with information regarding the nature of the breach, the data affected, the consequences, and the measures taken or proposed to address the breach.
 
-Notifications will be sent to the email address registered by the User in accordance with the Electronic Communications section of the Terms and Conditions.
+Notifications will be sent to the email address registered by the User in accordance with the Electronic Communications section of the Terms of Use.
 
 **7.5 Limitations**
 Despite the measures described above, the Company cannot guarantee that personal data will never be accessed, disclosed, altered, or destroyed because of a breach of security measures. Users provide their personal data at their own risk and are encouraged to take appropriate precautions to protect their own information.
@@ -527,7 +527,7 @@ When changes to this Privacy Policy are material, meaning they significantly aff
 - An email notification sent to the email address registered by the User
 - An in-app confirmation mechanism requiring the User's acknowledgment of the updated Policy.
 
-Notifications will be sent at least 15 days prior to the changes becoming effective, in accordance with the Terms and Conditions of Use.
+Notifications will be sent at least 15 days prior to the changes becoming effective, in accordance with the Terms of Use.
 
 **13.3 Non-Material Changes**
 For minor or non-material changes, such as corrections of typographical errors, clarifications that do not alter the substance of the Policy, or updates to third-party links, the Company may update this Privacy Policy without prior notice. The updated date at the top of the document will reflect any such changes.

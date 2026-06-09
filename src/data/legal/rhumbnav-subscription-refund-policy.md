@@ -6,7 +6,7 @@ Effective Date: Upon publication of the Application
 
 This Subscription and Refund Policy ("Policy") governs the subscription plans, billing cycles, trial periods, cancellation procedures, and refund conditions applicable to the mobile application RhumbNav (the "Application"), operated by Rhumb Labs (the "Company").
 
-This Policy forms an integral part of the Terms and Conditions of Use of the Application. For general terms governing the use of the Application, please refer to the Terms and Conditions.
+This Policy forms an integral part of the Terms of Use of the Application. For general terms governing the use of the Application, please refer to the Terms of Use.
 
 ## 1. Subscription Plans
 
