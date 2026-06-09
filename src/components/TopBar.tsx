@@ -10,6 +10,7 @@ export default function TopBar() {
   const isContactRoute = location.pathname === '/contact';
   const isRhumbNavRoute = location.pathname === '/rhumbnav';
   const isPogoRoute = location.pathname === '/pogo';
+  const isLegalRoute = location.pathname.startsWith('/legal');
   const basename = import.meta.env.BASE_URL ? import.meta.env.BASE_URL.replace(/\/$/, '') : '';
   
   const [activeSection, setActiveSection] = useState<string>('home');
@@ -63,9 +64,10 @@ export default function TopBar() {
     if (!isHomeRoute) {
       if (isContactRoute) setActiveSection('contact');
       else if (isRhumbNavRoute || isPogoRoute) setActiveSection('products');
+      else if (isLegalRoute) setActiveSection('legal');
       else setActiveSection('');
     }
-  }, [isHomeRoute, isContactRoute, isRhumbNavRoute, isPogoRoute]);
+  }, [isHomeRoute, isContactRoute, isRhumbNavRoute, isPogoRoute, isLegalRoute]);
 
   const scrollToSection = (e: React.MouseEvent, sectionId: string) => {
     setIsMobileMenuOpen(false);
@@ -103,8 +105,7 @@ export default function TopBar() {
           <Link to="/#home" onClick={(e) => scrollToSection(e, 'home')} className={getLinkClasses('home')}>Home</Link>
           <Link to="/#products" onClick={(e) => scrollToSection(e, 'products')} className={getLinkClasses('products')}>Products</Link>
           <Link to="/#about" onClick={(e) => scrollToSection(e, 'about')} className={getLinkClasses('about')}>About</Link>
-          <div className="w-px h-4 bg-card-border mx-2"></div>
-          <Link to="/contact" className={getLinkClasses('contact')}>Contact</Link>
+          <Link to="/legal" className={getLinkClasses('legal')}>Legal</Link>
         </div>
 
         {/* Action Buttons */}
@@ -113,7 +114,7 @@ export default function TopBar() {
              {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
            </button>
            <Link to="/contact" className="px-5 py-2 rounded-full bg-accent text-accent-foreground font-semibold text-sm hover:opacity-80 transition-opacity shadow-[0_0_20px_var(--shadow-btn)]">
-             Get in touch
+             Get in Touch
            </Link>
         </div>
 
@@ -144,6 +145,7 @@ export default function TopBar() {
               <Link to="/#home" onClick={(e) => scrollToSection(e, 'home')} className="text-xl font-medium text-text-secondary hover:text-text-primary">Home</Link>
               <Link to="/#products" onClick={(e) => scrollToSection(e, 'products')} className="text-xl font-medium text-text-secondary hover:text-text-primary">Products</Link>
               <Link to="/#about" onClick={(e) => scrollToSection(e, 'about')} className="text-xl font-medium text-text-secondary hover:text-text-primary">About</Link>
+              <Link to="/legal" onClick={() => setIsMobileMenuOpen(false)} className="text-xl font-medium text-text-secondary hover:text-text-primary">Legal</Link>
               <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)} className="text-xl font-medium text-text-secondary hover:text-text-primary">Contact</Link>
             </div>
           </motion.div>

@@ -46,7 +46,7 @@ export default function LandingPage() {
         }
         return next;
       });
-    }, 20000);
+    }, 10000);
 
     return () => clearInterval(interval);
   }, [autoScrollEnabled]);
