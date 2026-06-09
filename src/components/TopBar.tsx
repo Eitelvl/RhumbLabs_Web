@@ -10,6 +10,7 @@ export default function TopBar() {
   const isContactRoute = location.pathname === '/contact';
   const isRhumbNavRoute = location.pathname === '/rhumbnav';
   const isPogoRoute = location.pathname === '/pogo';
+  const basename = import.meta.env.BASE_URL ? import.meta.env.BASE_URL.replace(/\/$/, '') : '';
   
   const [activeSection, setActiveSection] = useState<string>('home');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
