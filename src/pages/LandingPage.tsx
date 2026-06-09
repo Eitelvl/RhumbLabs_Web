@@ -16,6 +16,7 @@ export default function LandingPage() {
   const location = useLocation();
   const [activeCard, setActiveCard] = useState(0);
   const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -31,7 +32,7 @@ export default function LandingPage() {
   }, [location]);
 
   useEffect(() => {
-    if (!autoScrollEnabled) return;
+    if (!autoScrollEnabled || isHovered) return;
 
     const interval = setInterval(() => {
       setActiveCard(prev => {
@@ -49,7 +50,7 @@ export default function LandingPage() {
     }, 10000);
 
     return () => clearInterval(interval);
-  }, [autoScrollEnabled]);
+  }, [autoScrollEnabled, isHovered]);
 
   const stopAutoScroll = () => {
     if (autoScrollEnabled) {
@@ -125,6 +126,8 @@ export default function LandingPage() {
             onTouchStart={stopAutoScroll}
             onWheel={stopAutoScroll}
             onKeyDown={stopAutoScroll}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
             className="flex overflow-x-auto snap-x snap-mandatory gap-8 pb-4 no-scrollbar scroll-smooth -mx-6 px-6 lg:-mx-12 lg:px-12" 
             style={{ scrollbarWidth: 'none' }}
           >
