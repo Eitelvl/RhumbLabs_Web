@@ -32,6 +32,7 @@ export default function Footer() {
               <ul className="space-y-3">
                 <li><a href={`${basename}/#about`} onClick={(e) => scrollToSection(e, 'about')} className="text-text-secondary hover:text-text-primary transition-colors text-[13px]">About Us</a></li>
                 <li><Link to="/contact" className="text-text-secondary hover:text-text-primary transition-colors text-[13px]">Contact</Link></li>
+                <li><a href={`${import.meta.env.BASE_URL}rhumblabs-texts.docx`} download className="text-accent hover:opacity-80 transition-opacity text-[13px] font-medium flex items-center gap-1">Text Catalog (Word)</a></li>
               </ul>
             </div>
             <div>

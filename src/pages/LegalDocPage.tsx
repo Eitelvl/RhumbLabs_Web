@@ -8,7 +8,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
 // Load all markdown files from /src/data/legal
-const docs = import.meta.glob('/src/data/legal/*.md', { query: '?raw', import: 'default' });
+const docs = import.meta.glob('/src/data/legal/*.md', { query: '?raw', import: 'default', eager: true });
 
 export default function LegalDocPage() {
   const location = useLocation();
@@ -30,28 +30,10 @@ export default function LegalDocPage() {
     filenamePrefix = 'pogo-';
   }
 
-  const [content, setContent] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Attempt to load the specific document
-    const docPath = `/src/data/legal/${filenamePrefix}${rawTitle}.md`;
-    
-    if (docs[docPath]) {
-      docs[docPath]()
-        .then((text: any) => {
-          setContent(text as string);
-          setLoading(false);
-        })
-        .catch(() => {
-          setContent(null);
-          setLoading(false);
-        });
-    } else {
-      setContent(null);
-      setLoading(false);
-    }
-  }, [filenamePrefix, rawTitle]);
+  // Attempt to load the specific document synchronously
+  const docPath = `/src/data/legal/${filenamePrefix}${rawTitle}.md`;
+  const content = (docs[docPath] as string) || null;
+  const loading = false;
 
   return (
     <div className="bg-surface text-on-surface min-h-screen flex flex-col">

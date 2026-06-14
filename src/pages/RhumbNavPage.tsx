@@ -82,7 +82,7 @@ export default function RhumbNavPage() {
                   <div className="w-14 h-14 rounded-2xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center mb-8">
                      <Calculator className="w-6 h-6 text-sky-400" />
                   </div>
-                  <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-6"></h2>
+                  <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-6">Precision calculation</h2>
                   <p className="text-text-secondary text-lg font-light leading-relaxed">
                     Flight calculations made faster, cleaner, and easier. From wind correction to fuel planning, RhumbNav gives you the numbers that matter—without the clutter.
                   </p>
