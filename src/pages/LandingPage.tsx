@@ -14,6 +14,22 @@ const AndroidIcon = ({ className }: { className?: string }) => (
 
 export default function LandingPage() {
   const location = useLocation();
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return document.documentElement.classList.contains('dark');
+    }
+    return true;
+  });
+
+  useEffect(() => {
+    const checkDark = () => {
+      setIsDarkMode(document.documentElement.classList.contains('dark'));
+    };
+    checkDark();
+    const observer = new MutationObserver(checkDark);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
   const [activeCard, setActiveCard] = useState(0);
   const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
@@ -206,7 +222,7 @@ export default function LandingPage() {
                      <DeviceMockup 
                         type="phone"
                         className="w-full z-20 shadow-[0_40px_100px_var(--shadow-heavy)]"
-                        imageSrc={`${import.meta.env.BASE_URL}pogo/summary_v.jpeg`}
+                        imageSrc={`${import.meta.env.BASE_URL}pogo/${isDarkMode ? 'Resumen.jpg' : 'Summary.jpg'}`}
                         alt="Pogo Mobile Interface"
                      />
                   </div>

@@ -87,13 +87,34 @@ export default function PogoPage() {
                   </p>
                 </div>
 
-                <div className="flex-1 w-full relative h-[400px] md:h-[600px] flex items-center justify-center overflow-hidden">
-                   <motion.div style={{ y }} className="w-full h-full flex justify-center items-center">
+                <div className="flex-1 w-full relative h-[450px] md:h-[600px] flex items-center justify-center overflow-hidden">
+                   <motion.div style={{ y }} className="w-full h-full flex justify-center items-center gap-4 px-6">
+                      {/* Light Mode Mockups (English) */}
                       <DeviceMockup 
                         type="phone"
-                        className="w-[60%] md:w-[70%] max-w-[300px] shadow-[0_20px_60px_var(--shadow-heavy)] rotate-[-4deg]"
-                        imageSrc={`${import.meta.env.BASE_URL}pogo/sesion_activa.jpeg`}
-                        alt="Log Session"
+                        className="show-in-light w-[45%] max-w-[160px] md:max-w-[210px] shadow-[0_20px_60px_var(--shadow-heavy)] rotate-[-6deg]"
+                        imageSrc={`${import.meta.env.BASE_URL}pogo/Active_session.jpg`}
+                        alt="Log Active Session Light"
+                      />
+                      <DeviceMockup 
+                        type="phone"
+                        className="show-in-light w-[45%] max-w-[160px] md:max-w-[210px] shadow-[0_20px_60px_var(--shadow-heavy)] rotate-[6deg] translate-y-6"
+                        imageSrc={`${import.meta.env.BASE_URL}pogo/Session_Detail.jpg`}
+                        alt="Session Detail Light"
+                      />
+
+                      {/* Dark Mode Mockups (Spanish) */}
+                      <DeviceMockup 
+                        type="phone"
+                        className="show-in-dark w-[45%] max-w-[160px] md:max-w-[210px] shadow-[0_20px_60px_var(--shadow-heavy)] rotate-[-6deg]"
+                        imageSrc={`${import.meta.env.BASE_URL}pogo/Sesion_Activa.jpg`}
+                        alt="Log Active Session Dark"
+                      />
+                      <DeviceMockup 
+                        type="phone"
+                        className="show-in-dark w-[45%] max-w-[160px] md:max-w-[210px] shadow-[0_20px_60px_var(--shadow-heavy)] rotate-[6deg] translate-y-6"
+                        imageSrc={`${import.meta.env.BASE_URL}pogo/Detalle_Sesion.jpg`}
+                        alt="Session Detail Dark"
                       />
                    </motion.div>
                 </div>
@@ -114,11 +135,19 @@ export default function PogoPage() {
                   </p>
                 </div>
                 <div className="flex-1 relative flex items-center justify-center mt-auto pb-10">
+                   {/* Light Mode Mockup (English) */}
                    <DeviceMockup 
                       type="phone"
-                      className="w-[50%] max-w-[250px] shadow-[0_20px_50px_var(--shadow-medium)]"
-                      imageSrc={`${import.meta.env.BASE_URL}pogo/summary_active_v.jpeg`}
-                      alt="Clear Progression"
+                      className="show-in-light w-[50%] max-w-[250px] shadow-[0_20px_50px_var(--shadow-medium)]"
+                      imageSrc={`${import.meta.env.BASE_URL}pogo/Summary2.jpg`}
+                      alt="Clear Progression Light"
+                   />
+                   {/* Dark Mode Mockup (Spanish) */}
+                   <DeviceMockup 
+                      type="phone"
+                      className="show-in-dark w-[50%] max-w-[250px] shadow-[0_20px_50px_var(--shadow-medium)]"
+                      imageSrc={`${import.meta.env.BASE_URL}pogo/Resumen.jpg`}
+                      alt="Clear Progression Dark"
                    />
                 </div>
              </motion.div>
@@ -129,21 +158,66 @@ export default function PogoPage() {
                className="group relative rounded-[2.5rem] border border-card-border bg-bg-secondary overflow-hidden min-h-[500px] flex flex-col"
              >
                 <div className="p-10 md:p-14 z-10">
-                  <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-8">
-                     <MapPin className="w-6 h-6 text-emerald-400" />
+                  <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-8">
+                     <Activity className="w-6 h-6 text-amber-400" />
                   </div>
-                  <h3 className="text-2xl md:text-3xl font-bold tracking-tight mb-4">Unlock Achievements</h3>
+                  <h3 className="text-2xl md:text-3xl font-bold tracking-tight mb-4">Complete History</h3>
                   <p className="text-text-secondary text-base md:text-lg font-light leading-relaxed">
-                    Push your limits and unlock achievements. Log boulder, route, or mixed sessions with a scale adapted to where you climb.
+                     Navigate and review your climbing records. Explore previous logs and see how you have excelled over sessions.
                   </p>
                 </div>
                 <div className="flex-1 relative flex items-center justify-center mt-auto pb-10">
+                   {/* Light Mode Mockup (English) */}
                    <DeviceMockup 
                       type="phone"
-                      className="w-[50%] max-w-[250px] shadow-[0_20px_50px_var(--shadow-medium)]"
-                      imageSrc={`${import.meta.env.BASE_URL}pogo/gymdetalle.jpeg`}
-                      alt="Unlock Achievements"
+                      className="show-in-light w-[50%] max-w-[250px] shadow-[0_20px_50px_var(--shadow-medium)]"
+                      imageSrc={`${import.meta.env.BASE_URL}pogo/History.jpg`}
+                      alt="Climbing History Light"
                    />
+                   {/* Dark Mode Mockup (Spanish) */}
+                   <DeviceMockup 
+                      type="phone"
+                      className="show-in-dark w-[50%] max-w-[250px] shadow-[0_20px_50px_var(--shadow-medium)]"
+                      imageSrc={`${import.meta.env.BASE_URL}pogo/Historial.jpg`}
+                      alt="Climbing History Dark"
+                   />
+                </div>
+             </motion.div>
+
+             {/* Feature 4 - Wide Card */}
+             <motion.div 
+               whileHover={{ y: -5 }}
+               className="md:col-span-2 group relative rounded-[2.5rem] border border-card-border bg-bg-secondary overflow-hidden min-h-[500px] md:min-h-[600px] flex flex-col md:flex-row items-center"
+             >
+                <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none translate-x-1/3 -translate-y-1/3"></div>
+                
+                <div className="flex-1 p-10 md:p-16 lg:p-20 z-10">
+                  <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-8">
+                     <MapPin className="w-6 h-6 text-emerald-400" />
+                  </div>
+                  <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">Unlock Achievements</h2>
+                  <p className="text-text-secondary text-lg md:text-xl font-light leading-relaxed max-w-xl">
+                    Push your limits and unlock achievements. Log boulder, route, or mixed sessions with a scale adapted to where you climb and earn milestone badges.
+                  </p>
+                </div>
+
+                <div className="flex-1 w-full relative h-[400px] md:h-[600px] flex items-center justify-center overflow-hidden">
+                   <motion.div style={{ y }} className="w-full h-full flex justify-center items-center">
+                      {/* Light Mode Mockup (English) */}
+                      <DeviceMockup 
+                        type="phone"
+                        className="show-in-light w-[60%] md:w-[70%] max-w-[300px] shadow-[0_20px_60px_var(--shadow-heavy)] rotate-[4deg]"
+                        imageSrc={`${import.meta.env.BASE_URL}pogo/Achievements.jpg`}
+                        alt="Unlock Achievements Light"
+                      />
+                      {/* Dark Mode Mockup (Spanish) */}
+                      <DeviceMockup 
+                        type="phone"
+                        className="show-in-dark w-[60%] md:w-[70%] max-w-[300px] shadow-[0_20px_60px_var(--shadow-heavy)] rotate-[4deg]"
+                        imageSrc={`${import.meta.env.BASE_URL}pogo/Logros.jpg`}
+                        alt="Unlock Achievements Dark"
+                      />
+                   </motion.div>
                 </div>
              </motion.div>
           </div>

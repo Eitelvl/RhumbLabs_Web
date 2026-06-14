@@ -18,7 +18,7 @@ export function DeviceMockup({ type, imageSrc, alt, imageClassName = "w-full h-f
       >
         <div className="w-full h-full rounded-[1.15rem] md:rounded-[1.6rem] bg-[#000000] p-[12px] md:p-[16px] relative flex">
           <div className="w-full h-full rounded-[0.5rem] md:rounded-[0.75rem] overflow-hidden relative bg-mockup-screen">
-            <img alt={alt} src={imageSrc} className={imageClassName} />
+            <img alt={alt} src={imageSrc} className={imageClassName} referrerPolicy="no-referrer" />
           </div>
         </div>
       </motion.div>
@@ -34,7 +34,7 @@ export function DeviceMockup({ type, imageSrc, alt, imageClassName = "w-full h-f
     >
       <div className="w-full h-full rounded-[1.85rem] md:rounded-[2.35rem] bg-[#000000] p-[8px] md:p-[12px] relative flex">
         <div className="w-full h-full rounded-[1.4rem] md:rounded-[1.8rem] overflow-hidden relative bg-mockup-screen">
-          <img alt={alt} src={imageSrc} className={imageClassName} />
+          <img alt={alt} src={imageSrc} className={imageClassName} referrerPolicy="no-referrer" />
         </div>
       </div>
     </motion.div>

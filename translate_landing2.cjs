@@ -1,13 +1,13 @@
 const fs = require('fs');
 
 const extraDict = {
-  "Aviation precision <br className=\\"hidden xl:block\\"/>in your pocket.": "Aviation precision", // I'll handle manually
+  'Aviation precision <br className="hidden xl:block"/>in your pocket.': "Aviation precision", // I'll handle manually
   "Complete VFR Navigation": "Complete VFR Navigation",
   "Digital Logbook & Pilot Credentials": "Digital Logbook & Pilot Credentials",
   "Real-time Weather & Airport Info": "Real-time Weather & Airport Info",
   "Advanced E6B Flight Computer": "Advanced E6B Flight Computer",
   "Discover RhumbNav": "Discover RhumbNav",
-  "Log, track, and master <br className=\\"hidden xl:block\\"/>your climbs.": "Log, track, and master",
+  'Log, track, and master <br className="hidden xl:block"/>your climbs.': "Log, track, and master",
   "Log climbs with custom gym color-grading systems.": "Log climbs with custom gym color-grading systems.",
   "Deep analytics on your bouldering performance.": "Deep analytics on your bouldering performance.",
   "Track progression across multiple gyms.": "Track progression across multiple gyms.",
