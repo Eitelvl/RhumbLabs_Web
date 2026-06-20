@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/RL4.png" />
+  <link rel="apple-touch-icon" href="/RL4.png" />
+  <title>Pogo Account Deletion | Eliminación de Cuenta - RhumbLabs</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Request deletion of your Pogo climbing account and associated data. Solicita la eliminación de tu cuenta de Pogo y datos asociados.">
+  <meta name="robots" content="index, follow">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              primary: '#a855f7', // Purple accent
+              secondary: '#6366f1',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Theme Sync Script -->
+  <script>
+    (function() {
+      try {
+        var savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+          document.documentElement.classList.remove('dark');
+        } else {
+          // Default to dark mode to match RhumbLabs standard
+          document.documentElement.classList.add('dark');
+        }
+      } catch (e) {}
+    })();
+  </script>
+
+  <style>
+    /* Custom page variables for theme integrity */
+    :root {
+      --bg-primary: #f6f4ee;
+      --bg-secondary: #ede9e0;
+      --text-primary: #2c2825;
+      --text-secondary: #706861;
+      --card-element: rgba(0, 0, 0, 0.035);
+      --card-border: rgba(0, 0, 0, 0.08);
+      --border-subtle: rgba(0, 0, 0, 0.05);
+      --accent: #2c2825;
+      --accent-foreground: #ffffff;
+    }
+    
+    .dark {
+      --bg-primary: #000000;
+      --bg-secondary: #0a0b0d;
+      --text-primary: #ffffff;
+      --text-secondary: #8a8f98;
+      --card-element: rgba(255, 255, 255, 0.05);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --border-subtle: rgba(255, 255, 255, 0.04);
+      --accent: #ffffff;
+      --accent-foreground: #000000;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .custom-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--card-border);
+    }
+
+    .linear-card-gradient {
+      background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.03) 0%, transparent 70%), var(--bg-secondary);
+      border: 1px solid var(--card-border);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+
+  <!-- Header / Navigation -->
+  <header class="w-full fixed top-0 left-0 z-50 backdrop-blur-xl border-b border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.06)] bg-[rgba(246,244,238,0.8)] dark:bg-[rgba(0,0,0,0.8)] transition-colors duration-300">
+    <div class="max-w-[1400px] mx-auto px-6 h-20 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2 group">
+        <!-- Back Arrow + Logo -->
+        <svg class="w-5 h-5 text-[color:var(--text-secondary)] group-hover:text-[color:var(--text-primary)] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        <span class="font-bold tracking-tight text-lg text-[color:var(--text-primary)] pl-2">RhumbLabs</span>
+      </a>
+      
+      <!-- Language switcher helper -->
+      <div class="flex items-center gap-4">
+        <button onclick="toggleTheme()" class="p-2 rounded-full hover:bg-[color:var(--card-element)] transition-colors text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)]" aria-label="Toggle theme">
+          <!-- Sun Icon (visible in dark) -->
+          <svg class="hidden dark:block w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
+          </svg>
+          <!-- Moon Icon (visible in light) -->
+          <svg class="block dark:hidden w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+        </button>
+        <a href="#es" class="text-xs font-semibold px-2.5 py-1 rounded bg-[color:var(--card-element)] text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)] border border-[color:var(--card-border)]">ES</a>
+        <a href="#en" class="text-xs font-semibold px-2.5 py-1 rounded bg-[color:var(--card-element)] text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)] border border-[color:var(--card-border)]">EN</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container with Side-by-Side Dual Language Cards -->
+  <main class="flex-1 pt-32 pb-24 px-6 max-w-[1400px] mx-auto w-full">
+    
+    <!-- Top badge/intro -->
+    <div class="text-center max-w-2xl mx-auto mb-16">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-purple-500/20 bg-purple-500/5 text-purple-500 text-[10px] uppercase font-bold tracking-widest mb-6">
+        <span>Google Play / App Store Compliant</span>
+      </div>
+      <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-[color:var(--text-primary)]">
+        Pogo Account Deletion <span class="text-[color:var(--text-secondary)] font-normal">/</span> Eliminación de Cuenta
+      </h1>
+      <p class="text-lg text-[color:var(--text-secondary)] font-light leading-relaxed">
+        We respect your privacy. Here you can easily request the permanent deletion of your Pogo climbing app account and all associated personal data.
+      </p>
+    </div>
+
+    <!-- Main Grid containing both Spanish & English blocks side by side -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mt-6">
+      
+      <!-- SECTION IN SPANISH (Español - ID: es) -->
+      <section id="es" class="linear-card-gradient p-8 md:p-10 rounded-[2.5rem] flex flex-col justify-between scroll-mt-24">
+        <div>
+          <div class="flex items-center justify-between mb-8 border-b border-[color:var(--card-border)] pb-6">
+            <h2 class="text-2xl font-bold text-[color:var(--text-primary)] tracking-tight">Español</h2>
+            <span class="text-xs font-bold uppercase tracking-wider px-3 py-1 bg-purple-500/10 text-purple-500 rounded-full">Manual y Directo</span>
+          </div>
+
+          <p class="text-[color:var(--text-secondary)] mb-8 leading-relaxed">
+            Tienes pleno control sobre tus datos. Conforme con los requisitos de Google Play y legislación de protección de datos, puedes eliminar tu cuenta de Pogo y toda la información asociada mediante dos vías sencillas:
+          </p>
+
+          <!-- Instructions steps list -->
+          <div class="space-y-6">
+            
+            <!-- Route 1: Inside the app -->
+            <div class="flex gap-4">
+              <div class="shrink-0 w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-500">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg text-[color:var(--text-primary)] mb-1">Mtodo 1: Desde la App (Inmediato)</h3>
+                <p class="text-sm text-[color:var(--text-secondary)] leading-relaxed">
+                  Abre la aplicación Pogo en tu dispositivo Android o iOS, navega a la sección de <strong class="font-semibold text-[color:var(--text-primary)]">Ajustes / Ajustes de Perfil</strong>, selecciona <strong class="font-semibold text-[color:var(--text-primary)]">Eliminar Cuenta</strong> y confirma la acción. Todo tu historial de escaladas se eliminará instantáneamente.
+                </p>
+              </div>
+            </div>
+
+            <!-- Route 2: Email support request -->
+            <div class="flex gap-4">
+              <div class="shrink-0 w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-500">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 19v-8.93a2 2 0 01.89-1.664l8-4a2 2 0 011.89 0l8 4A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5m0 0l-1.14.76a2 2 0 01-2.22 0l-1.14-.76" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg text-[color:var(--text-primary)] mb-1">Mtodo 2: Solicitud por Correo (72 horas)</h3>
+                <p class="text-sm text-[color:var(--text-secondary)] leading-relaxed">
+                  Si ya desinstalaste la aplicación o no consigues iniciar sesión, envía un correo a <a href="mailto:support@rhumblabs.com?subject=Pogo - Solicitud de eliminación de cuenta&body=Hola,%20solicito%20la%20eliminación%20de%20mi%20cuenta%20de%20Pogo.%20Mi%20correo%20registrado%20es:%20" class="text-purple-500 hover:underline font-semibold">support@rhumblabs.com</a> indicando tu dirección de correo electrónico registrada. Procesaremos tu solicitud en menos de 3 días laborables.
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Data Policy Transparency Table, critical for Google Reviewers -->
+          <div class="mt-8 pt-8 border-t border-[color:var(--card-border)]">
+            <h4 class="font-semibold text-sm text-[color:var(--text-primary)] uppercase tracking-wider mb-4">¿Qu datos eliminamos o retenemos?</h4>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead>
+                  <tr class="text-[color:var(--text-secondary)] border-b border-[color:var(--card-border)] pb-2">
+                    <th class="py-2 font-semibold">Tipo de Información</th>
+                    <th class="py-2 font-semibold text-right">Acción Tras la Eliminación</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-[color:var(--card-border)] text-[color:var(--text-secondary)]">
+                  <tr>
+                    <td class="py-3 font-medium text-[color:var(--text-primary)]">Datos de Perfil (Email, Nombre)</td>
+                    <td class="py-3 text-right">Eliminado de forma permanente</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 font-medium text-[color:var(--text-primary)]">Sesiones de Escalada y Logs</td>
+                    <td class="py-3 text-right">Eliminado de forma permanente</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 font-medium text-[color:var(--text-primary)]">Logros Obtenidos y Badges</td>
+                    <td class="py-3 text-right">Eliminado de forma permanente</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 font-medium text-[color:var(--text-primary)]">Registros de Seguridad / Facturación</td>
+                    <td class="py-3 text-right text-amber-500 dark:text-amber-400">Anonimizado por motivos regulatorios</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-10">
+          <a href="mailto:support@rhumblabs.com?subject=Pogo - Solicitud de eliminación de cuenta&body=Hola,%20solicito%20la%20eliminación%20de%20mi%20cuenta%20de%20Pogo.%20Mi%20correo%20registrado%20es:%20" 
+             class="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-4 px-6 rounded-2xl inline-flex items-center justify-center gap-3 transition-colors shadow-lg shadow-purple-600/10 hover:shadow-purple-600/20">
+            <svg class="w-5 h-5 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+            Solicitar Eliminación vía Email
+          </a>
+        </div>
+      </section>
+
+      <!-- SECTION IN ENGLISH (ID: en) -->
+      <section id="en" class="linear-card-gradient p-8 md:p-10 rounded-[2.5rem] flex flex-col justify-between scroll-mt-24">
+        <div>
+          <div class="flex items-center justify-between mb-8 border-b border-[color:var(--card-border)] pb-6">
+            <h2 class="text-2xl font-bold text-[color:var(--text-primary)] tracking-tight">English</h2>
+            <span class="text-xs font-bold uppercase tracking-wider px-3 py-1 bg-purple-500/10 text-purple-500 rounded-full">Secure & compliant</span>
+          </div>
+
+          <p class="text-[color:var(--text-secondary)] mb-8 leading-relaxed">
+            You hold absolute sovereignty over your data. In full compliance with Google Play Developer Policies and global privacy regulations, you can wipe your Pogo climbing account and history through two seamless procedures:
+          </p>
+
+          <!-- Instructions steps list -->
+          <div class="space-y-6">
+            
+            <!-- Route 1: Inside the app -->
+            <div class="flex gap-4">
+              <div class="shrink-0 w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-500">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg text-[color:var(--text-primary)] mb-1">Option 1: In-App Deletion (Instant)</h3>
+                <p class="text-sm text-[color:var(--text-secondary)] leading-relaxed">
+                  Open the Pogo app on your mobile device, skip over to <strong class="font-semibold text-[color:var(--text-primary)]">Settings / Profile Settings</strong>, select the <strong class="font-semibold text-[color:var(--text-primary)]">Delete Account</strong> option, and confirm. All your climbing history, metrics, and profile details are cleared instantly.
+                </p>
+              </div>
+            </div>
+
+            <!-- Route 2: Email support request -->
+            <div class="flex gap-4">
+              <div class="shrink-0 w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-500">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 19v-8.93a2 2 0 01.89-1.664l8-4a2 2 0 011.89 0l8 4A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5m0 0l-1.14.76a2 2 0 01-2.22 0l-1.14-.76" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg text-[color:var(--text-primary)] mb-1">Option 2: Support Request via Email (72 Hours)</h3>
+                <p class="text-sm text-[color:var(--text-secondary)] leading-relaxed">
+                  If you have already deleted the application or cannot log in, send an email request to <a href="mailto:support@rhumblabs.com?subject=Pogo - Account Deletion Request&body=Hello,%20I'd%20like%20to%20permanently%20delete%20my%20Pogo%20climbing%20account.%20My%20associated%20email%20address%20is:%20" class="text-purple-500 hover:underline font-semibold">support@rhumblabs.com</a>. We will verify ownership and erase your account data within 3 business days.
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Data Policy Transparency Table -->
+          <div class="mt-8 pt-8 border-t border-[color:var(--card-border)]">
+            <h4 class="font-semibold text-sm text-[color:var(--text-primary)] uppercase tracking-wider mb-4">What data is deleted or retained?</h4>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead>
+                  <tr class="text-[color:var(--text-secondary)] border-b border-[color:var(--card-border)] pb-2">
+                    <th class="py-2 font-semibold">Data Category</th>
+                    <th class="py-2 font-semibold text-right">Delete/Retain Action</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-[color:var(--card-border)] text-[color:var(--text-secondary)]">
+                  <tr>
+                    <td class="py-3 font-medium text-[color:var(--text-primary)]">Profile Information (Email, Username)</td>
+                    <td class="py-3 text-right">Permanently deleted</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 font-medium text-[color:var(--text-primary)]">Climbing History & Logs</td>
+                    <td class="py-3 text-right">Permanently deleted</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 font-medium text-[color:var(--text-primary)]">Earned Milestones & Badges</td>
+                    <td class="py-3 text-right">Permanently deleted</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 font-medium text-[color:var(--text-primary)]">Access logs & Billing metadata</td>
+                    <td class="py-3 text-right text-amber-500 dark:text-amber-400">Anonymized for security audits</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-10">
+          <a href="mailto:support@rhumblabs.com?subject=Pogo - Account Deletion Request&body=Hello,%20I'd%20like%20to%20permanently%20delete%20my%20Pogo%20climbing%20account.%20My%20associated%20email%20address%20is:%20" 
+             class="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-4 px-6 rounded-2xl inline-flex items-center justify-center gap-3 transition-colors shadow-lg shadow-purple-600/10 hover:shadow-purple-600/20">
+            <svg class="w-5 h-5 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+            Request Deletion via Email
+          </a>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Additional Trust Badges & Policies footer link -->
+    <div class="mt-16 text-center border-t border-[color:var(--card-border)] pt-12">
+      <p class="text-sm text-[color:var(--text-secondary)]">
+        For further details regarding database encryption, data storage and data safety policies, consult our official documentation:
+      </p>
+      <div class="mt-4 flex justify-center gap-6 text-sm font-semibold">
+        <a href="/privacy" class="text-purple-500 hover:underline">Privacy Policy</a>
+        <span class="text-[color:var(--card-border)]">|</span>
+        <a href="/terms" class="text-purple-500 hover:underline">Terms of Service</a>
+        <span class="text-[color:var(--card-border)]">|</span>
+        <a href="/" class="text-purple-500 hover:underline">Go to RhumbLabs Home</a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.06)] bg-[rgba(0,0,0,0.02)] dark:bg-[rgba(255,255,255,0.02)] py-12 px-6 transition-colors duration-300 mt-auto">
+    <div class="max-w-[1400px] mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-sm text-[color:var(--text-secondary)]">
+      <span>© 2026 RhumbLabs. All rights reserved. Todos los derechos reservados.</span>
+      <div class="flex gap-6">
+        <span>Google Play Verified compliant</span>
+        <span>Developer Support: support@rhumblabs.com</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Theme toggle actions -->
+  <script>
+    function toggleTheme() {
+      if (document.documentElement.classList.contains('dark')) {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      }
+    }
+  </script>
+</body>
+</html>
