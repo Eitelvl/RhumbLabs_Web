@@ -229,9 +229,9 @@ export default function LandingPage() {
                 </div>
                 
                 <div className="xl:col-span-5 order-1 xl:order-2 flex flex-col justify-center">
-                  <div className="relative mb-6 self-start flex items-center h-16 md:h-20 w-48 md:w-64">
-                    <img src={`${import.meta.env.BASE_URL}pogo/Pogo5.png`} alt="Pogo" className="show-in-light w-full h-auto object-contain origin-left" />
-                    <img src={`${import.meta.env.BASE_URL}pogo/Pogo2.png`} alt="Pogo" className="show-in-dark w-full h-auto object-contain origin-left" />
+                  <div className="relative mb-10 -mt-6 md:-mt-12 self-start flex items-center h-24 md:h-32 w-64 md:w-80">
+                    <img src={`${import.meta.env.BASE_URL}pogo/Pogo2.png`} alt="Pogo" className="show-in-light w-full h-auto object-contain origin-left scale-110 md:scale-125" />
+                    <img src={`${import.meta.env.BASE_URL}pogo/Pogo2.png`} alt="Pogo" className="show-in-dark w-full h-auto object-contain origin-left scale-110 md:scale-125" />
                   </div>
                   <h3 className="text-4xl md:text-5xl font-bold text-text-primary mb-6 tracking-tight leading-tight">Climb higher, <br className="hidden xl:block"/>track smarter.</h3>
                   <p className="text-text-secondary text-lg md:text-xl leading-relaxed mb-10 font-light max-w-lg">

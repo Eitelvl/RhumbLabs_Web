@@ -31,10 +31,10 @@ export default function PogoPage() {
               initial={{ opacity: 0, scale: 0.9, filter: "blur(10px)" }}
               animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-              className="inline-flex items-center justify-center mb-8 relative h-20 md:h-28 w-64 md:w-80"
+              className="inline-flex items-center justify-center -mt-4 md:-mt-8 mb-20 md:mb-28 relative h-24 md:h-36 w-72 md:w-96"
             >
-              <img src={`${import.meta.env.BASE_URL}pogo/Pogo5.png`} alt="Pogo Logo" className="show-in-light w-[220px] md:w-[320px] h-auto object-contain scale-[1.3] md:scale-[1.5] origin-center" />
-              <img src={`${import.meta.env.BASE_URL}pogo/Pogo2.png`} alt="Pogo Logo" className="show-in-dark w-[220px] md:w-[320px] h-auto object-contain scale-[1.3] md:scale-[1.5] origin-center" />
+              <img src={`${import.meta.env.BASE_URL}pogo/Pogo2.png`} alt="Pogo Logo" className="show-in-light w-full h-auto object-contain scale-[1.5] md:scale-[1.8] origin-center" />
+              <img src={`${import.meta.env.BASE_URL}pogo/Pogo2.png`} alt="Pogo Logo" className="show-in-dark w-full h-auto object-contain scale-[1.5] md:scale-[1.8] origin-center" />
             </motion.div>
             
             <motion.h1 
