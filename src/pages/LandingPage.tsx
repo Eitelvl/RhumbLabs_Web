@@ -101,11 +101,6 @@ export default function LandingPage() {
            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
            className="z-20 max-w-5xl mx-auto"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-card-border bg-card-element backdrop-blur-md text-sm font-medium text-text-secondary mb-10 shadow-xl">
-            <span className="w-2 h-2 rounded-full bg-green-400 shadow-[0_0_8px_rgba(74,222,128,0.8)] animate-pulse"></span>
-            Building the next generation of software at RhumbLabs
-          </div>
-          
           <h1 className="text-5xl md:text-7xl lg:text-[6rem] font-bold tracking-tighter mb-8 leading-[1.05] text-text-primary font-headline">
             RhumbLabs <br className="hidden md:block" />
             <span className="text-text-secondary">digital products.</span>
