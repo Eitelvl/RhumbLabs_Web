@@ -30,6 +30,7 @@ export default function LandingPage() {
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
     return () => observer.disconnect();
   }, []);
+
   const [activeCard, setActiveCard] = useState(0);
   const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
@@ -111,7 +112,13 @@ export default function LandingPage() {
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-             <Link to="#products" className="group relative inline-flex items-center justify-center gap-2 h-14 px-8 rounded-full bg-accent text-accent-foreground font-medium transition-transform hover:scale-105 active:scale-95 shadow-[0_0_40px_var(--shadow-btn)]">
+             <Link to="/#products" onClick={(e) => {
+               const el = document.getElementById('products');
+               if (el) {
+                 e.preventDefault();
+                 el.scrollIntoView({ behavior: 'smooth' });
+               }
+             }} className="group relative inline-flex items-center justify-center gap-2 h-14 px-8 rounded-full bg-accent text-accent-foreground font-medium transition-transform hover:scale-105 active:scale-95 shadow-[0_0_40px_var(--shadow-btn)]">
                Our Products
                <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
              </Link>

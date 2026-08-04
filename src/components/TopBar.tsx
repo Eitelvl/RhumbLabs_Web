@@ -41,7 +41,7 @@ export default function TopBar() {
       setScrolled(window.scrollY > 20);
       
       if (!isHomeRoute) return;
-      const sections = ['home', 'products', 'about'];
+      const sections = ['home', 'about'];
       let current = 'home';
       for (const section of sections) {
         const element = document.getElementById(section);
@@ -60,14 +60,16 @@ export default function TopBar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isHomeRoute]);
 
+  const isProductsRoute = location.pathname === '/products';
+
   useEffect(() => {
     if (!isHomeRoute) {
       if (isContactRoute) setActiveSection('contact');
-      else if (isRhumbNavRoute || isPogoRoute) setActiveSection('products');
+      else if (isRhumbNavRoute || isPogoRoute || isProductsRoute) setActiveSection('products');
       else if (isLegalRoute) setActiveSection('legal');
       else setActiveSection('');
     }
-  }, [isHomeRoute, isContactRoute, isRhumbNavRoute, isPogoRoute, isLegalRoute]);
+  }, [isHomeRoute, isContactRoute, isRhumbNavRoute, isPogoRoute, isLegalRoute, isProductsRoute]);
 
   const scrollToSection = (e: React.MouseEvent, sectionId: string) => {
     setIsMobileMenuOpen(false);
@@ -101,9 +103,20 @@ export default function TopBar() {
         </div>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-8 bg-card-element border border-card-border backdrop-blur-md rounded-full px-6 py-2 shadow-2xl">
+        <div className="hidden md:flex items-center gap-8 bg-card-element border border-card-border backdrop-blur-md rounded-full px-6 py-2 shadow-2xl relative">
           <Link to="/#home" onClick={(e) => scrollToSection(e, 'home')} className={getLinkClasses('home')}>Home</Link>
-          <Link to="/#products" onClick={(e) => scrollToSection(e, 'products')} className={getLinkClasses('products')}>Products</Link>
+          <div className="relative group">
+            <Link to="/products" className={`${getLinkClasses('products')} flex items-center gap-1`}>
+              Products
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-70 transition-transform group-hover:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+            </Link>
+            <div className="absolute top-full left-1/2 -translate-x-1/2 pt-4 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300">
+              <div className="bg-bg-secondary border border-border-subtle rounded-2xl p-2 w-48 shadow-2xl flex flex-col gap-1">
+                <Link to="/rhumbnav" className="px-4 py-2 rounded-xl text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-card-element transition-colors">RhumbNav</Link>
+                <Link to="/pogo" className="px-4 py-2 rounded-xl text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-card-element transition-colors">Pogo</Link>
+              </div>
+            </div>
+          </div>
           <Link to="/#about" onClick={(e) => scrollToSection(e, 'about')} className={getLinkClasses('about')}>About</Link>
           <Link to="/legal" className={getLinkClasses('legal')}>Legal</Link>
         </div>
@@ -143,7 +156,13 @@ export default function TopBar() {
           >
             <div className="py-6 px-6 flex flex-col gap-4">
               <Link to="/#home" onClick={(e) => scrollToSection(e, 'home')} className="text-xl font-medium text-text-secondary hover:text-text-primary">Home</Link>
-              <Link to="/#products" onClick={(e) => scrollToSection(e, 'products')} className="text-xl font-medium text-text-secondary hover:text-text-primary">Products</Link>
+              <div className="flex flex-col gap-2">
+                <Link to="/products" onClick={() => setIsMobileMenuOpen(false)} className="text-xl font-medium text-text-secondary hover:text-text-primary">Products</Link>
+                <div className="flex flex-col gap-2 pl-4 border-l-2 border-border-subtle ml-2">
+                  <Link to="/rhumbnav" onClick={() => setIsMobileMenuOpen(false)} className="text-lg font-medium text-text-secondary hover:text-text-primary">RhumbNav</Link>
+                  <Link to="/pogo" onClick={() => setIsMobileMenuOpen(false)} className="text-lg font-medium text-text-secondary hover:text-text-primary">Pogo</Link>
+                </div>
+              </div>
               <Link to="/#about" onClick={(e) => scrollToSection(e, 'about')} className="text-xl font-medium text-text-secondary hover:text-text-primary">About</Link>
               <Link to="/legal" onClick={() => setIsMobileMenuOpen(false)} className="text-xl font-medium text-text-secondary hover:text-text-primary">Legal</Link>
               <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)} className="text-xl font-medium text-text-secondary hover:text-text-primary">Contact</Link>

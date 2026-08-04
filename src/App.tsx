@@ -8,6 +8,7 @@ import LandingPage from './pages/LandingPage';
 import LegalPage from './pages/LegalPage';
 import LegalDocPage from './pages/LegalDocPage';
 import ContactPage from './pages/ContactPage';
+import ProductsPage from './pages/ProductsPage';
 import RhumbNavPage from './pages/RhumbNavPage';
 import PogoPage from './pages/PogoPage';
 import PogoDeleteAccountPage from './pages/PogoDeleteAccountPage';
@@ -23,6 +24,7 @@ export default function App() {
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/products" element={<ProductsPage />} />
         <Route path="/legal" element={<LegalPage />} />
         <Route path="/legal/*" element={<LegalDocPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
