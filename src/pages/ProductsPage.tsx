@@ -6,6 +6,7 @@ import TopBar from '../components/TopBar';
 import Footer from '../components/Footer';
 import { motion } from 'motion/react';
 
+// Products Page - RhumbLabs
 export default function ProductsPage() {
   const [isDarkMode, setIsDarkMode] = useState(() => {
     if (typeof window !== 'undefined') {
