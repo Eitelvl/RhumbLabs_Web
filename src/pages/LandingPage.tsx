@@ -92,7 +92,7 @@ export default function LandingPage() {
       <TopBar />
 
       {/* Modern Hero Section */}
-      <section id="home" className="relative pt-48 pb-32 overflow-hidden px-6 lg:px-12 flex flex-col justify-center items-center text-center">
+      <section id="home" className="relative min-h-[100dvh] pt-20 pb-20 overflow-hidden px-6 lg:px-12 flex flex-col justify-center items-center text-center">
         {/* Subtle glowing orb in background */}
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-sky-500/10 rounded-full blur-[120px] opacity-60 pointer-events-none"></div>
 
