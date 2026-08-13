@@ -101,9 +101,12 @@ export default function ContactPage() {
                       <span className="text-sm text-text-secondary font-medium">App Support</span>
                       <ArrowUpRight className="w-4 h-4 text-text-secondary group-hover:text-text-secondary transition-colors" />
                     </a>
-                    <Link to="/pogo/delete-account" className="sm:col-span-2 flex items-center justify-between p-3 rounded-lg border border-red-500/20 bg-red-500/5 hover:bg-red-500/10 transition-colors group">
-                      <span className="text-sm text-red-400 font-medium tracking-wide">Delete my Pogo account</span>
-                      <ArrowUpRight className="w-4 h-4 text-red-400 group-hover:text-red-300 transition-colors" />
+                    <Link to="/pogo/delete-account" className="sm:col-span-2 flex items-center justify-between p-3.5 rounded-xl border border-red-500/30 bg-red-500/10 hover:bg-red-500/20 transition-colors group">
+                      <div className="flex flex-col">
+                        <span className="text-sm text-red-400 font-semibold tracking-wide">Pogo Account &amp; Data Deletion</span>
+                        <span className="text-xs text-text-secondary font-light">Request account deletion or view Google Play data policy</span>
+                      </div>
+                      <ArrowUpRight className="w-4 h-4 text-red-400 group-hover:text-red-300 transition-colors shrink-0 ml-2" />
                     </Link>
                   </div>
                 </div>

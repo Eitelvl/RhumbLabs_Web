@@ -33,6 +33,8 @@ export default function App() {
         <Route path="/rhumbnav" element={<RhumbNavPage />} />
         <Route path="/pogo" element={<PogoPage />} />
         <Route path="/pogo/delete-account" element={<PogoDeleteAccountPage />} />
+        <Route path="/delete-account" element={<PogoDeleteAccountPage />} />
+        <Route path="/pogo-delete-account" element={<PogoDeleteAccountPage />} />
       </Routes>
     </BrowserRouter>
   );
