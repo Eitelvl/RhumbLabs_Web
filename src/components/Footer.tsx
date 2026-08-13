@@ -42,9 +42,10 @@ export default function Footer() {
               </ul>
             </div>
             <div className="col-span-1 sm:col-span-2 lg:col-span-1">
-              <span className="text-[11px] font-semibold text-text-primary uppercase tracking-widest block mb-4">Legal</span>
+              <span className="text-[11px] font-semibold text-text-primary uppercase tracking-widest block mb-4">Legal & Privacy</span>
               <ul className="space-y-3">
                 <li><Link to="/legal" className="text-text-secondary hover:text-text-primary transition-colors text-[13px]">Legal Center</Link></li>
+                <li><Link to="/delete-account" className="text-text-secondary hover:text-text-primary transition-colors text-[13px]">Data Deletion</Link></li>
               </ul>
             </div>
           </div>
