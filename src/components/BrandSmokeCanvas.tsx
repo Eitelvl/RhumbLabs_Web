@@ -2,6 +2,79 @@ import React, { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useBrandTheme } from '../context/BrandThemeContext';
 
+interface RGB {
+  r: number;
+  g: number;
+  b: number;
+}
+
+// Brand color definitions:
+// Rich Vibrant Magenta/Purple (Pogo) - Prominent, electric and deep
+const PURPLE_CORE: RGB = { r: 192, g: 38, b: 211 };   // #c026d3 (Vivid Magenta)
+const PURPLE_BRIGHT: RGB = { r: 232, g: 121, b: 249 }; // #e879f9 (Neon Magenta Glow)
+const PURPLE_DEEP: RGB = { r: 134, g: 25, b: 143 };   // #86198f (Deep Plum/Purple)
+
+// Electric Cyan/Blue (RhumbNav)
+const BLUE_CORE: RGB = { r: 6, g: 182, b: 212 };      // #06b6d4 (Cyan)
+const BLUE_BRIGHT: RGB = { r: 0, g: 242, b: 254 };    // #00f2fe (Electric Cyan)
+const BLUE_DEEP: RGB = { r: 14, g: 165, b: 233 };     // #0ea5e9 (Vivid Sky Blue)
+
+function lerpRGB(c1: RGB, c2: RGB, factor: number): RGB {
+  const f = Math.max(0, Math.min(1, factor));
+  return {
+    r: Math.round(c1.r + (c2.r - c1.r) * f),
+    g: Math.round(c1.g + (c2.g - c1.g) * f),
+    b: Math.round(c1.b + (c2.b - c1.b) * f),
+  };
+}
+
+function rgbaStr(c: RGB, alpha: number): string {
+  return `rgba(${c.r}, ${c.g}, ${c.b}, ${alpha.toFixed(3)})`;
+}
+
+function hexStr(c: RGB): string {
+  const toHex = (n: number) => n.toString(16).padStart(2, '0');
+  return `#${toHex(c.r)}${toHex(c.g)}${toHex(c.b)}`;
+}
+
+// Helper to calculate the 4 exact states:
+// State 0: Purple background + Purple strips (Starts here immediately on load)
+// State 1: Purple background + Blue strips
+// State 2: Blue background + Purple strips
+// State 3: Blue background + Blue strips
+function getFourStateFactors(t: number) {
+  const cycleDuration = 20; // 20 seconds total (5s per state)
+  const normalizedTime = ((t % cycleDuration) + cycleDuration) % cycleDuration;
+  const segment = (normalizedTime / cycleDuration) * 4; // 0 to 4
+  const stateIndex = Math.floor(segment) % 4;
+  const progressInState = segment - Math.floor(segment); // 0 to 1
+
+  // [bgFactor (0=Purple, 1=Blue), stripFactor (0=Purple, 1=Blue)]
+  const states: [number, number][] = [
+    [0, 0], // State 0: Purple background + Purple strips
+    [0, 1], // State 1: Purple background + Blue strips
+    [1, 0], // State 2: Blue background + Purple strips
+    [1, 1], // State 3: Blue background + Blue strips
+  ];
+
+  const curr = states[stateIndex];
+  const next = states[(stateIndex + 1) % 4];
+
+  // Hold pure color for 70% of the state duration, then smoothly transition over the remaining 30%
+  const transitionStart = 0.70;
+  let transitionProgress = 0;
+  if (progressInState > transitionStart) {
+    const rawProgress = (progressInState - transitionStart) / (1 - transitionStart);
+    // Smooth S-curve cosine easing
+    transitionProgress = (1 - Math.cos(rawProgress * Math.PI)) / 2;
+  }
+
+  const bgFactor = curr[0] + (next[0] - curr[0]) * transitionProgress;
+  const stripFactor = curr[1] + (next[1] - curr[1]) * transitionProgress;
+
+  return { bgFactor, stripFactor };
+}
+
 export const BrandSmokeCanvas: React.FC = () => {
   const { brandSmokeEnabled } = useBrandTheme();
   const location = useLocation();
@@ -24,13 +97,13 @@ export const BrandSmokeCanvas: React.FC = () => {
   if (isLegalOrDeletionRoute) {
     routeMode = 'legal';
   } else if (cleanPath === '/products') {
-    routeMode = 'products'; // Left Cyan (RhumbNav), Right Magenta (Pogo)
+    routeMode = 'products';
   } else if (cleanPath === '/rhumbnav') {
-    routeMode = 'cyan'; // Electric Cyan Nebula
+    routeMode = 'cyan'; // Blue background + Blue strips
   } else if (cleanPath === '/pogo') {
-    routeMode = 'magenta'; // Deep Magenta/Plum Nebula
+    routeMode = 'magenta'; // Purple background + Purple strips
   } else {
-    routeMode = 'dual'; // Magenta & Cyan dual glow (Home, Contact, About)
+    routeMode = 'dual'; // Cycles through all 4 variations: Purple/Purple, Purple/Blue, Blue/Purple, Blue/Blue
   }
 
   useEffect(() => {
@@ -44,7 +117,7 @@ export const BrandSmokeCanvas: React.FC = () => {
     let time = 0;
     let scrollOffset = 0;
 
-    // Floating dust particles (only animated when brandSmokeEnabled is true)
+    // Floating dust particles
     interface DustParticle {
       x: number;
       y: number;
@@ -52,7 +125,6 @@ export const BrandSmokeCanvas: React.FC = () => {
       vx: number;
       vy: number;
       alpha: number;
-      color: string;
       side: 'left' | 'right';
     }
 
@@ -61,27 +133,21 @@ export const BrandSmokeCanvas: React.FC = () => {
 
     for (let i = 0; i < particleCount; i++) {
       const side = Math.random() > 0.5 ? 'left' : 'right';
-      
-      let particleColor = side === 'left' ? '#86198f' : '#00f2fe';
-      if (routeMode === 'cyan') particleColor = '#00f2fe';
-      if (routeMode === 'magenta') particleColor = '#a21caf';
-      if (routeMode === 'products') particleColor = side === 'left' ? '#00f2fe' : '#86198f';
-
       particles.push({
         x: side === 'left' 
           ? Math.random() * (window.innerWidth * 0.35) 
           : window.innerWidth * 0.65 + Math.random() * (window.innerWidth * 0.35),
         y: Math.random() * window.innerHeight,
-        radius: 1 + Math.random() * 2.2,
+        radius: 1.2 + Math.random() * 2.2,
         vx: (Math.random() - 0.5) * 0.18,
         vy: -0.15 - Math.random() * 0.35,
-        alpha: 0.15 + Math.random() * 0.3,
-        color: particleColor,
+        alpha: 0.2 + Math.random() * 0.3,
         side,
       });
     }
 
     // Render multi-strand flowing cable/ribbon curve
+    // Supports 4 variations: Purple bg + Purple strips, Purple bg + Blue strips, Blue bg + Purple strips, Blue bg + Blue strips
     const drawCableStrand = (
       ctx: CanvasRenderingContext2D,
       width: number,
@@ -90,7 +156,9 @@ export const BrandSmokeCanvas: React.FC = () => {
       strandIndex: number,
       totalStrands: number,
       t: number,
-      scrollY: number
+      scrollY: number,
+      stripColorFactor: number,
+      opacityScale: number
     ) => {
       ctx.beginPath();
 
@@ -101,35 +169,6 @@ export const BrandSmokeCanvas: React.FC = () => {
       // Base X offset
       const baseX = isLeft ? width * 0.08 : width * 0.92;
       const maxAmplitude = width * 0.08;
-
-      const magentaColors = [
-        'rgba(168, 85, 247, 0.22)',
-        'rgba(134, 25, 143, 0.20)',
-        'rgba(192, 38, 211, 0.18)',
-        'rgba(112, 26, 117, 0.15)'
-      ];
-
-      const cyanColors = [
-        'rgba(0, 242, 254, 0.28)',
-        'rgba(6, 182, 212, 0.25)',
-        'rgba(56, 189, 248, 0.22)',
-        'rgba(14, 165, 233, 0.18)'
-      ];
-
-      let strokeColor = '';
-      if (routeMode === 'cyan') {
-        strokeColor = cyanColors[strandIndex % cyanColors.length];
-      } else if (routeMode === 'magenta') {
-        strokeColor = magentaColors[strandIndex % magentaColors.length];
-      } else if (routeMode === 'products') {
-        strokeColor = isLeft
-          ? cyanColors[strandIndex % cyanColors.length]
-          : 'rgba(134, 25, 143, 0.16)';
-      } else {
-        strokeColor = isLeft
-          ? magentaColors[strandIndex % magentaColors.length]
-          : cyanColors[strandIndex % cyanColors.length];
-      }
 
       const points: { x: number; y: number }[] = [];
 
@@ -166,14 +205,26 @@ export const BrandSmokeCanvas: React.FC = () => {
         );
       }
 
-      ctx.lineWidth = 2.0 + (strandIndex % 2);
-      ctx.strokeStyle = strokeColor;
-      
-      const isCyanStrand = routeMode === 'cyan' || 
-        (routeMode === 'dual' && !isLeft) || 
-        (routeMode === 'products' && isLeft);
-      ctx.shadowColor = isCyanStrand ? '#00f2fe' : '#a855f7';
-      ctx.shadowBlur = isCyanStrand ? 12 : 6;
+      // Determine strand color based on routeMode and stripColorFactor (0 = Purple, 1 = Blue)
+      let factor = stripColorFactor;
+      if (routeMode === 'cyan') factor = 1.0;
+      if (routeMode === 'magenta') factor = 0.0;
+      if (routeMode === 'products') factor = isLeft ? 1.0 : 0.0;
+
+      const strandColorCore = lerpRGB(PURPLE_CORE, BLUE_CORE, factor);
+      const strandColorBright = lerpRGB(PURPLE_BRIGHT, BLUE_BRIGHT, factor);
+      const alphaBase = (0.28 + (strandIndex % 2) * 0.08) * opacityScale;
+
+      // Linear gradient along cable length for smooth aesthetic depth
+      const grad = ctx.createLinearGradient(0, 0, 0, height);
+      grad.addColorStop(0, rgbaStr(strandColorBright, alphaBase * 0.9));
+      grad.addColorStop(0.5, rgbaStr(strandColorCore, alphaBase * 1.15));
+      grad.addColorStop(1, rgbaStr(strandColorBright, alphaBase * 0.85));
+
+      ctx.lineWidth = 2.2 + (strandIndex % 2);
+      ctx.strokeStyle = grad;
+      ctx.shadowColor = hexStr(strandColorBright);
+      ctx.shadowBlur = 10 + (strandIndex % 2) * 4;
       ctx.stroke();
     };
 
@@ -185,36 +236,54 @@ export const BrandSmokeCanvas: React.FC = () => {
       ctx.clearRect(0, 0, width, height);
 
       // Ambient multiplier based on light vs dark mode
-      const opacityScale = isDark ? 1.0 : 0.6;
+      const opacityScale = isDark ? 1.0 : 0.65;
       const isLegal = routeMode === 'legal';
       const legalScale = isLegal ? 0.75 : 1.0;
 
+      // Calculate the active background and strip color factors (0 = Purple/Magenta, 1 = Blue/Cyan)
+      const { bgFactor, stripFactor } = getFourStateFactors(currentT);
+
+      // Determine background color factor for each side
+      let leftBgFactor = bgFactor;
+      let rightBgFactor = bgFactor;
+
+      if (routeMode === 'cyan') {
+        leftBgFactor = 1.0;
+        rightBgFactor = 1.0;
+      } else if (routeMode === 'magenta') {
+        leftBgFactor = 0.0;
+        rightBgFactor = 0.0;
+      } else if (routeMode === 'products') {
+        leftBgFactor = 1.0; // Left Cyan (RhumbNav)
+        rightBgFactor = 0.0; // Right Magenta (Pogo)
+      }
+
+      // Left Side Background Ambient Colors
+      const leftBgCore = lerpRGB(PURPLE_DEEP, BLUE_DEEP, leftBgFactor);
+      const leftBgOuter = lerpRGB(PURPLE_CORE, BLUE_CORE, leftBgFactor);
+
+      // Right Side Background Ambient Colors
+      const rightBgCore = lerpRGB(PURPLE_CORE, BLUE_CORE, rightBgFactor);
+      const rightBgOuter = lerpRGB(PURPLE_BRIGHT, BLUE_BRIGHT, rightBgFactor);
+
       // 1. Left Side Top Ambient Glow
-      const isLeftCyan = routeMode === 'cyan';
       const leftShiftY = brandSmokeEnabled ? Math.sin(currentT * 0.5) * 35 : 0;
-      
       const gradLeftTop = ctx.createRadialGradient(
         width * 0.05,
         height * 0.32 + leftShiftY,
         5,
         width * 0.05,
         height * 0.32,
-        width * 0.44
+        width * 0.45
       );
-
-      if (isLeftCyan) {
-        gradLeftTop.addColorStop(0, `rgba(6, 182, 212, ${0.16 * opacityScale * legalScale})`);
-        gradLeftTop.addColorStop(0.6, `rgba(0, 242, 254, ${0.05 * opacityScale * legalScale})`);
-      } else {
-        gradLeftTop.addColorStop(0, `rgba(112, 26, 117, ${0.16 * opacityScale * legalScale})`);
-        gradLeftTop.addColorStop(0.6, `rgba(147, 51, 234, ${0.05 * opacityScale * legalScale})`);
-      }
+      gradLeftTop.addColorStop(0, rgbaStr(leftBgCore, 0.22 * opacityScale * legalScale));
+      gradLeftTop.addColorStop(0.55, rgbaStr(leftBgOuter, 0.08 * opacityScale * legalScale));
       gradLeftTop.addColorStop(1, 'rgba(0, 0, 0, 0)');
 
       ctx.fillStyle = gradLeftTop;
       ctx.fillRect(0, 0, width, height);
 
-      // 2. Left Side Bottom Ambient Glow (Dual contrast across whole scroll/page)
+      // 2. Left Side Bottom Ambient Glow
       if (routeMode === 'dual' || routeMode === 'legal' || routeMode === 'products') {
         const leftBottomShiftY = brandSmokeEnabled ? Math.cos(currentT * 0.5) * 35 : 0;
         const gradLeftBottom = ctx.createRadialGradient(
@@ -225,8 +294,8 @@ export const BrandSmokeCanvas: React.FC = () => {
           height * 0.78,
           width * 0.45
         );
-        gradLeftBottom.addColorStop(0, `rgba(6, 182, 212, ${0.13 * opacityScale * legalScale})`);
-        gradLeftBottom.addColorStop(0.6, `rgba(0, 242, 254, ${0.04 * opacityScale * legalScale})`);
+        gradLeftBottom.addColorStop(0, rgbaStr(leftBgCore, 0.18 * opacityScale * legalScale));
+        gradLeftBottom.addColorStop(0.55, rgbaStr(leftBgOuter, 0.06 * opacityScale * legalScale));
         gradLeftBottom.addColorStop(1, 'rgba(0, 0, 0, 0)');
 
         ctx.fillStyle = gradLeftBottom;
@@ -234,10 +303,7 @@ export const BrandSmokeCanvas: React.FC = () => {
       }
 
       // 3. Right Side Top Ambient Glow
-      const isRightMagenta = routeMode === 'magenta';
-      const isRightProducts = routeMode === 'products';
       const rightShiftY = brandSmokeEnabled ? Math.cos(currentT * 0.5) * 35 : 0;
-
       const gradRightTop = ctx.createRadialGradient(
         width * 0.94,
         height * 0.32 + rightShiftY,
@@ -246,20 +312,14 @@ export const BrandSmokeCanvas: React.FC = () => {
         height * 0.32,
         width * 0.48
       );
-
-      if (isRightProducts || isRightMagenta) {
-        gradRightTop.addColorStop(0, `rgba(134, 25, 143, ${0.15 * opacityScale * legalScale})`);
-        gradRightTop.addColorStop(0.6, `rgba(168, 85, 247, ${0.05 * opacityScale * legalScale})`);
-      } else {
-        gradRightTop.addColorStop(0, `rgba(14, 165, 233, ${0.16 * opacityScale * legalScale})`);
-        gradRightTop.addColorStop(0.6, `rgba(56, 189, 248, ${0.05 * opacityScale * legalScale})`);
-      }
+      gradRightTop.addColorStop(0, rgbaStr(rightBgCore, 0.20 * opacityScale * legalScale));
+      gradRightTop.addColorStop(0.55, rgbaStr(rightBgOuter, 0.08 * opacityScale * legalScale));
       gradRightTop.addColorStop(1, 'rgba(0, 0, 0, 0)');
 
       ctx.fillStyle = gradRightTop;
       ctx.fillRect(0, 0, width, height);
 
-      // 4. Right Side Bottom Ambient Glow (Balance across full page height)
+      // 4. Right Side Bottom Ambient Glow
       if (routeMode === 'dual' || routeMode === 'legal' || routeMode === 'products') {
         const rightBottomShiftY = brandSmokeEnabled ? Math.sin(currentT * 0.5) * 35 : 0;
         const gradRightBottom = ctx.createRadialGradient(
@@ -270,22 +330,23 @@ export const BrandSmokeCanvas: React.FC = () => {
           height * 0.80,
           width * 0.45
         );
-        gradRightBottom.addColorStop(0, `rgba(134, 25, 143, ${0.11 * opacityScale * legalScale})`);
-        gradRightBottom.addColorStop(0.6, `rgba(168, 85, 247, ${0.04 * opacityScale * legalScale})`);
+        gradRightBottom.addColorStop(0, rgbaStr(rightBgCore, 0.16 * opacityScale * legalScale));
+        gradRightBottom.addColorStop(0.55, rgbaStr(rightBgOuter, 0.05 * opacityScale * legalScale));
         gradRightBottom.addColorStop(1, 'rgba(0, 0, 0, 0)');
 
         ctx.fillStyle = gradRightBottom;
         ctx.fillRect(0, 0, width, height);
       }
 
-      // If FX animation is enabled, render animated cables and particles on top
+      // 5. Cable Ribbon Strands & Floating Ambient Dust
       if (brandSmokeEnabled && routeMode !== 'legal') {
         const totalStrands = 3;
         for (let i = 0; i < totalStrands; i++) {
-          drawCableStrand(ctx, width, height, 'left', i, totalStrands, currentT, currentScroll);
-          drawCableStrand(ctx, width, height, 'right', i, totalStrands, currentT, currentScroll);
+          drawCableStrand(ctx, width, height, 'left', i, totalStrands, currentT, currentScroll, stripFactor, opacityScale);
+          drawCableStrand(ctx, width, height, 'right', i, totalStrands, currentT, currentScroll, stripFactor, opacityScale);
         }
 
+        // Floating ambient dust particles
         for (const p of particles) {
           p.y += p.vy;
           p.x += p.vx + Math.sin(currentT + p.y * 0.01) * 0.2;
@@ -297,11 +358,19 @@ export const BrandSmokeCanvas: React.FC = () => {
               : width * 0.65 + Math.random() * (width * 0.35);
           }
 
+          let pFactor = stripFactor;
+          if (routeMode === 'cyan') pFactor = 1.0;
+          if (routeMode === 'magenta') pFactor = 0.0;
+          if (routeMode === 'products') pFactor = p.side === 'left' ? 1.0 : 0.0;
+
+          const pColorRGB = lerpRGB(PURPLE_BRIGHT, BLUE_BRIGHT, pFactor);
+          const pColorHex = hexStr(pColorRGB);
+
           ctx.beginPath();
           ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-          ctx.fillStyle = p.color;
-          ctx.globalAlpha = p.alpha * (0.6 + Math.sin(currentT * 1.5 + p.y) * 0.35);
-          ctx.shadowColor = p.color;
+          ctx.fillStyle = pColorHex;
+          ctx.globalAlpha = p.alpha * (0.7 + Math.sin(currentT * 1.5 + p.y) * 0.3) * opacityScale;
+          ctx.shadowColor = pColorHex;
           ctx.shadowBlur = 6;
           ctx.fill();
           ctx.globalAlpha = 1.0;
@@ -315,13 +384,12 @@ export const BrandSmokeCanvas: React.FC = () => {
     window.addEventListener('scroll', handleScroll, { passive: true });
 
     const resize = () => {
-      const dpr = window.devicePixelRatio || 1;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = window.innerWidth * dpr;
       canvas.height = window.innerHeight * dpr;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.scale(dpr, dpr);
-      if (!brandSmokeEnabled) {
-        drawFrame(0, 0);
-      }
+      drawFrame(time, window.scrollY || 0);
     };
 
     resize();
@@ -329,9 +397,7 @@ export const BrandSmokeCanvas: React.FC = () => {
 
     // Watch for dark/light mode class changes on <html>
     const observer = new MutationObserver(() => {
-      if (!brandSmokeEnabled) {
-        drawFrame(0, 0);
-      }
+      drawFrame(time, window.scrollY || 0);
     });
     observer.observe(document.documentElement, {
       attributes: true,
@@ -339,14 +405,16 @@ export const BrandSmokeCanvas: React.FC = () => {
     });
 
     if (brandSmokeEnabled) {
-      const render = () => {
-        time += 0.009;
+      let lastTimestamp = performance.now();
+      const render = (now: number) => {
+        const delta = Math.min((now - lastTimestamp) / 1000, 0.1);
+        lastTimestamp = now;
+        time += delta;
         drawFrame(time, scrollOffset);
         animationFrameId = requestAnimationFrame(render);
       };
-      render();
+      animationFrameId = requestAnimationFrame(render);
     } else {
-      // Draw stationary static background immediately
       drawFrame(0, 0);
     }
 
@@ -368,5 +436,6 @@ export const BrandSmokeCanvas: React.FC = () => {
     />
   );
 };
+
 
 
