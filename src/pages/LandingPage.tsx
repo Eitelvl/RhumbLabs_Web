@@ -227,26 +227,26 @@ export default function LandingPage() {
               {/* Image Column - 3 Vertical Phones Stack */}
               <div className="lg:col-span-5 flex justify-center items-center relative min-h-[300px] md:min-h-[340px] py-4">
                 <div className="flex flex-row items-center justify-center w-full max-w-[380px] md:max-w-[440px] relative">
-                  {/* Left Phone: Flight Plan (FPL) */}
+                  {/* Left Phone: Pilot License */}
                   <DeviceMockup 
                     type="phone"
                     className="w-[50%] md:w-[54%] shadow-[0_15px_35px_rgba(0,0,0,0.3)] z-10 scale-90 -mr-[20%]"
-                    imageSrc={getAssetUrl('rhumbnav-fpl.jpeg')}
-                    alt="RhumbNav Flight Plan"
-                  />
-                  {/* Center Phone (Front): Pilot License */}
-                  <DeviceMockup 
-                    type="phone"
-                    className="w-[58%] md:w-[62%] shadow-[0_25px_60px_var(--shadow-heavy)] z-30 relative"
                     imageSrc={getAssetUrl('rhumbnav-license.jpeg')}
                     alt="RhumbNav Pilot License"
                   />
-                  {/* Right Phone: Flight Computer */}
+                  {/* Center Phone (Front): Active Navigation */}
+                  <DeviceMockup 
+                    type="phone"
+                    className="w-[58%] md:w-[62%] shadow-[0_25px_60px_var(--shadow-heavy)] z-30 relative"
+                    imageSrc={getAssetUrl('rhumbnav-nav-active.jpeg')}
+                    alt="RhumbNav Active Navigation"
+                  />
+                  {/* Right Phone: Flight Plan (FPL) */}
                   <DeviceMockup 
                     type="phone"
                     className="w-[50%] md:w-[54%] shadow-[0_15px_35px_rgba(0,0,0,0.3)] z-10 scale-90 -ml-[20%]"
-                    imageSrc={getAssetUrl('rhumbnav-computer.jpeg')}
-                    alt="RhumbNav Precision Flight Computer"
+                    imageSrc={getAssetUrl('rhumbnav-fpl.jpeg')}
+                    alt="RhumbNav Flight Plan"
                   />
                 </div>
               </div>
@@ -267,26 +267,26 @@ export default function LandingPage() {
               {/* Image Column - 3 Vertical Phones Stack */}
               <div className="lg:col-span-5 order-2 lg:order-1 flex justify-center items-center relative min-h-[300px] md:min-h-[340px] py-4 self-center">
                  <div className="flex flex-row items-center justify-center w-full max-w-[380px] md:max-w-[440px] relative">
-                   {/* Left Phone: Achievements */}
+                   {/* Left Phone: Summary */}
                    <DeviceMockup 
                       type="phone"
                       className="w-[50%] md:w-[54%] shadow-[0_15px_35px_rgba(0,0,0,0.3)] z-10 scale-90 -mr-[20%]"
-                      imageSrc={getAssetUrl(isDarkMode ? 'pogo/pogo-achievements-dark.jpg' : 'pogo/pogo-achievements-light.jpg')}
-                      alt="Pogo Achievements View"
-                   />
-                   {/* Center Phone (Front): Summary */}
-                   <DeviceMockup 
-                      type="phone"
-                      className="w-[58%] md:w-[62%] shadow-[0_25px_60px_var(--shadow-heavy)] z-30 relative"
                       imageSrc={getAssetUrl(isDarkMode ? 'pogo/pogo-summary-dark.jpg' : 'pogo/pogo-summary-light.jpg')}
                       alt="Pogo Summary View"
                    />
-                   {/* Right Phone: Active Session */}
+                   {/* Center Phone (Front): Active Session */}
+                   <DeviceMockup 
+                      type="phone"
+                      className="w-[58%] md:w-[62%] shadow-[0_25px_60px_var(--shadow-heavy)] z-30 relative"
+                      imageSrc={getAssetUrl(isDarkMode ? 'pogo/pogo-active-session-dark.jpg' : 'pogo/pogo-active-session-light.jpg')}
+                      alt="Pogo Active Session View"
+                   />
+                   {/* Right Phone: Achievements */}
                    <DeviceMockup 
                       type="phone"
                       className="w-[50%] md:w-[54%] shadow-[0_15px_35px_rgba(0,0,0,0.3)] z-10 scale-90 -ml-[20%]"
-                      imageSrc={getAssetUrl(isDarkMode ? 'pogo/pogo-active-session-dark.jpg' : 'pogo/pogo-active-session-light.jpg')}
-                      alt="Pogo Active Session View"
+                      imageSrc={getAssetUrl(isDarkMode ? 'pogo/pogo-achievements-dark.jpg' : 'pogo/pogo-achievements-light.jpg')}
+                      alt="Pogo Achievements View"
                    />
                 </div>
               </div>
