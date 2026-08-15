@@ -58,7 +58,7 @@ export default function ProductsPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="w-full group relative rounded-[2rem] border border-card-border bg-bg-secondary overflow-hidden flex flex-col p-8 md:p-12 hover:bg-card-element transition-colors aspect-square"
+              className="w-full group relative rounded-[2rem] linear-card backdrop-blur-xl overflow-hidden flex flex-col p-8 md:p-12 aspect-square"
             >
               <div className="flex flex-col items-center text-center h-full w-full justify-between">
                 {/* Logo Area - Aligned to bottom, matching optical weight */}
@@ -93,7 +93,7 @@ export default function ProductsPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="w-full group relative rounded-[2rem] border border-card-border bg-bg-secondary overflow-hidden flex flex-col p-8 md:p-12 hover:bg-card-element transition-colors aspect-square"
+              className="w-full group relative rounded-[2rem] linear-card backdrop-blur-xl overflow-hidden flex flex-col p-8 md:p-12 aspect-square"
             >
               <div className="flex flex-col items-center text-center h-full w-full justify-between">
                 {/* Logo Area - Aligned to bottom, matching optical weight */}

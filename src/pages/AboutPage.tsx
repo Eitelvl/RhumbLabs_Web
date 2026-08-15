@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion, useInView } from 'motion/react';
 import TopBar from '../components/TopBar';
 import Footer from '../components/Footer';
+import { getAssetUrl } from '../utils/assets';
 import { 
   ArrowRight, 
   Sparkles, 
@@ -438,7 +439,7 @@ export default function AboutPage() {
                   {/* Logo Area: Left-Aligned */}
                   <div className="h-20 sm:h-24 flex items-center justify-start mb-6">
                     <img 
-                      src={`${import.meta.env.BASE_URL}rhumbnav-logo.png`} 
+                      src={getAssetUrl('rhumbnav-logo.png')} 
                       alt="RhumbNav" 
                       className="h-10 sm:h-12 md:h-14 w-auto object-contain"
                     />
@@ -473,7 +474,7 @@ export default function AboutPage() {
                   {/* Logo Area: Left-Aligned */}
                   <div className="h-20 sm:h-24 flex items-center justify-start mb-6">
                     <img 
-                      src={`${import.meta.env.BASE_URL}pogo/pogo-logo.png`} 
+                      src={getAssetUrl('pogo/pogo-logo.png')} 
                       alt="Pogo" 
                       className="h-10 sm:h-12 md:h-14 w-auto object-contain" 
                     />

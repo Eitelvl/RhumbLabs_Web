@@ -37,42 +37,24 @@ function hexStr(c: RGB): string {
   return `#${toHex(c.r)}${toHex(c.g)}${toHex(c.b)}`;
 }
 
-// Helper to calculate the 4 exact states:
-// State 0: Purple background + Purple strips (Starts here immediately on load)
-// State 1: Purple background + Blue strips
-// State 2: Blue background + Purple strips
-// State 3: Blue background + Blue strips
-function getFourStateFactors(t: number) {
-  const cycleDuration = 20; // 20 seconds total (5s per state)
-  const normalizedTime = ((t % cycleDuration) + cycleDuration) % cycleDuration;
-  const segment = (normalizedTime / cycleDuration) * 4; // 0 to 4
-  const stateIndex = Math.floor(segment) % 4;
-  const progressInState = segment - Math.floor(segment); // 0 to 1
+// 2 Contrasting Variations (0 = Purple/Magenta, 1 = Blue/Cyan):
+// Variation 0: Blue/Greenish-Cyan background -> Purple/Magenta lines
+// Variation 1: Purple/Magenta background -> Blue/Cyan lines
+const VARIATIONS = [
+  { bgFactor: 1.0, stripFactor: 0.0 }, // Fondo azul/verdoso -> líneas moradas
+  { bgFactor: 0.0, stripFactor: 1.0 }, // Fondo morado -> líneas azules
+];
 
-  // [bgFactor (0=Purple, 1=Blue), stripFactor (0=Purple, 1=Blue)]
-  const states: [number, number][] = [
-    [0, 0], // State 0: Purple background + Purple strips
-    [0, 1], // State 1: Purple background + Blue strips
-    [1, 0], // State 2: Blue background + Purple strips
-    [1, 1], // State 3: Blue background + Blue strips
-  ];
-
-  const curr = states[stateIndex];
-  const next = states[(stateIndex + 1) % 4];
-
-  // Hold pure color for 70% of the state duration, then smoothly transition over the remaining 30%
-  const transitionStart = 0.70;
-  let transitionProgress = 0;
-  if (progressInState > transitionStart) {
-    const rawProgress = (progressInState - transitionStart) / (1 - transitionStart);
-    // Smooth S-curve cosine easing
-    transitionProgress = (1 - Math.cos(rawProgress * Math.PI)) / 2;
+function getNextVariationIndex(): number {
+  try {
+    const stored = sessionStorage.getItem('rhumb_bg_variation');
+    const currentIndex = stored !== null ? parseInt(stored, 10) : -1;
+    const nextIndex = (currentIndex + 1) % VARIATIONS.length;
+    sessionStorage.setItem('rhumb_bg_variation', nextIndex.toString());
+    return nextIndex;
+  } catch {
+    return Math.floor(Math.random() * VARIATIONS.length);
   }
-
-  const bgFactor = curr[0] + (next[0] - curr[0]) * transitionProgress;
-  const stripFactor = curr[1] + (next[1] - curr[1]) * transitionProgress;
-
-  return { bgFactor, stripFactor };
 }
 
 export const BrandSmokeCanvas: React.FC = () => {
@@ -80,12 +62,15 @@ export const BrandSmokeCanvas: React.FC = () => {
   const location = useLocation();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
+  // Pick a variation on load/navigation so each reload/refresh rotates through the 4 variations cleanly
+  const variationRef = useRef<number>(getNextVariationIndex());
+
   const path = location.pathname.toLowerCase().replace(/\/$/, '') || '/';
   const base = (import.meta.env.BASE_URL || '/').toLowerCase().replace(/\/$/, '');
   const cleanPath = path.startsWith(base) ? path.slice(base.length) || '/' : path;
 
   // Determine effect theme based on current route
-  let routeMode: 'dual' | 'products' | 'cyan' | 'magenta' | 'legal' = 'dual';
+  let routeMode: 'dual' | 'cyan' | 'magenta' | 'legal' = 'dual';
 
   const isLegalOrDeletionRoute = 
     cleanPath.includes('legal') ||
@@ -96,15 +81,19 @@ export const BrandSmokeCanvas: React.FC = () => {
 
   if (isLegalOrDeletionRoute) {
     routeMode = 'legal';
-  } else if (cleanPath === '/products') {
-    routeMode = 'products';
   } else if (cleanPath === '/rhumbnav') {
-    routeMode = 'cyan'; // Blue background + Blue strips
+    routeMode = 'cyan'; // Dedicated Blue background + Blue strips
   } else if (cleanPath === '/pogo') {
-    routeMode = 'magenta'; // Purple background + Purple strips
+    routeMode = 'magenta'; // Dedicated Purple background + Purple strips
   } else {
-    routeMode = 'dual'; // Cycles through all 4 variations: Purple/Purple, Purple/Blue, Blue/Purple, Blue/Blue
+    // "Home" (/), "Our Products" (/products), "About" (/about), "Contact" (/contact)
+    routeMode = 'dual'; // Alternates between (Blue bg + Purple lines) and (Purple bg + Blue lines)
   }
+
+  // Update variation on path change so navigating or reloading transitions between the variations
+  useEffect(() => {
+    variationRef.current = getNextVariationIndex();
+  }, [cleanPath]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -209,7 +198,6 @@ export const BrandSmokeCanvas: React.FC = () => {
       let factor = stripColorFactor;
       if (routeMode === 'cyan') factor = 1.0;
       if (routeMode === 'magenta') factor = 0.0;
-      if (routeMode === 'products') factor = isLeft ? 1.0 : 0.0;
 
       const strandColorCore = lerpRGB(PURPLE_CORE, BLUE_CORE, factor);
       const strandColorBright = lerpRGB(PURPLE_BRIGHT, BLUE_BRIGHT, factor);
@@ -240,8 +228,10 @@ export const BrandSmokeCanvas: React.FC = () => {
       const isLegal = routeMode === 'legal';
       const legalScale = isLegal ? 0.75 : 1.0;
 
-      // Calculate the active background and strip color factors (0 = Purple/Magenta, 1 = Blue/Cyan)
-      const { bgFactor, stripFactor } = getFourStateFactors(currentT);
+      // Select the active variation factors (0 = Purple/Magenta, 1 = Blue/Cyan)
+      const selectedVariation = VARIATIONS[variationRef.current % VARIATIONS.length];
+      const bgFactor = selectedVariation.bgFactor;
+      const stripFactor = selectedVariation.stripFactor;
 
       // Determine background color factor for each side
       let leftBgFactor = bgFactor;
@@ -253,9 +243,6 @@ export const BrandSmokeCanvas: React.FC = () => {
       } else if (routeMode === 'magenta') {
         leftBgFactor = 0.0;
         rightBgFactor = 0.0;
-      } else if (routeMode === 'products') {
-        leftBgFactor = 1.0; // Left Cyan (RhumbNav)
-        rightBgFactor = 0.0; // Right Magenta (Pogo)
       }
 
       // Left Side Background Ambient Colors
@@ -284,7 +271,7 @@ export const BrandSmokeCanvas: React.FC = () => {
       ctx.fillRect(0, 0, width, height);
 
       // 2. Left Side Bottom Ambient Glow
-      if (routeMode === 'dual' || routeMode === 'legal' || routeMode === 'products') {
+      if (routeMode === 'dual' || routeMode === 'legal') {
         const leftBottomShiftY = brandSmokeEnabled ? Math.cos(currentT * 0.5) * 35 : 0;
         const gradLeftBottom = ctx.createRadialGradient(
           width * 0.08,
@@ -320,7 +307,7 @@ export const BrandSmokeCanvas: React.FC = () => {
       ctx.fillRect(0, 0, width, height);
 
       // 4. Right Side Bottom Ambient Glow
-      if (routeMode === 'dual' || routeMode === 'legal' || routeMode === 'products') {
+      if (routeMode === 'dual' || routeMode === 'legal') {
         const rightBottomShiftY = brandSmokeEnabled ? Math.sin(currentT * 0.5) * 35 : 0;
         const gradRightBottom = ctx.createRadialGradient(
           width * 0.90,
@@ -361,7 +348,6 @@ export const BrandSmokeCanvas: React.FC = () => {
           let pFactor = stripFactor;
           if (routeMode === 'cyan') pFactor = 1.0;
           if (routeMode === 'magenta') pFactor = 0.0;
-          if (routeMode === 'products') pFactor = p.side === 'left' ? 1.0 : 0.0;
 
           const pColorRGB = lerpRGB(PURPLE_BRIGHT, BLUE_BRIGHT, pFactor);
           const pColorHex = hexStr(pColorRGB);

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import TopBar from '../components/TopBar';
 import Footer from '../components/Footer';
+import { getAssetUrl } from '../utils/assets';
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function LegalPage() {
@@ -85,7 +86,7 @@ export default function LegalPage() {
         <div className="flex justify-between items-center mb-8">
           <div className="flex items-center">
             <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center h-12 md:h-16">
-              <img src={`${import.meta.env.BASE_URL}rhumb-labs-logo.png`} alt="Rhumb Labs" className="h-full w-auto object-left object-contain scale-[2] md:scale-[2.5] origin-left -translate-x-4 md:-translate-x-8" />
+              <img src={getAssetUrl('rhumb-labs-logo.png')} alt="Rhumb Labs" className="h-full w-auto object-left object-contain scale-[2] md:scale-[2.5] origin-left -translate-x-4 md:-translate-x-8" />
             </Link>
           </div>
           <button onClick={() => setIsMobileMenuOpen(false)} className="text-text-secondary hover:text-text-primary">

@@ -177,7 +177,7 @@ export default function LandingPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.7 }}
-            className="w-full group relative rounded-[1.75rem] md:rounded-[2.5rem] border border-card-border bg-bg-secondary overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
+            className="w-full group relative rounded-[1.75rem] md:rounded-[2.5rem] linear-card backdrop-blur-xl overflow-hidden"
           >
             <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[90px] pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
             
@@ -259,7 +259,7 @@ export default function LandingPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.7 }}
-            className="w-full group relative rounded-[1.75rem] md:rounded-[2.5rem] border border-card-border bg-bg-secondary overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
+            className="w-full group relative rounded-[1.75rem] md:rounded-[2.5rem] linear-card backdrop-blur-xl overflow-hidden"
           >
             <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-purple-500/5 rounded-full blur-[90px] pointer-events-none -translate-y-1/2 -translate-x-1/3"></div>
             
