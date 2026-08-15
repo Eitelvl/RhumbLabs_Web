@@ -1,7 +1,6 @@
 import { AlertTriangle, Download, Gavel, X, ChevronDown, Menu } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import RhumbLabsLogo from '../components/RhumbLabsLogo';
 import TopBar from '../components/TopBar';
 import Footer from '../components/Footer';
 import { motion, AnimatePresence } from 'motion/react';
@@ -86,9 +85,7 @@ export default function LegalPage() {
         <div className="flex justify-between items-center mb-8">
           <div className="flex items-center">
             <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center h-12 md:h-16">
-              <img src={`${import.meta.env.BASE_URL}pogo/RL1N.png`} alt="Rhumb Labs" className="show-in-light h-full w-auto object-left object-contain scale-[2] md:scale-[2.5] origin-left -translate-x-4 md:-translate-x-8" />
-              <img src={`${import.meta.env.BASE_URL}pogo/RL1.png`} alt="Rhumb Labs" className="show-in-dark h-full w-auto object-left object-contain scale-[2] md:scale-[2.5] origin-left -translate-x-4 md:-translate-x-8" />
-
+              <img src={`${import.meta.env.BASE_URL}rhumb-labs-logo.png`} alt="Rhumb Labs" className="h-full w-auto object-left object-contain scale-[2] md:scale-[2.5] origin-left -translate-x-4 md:-translate-x-8" />
             </Link>
           </div>
           <button onClick={() => setIsMobileMenuOpen(false)} className="text-text-secondary hover:text-text-primary">

@@ -52,9 +52,9 @@
   --bg-primary: #000000;
   --bg-secondary: #0a0b0d;
   --text-primary: #ffffff;
-  --text-secondary: #8A8F98;
-  --card-element: rgba(255, 255, 255, 0.05);
-  --card-border: rgba(255, 255, 255, 0.1);
+  --text-secondary: #C5C9D3;
+  --card-element: rgba(255, 255, 255, 0.06);
+  --card-border: rgba(255, 255, 255, 0.12);
   --border-subtle: rgba(255, 255, 255, 0.04);
   --accent: #ffffff;
   --accent-foreground: #000000;
@@ -101,47 +101,302 @@ html.dark .show-in-light { display: none !important; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .active-link { color: var(--text-primary) !important; font-weight: 500; }
 
-/* Landing Page Specifics */
+/* Landing Page Specifics & RhumbLabs Brand Typography */
+.brand-hero-title-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: -0.035em;
+}
+
+/* Background/Foreground Traversing Energy Strands (Magenta-Purple to Cyan-Blue) */
+.brand-traversing-lines-svg {
+  position: absolute;
+  top: -15%;
+  left: -5%;
+  width: 110%;
+  height: 130%;
+  pointer-events: none;
+  z-index: 2;
+  overflow: visible;
+}
+
+.brand-strand-wave-1 {
+  stroke-dasharray: 800;
+  stroke-dashoffset: 0;
+  animation: strandFlow1 8s ease-in-out infinite alternate;
+}
+
+.brand-strand-wave-2 {
+  stroke-dasharray: 800;
+  stroke-dashoffset: 0;
+  animation: strandFlow2 10s ease-in-out infinite alternate;
+}
+
+.brand-strand-wave-3 {
+  stroke-dasharray: 800;
+  stroke-dashoffset: 0;
+  animation: strandFlow3 7s ease-in-out infinite alternate;
+}
+
+@keyframes strandFlow1 {
+  0% {
+    transform: translateY(-2px) scaleY(0.95);
+    opacity: 0.85;
+  }
+  50% {
+    transform: translateY(3px) scaleY(1.08);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-3px) scaleY(0.98);
+    opacity: 0.85;
+  }
+}
+
+@keyframes strandFlow2 {
+  0% {
+    transform: translateY(3px) scaleY(1.05);
+    opacity: 0.75;
+  }
+  50% {
+    transform: translateY(-4px) scaleY(0.92);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translateY(2px) scaleY(1.02);
+    opacity: 0.75;
+  }
+}
+
+@keyframes strandFlow3 {
+  0% {
+    transform: translateY(-1px);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(2px);
+    opacity: 0.85;
+  }
+  100% {
+    transform: translateY(-2px);
+    opacity: 0.6;
+  }
+}
+
+/* Middle horizontal color line (purple to electric blue gradient) */
+.brand-middle-line {
+  position: absolute;
+  top: 50%;
+  left: 2%;
+  right: 2%;
+  height: 2.5px;
+  transform: translateY(-50%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(168, 85, 247, 0.9) 15%,
+    rgba(192, 38, 211, 0.95) 35%,
+    rgba(59, 130, 246, 0.95) 65%,
+    rgba(6, 182, 212, 0.9) 85%,
+    transparent 100%
+  );
+  border-radius: 9999px;
+  z-index: 2;
+  pointer-events: none;
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.6), 0 0 18px rgba(56, 189, 248, 0.5);
+}
+
+@media (min-width: 768px) {
+  .brand-middle-line {
+    height: 3.5px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .brand-middle-line {
+    height: 4.5px;
+  }
+}
+
+/* A clean traveling dot / point of light passing from left to right along the word */
+.brand-light-point {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  transform: translate(-50%, -50%);
+  background: #ffffff;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 4;
+  box-shadow: 
+    0 0 8px 3px #ffffff,
+    0 0 18px 8px rgba(168, 85, 247, 0.85),
+    0 0 32px 12px rgba(6, 182, 212, 0.75);
+  animation: pointOfLightTransit 6s cubic-bezier(0.45, 0, 0.25, 1) infinite;
+}
+
+@keyframes pointOfLightTransit {
+  0%, 15% {
+    left: -5%;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  22% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+  60% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  70% {
+    left: 105%;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.6);
+  }
+  100% {
+    left: 105%;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+}
+
+.text-gradient-cyan {
+  background: linear-gradient(135deg, #38bdf8 0%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 1px #000000;
+  paint-order: stroke fill;
+}
+
+/* Global text outline and contrast utilities */
+.text-stroke-black {
+  -webkit-text-stroke: 1.5px #000000;
+  paint-order: stroke fill;
+}
+
+.text-stroke-sm-black {
+  -webkit-text-stroke: 0.8px #000000;
+  paint-order: stroke fill;
+}
+
+.text-shadow-black {
+  text-shadow: none;
+}
+
+.text-gradient-magenta {
+  background: linear-gradient(135deg, #e879f9 0%, #a21caf 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 1px #000000;
+  paint-order: stroke fill;
+}
+
+.border-brand-gradient {
+  border: 1px solid transparent;
+  background: linear-gradient(var(--bg-secondary), var(--bg-secondary)) padding-box,
+              linear-gradient(135deg, rgba(134, 25, 143, 0.4), rgba(6, 182, 212, 0.4)) border-box;
+}
+
+.brand-btn-primary {
+  background: linear-gradient(135deg, #86198f 0%, #7c3aed 50%, #06b6d4 100%);
+  color: #ffffff;
+  border-radius: 9999px;
+  box-shadow: 0 4px 18px -2px rgba(6, 182, 212, 0.3), 0 0 12px rgba(134, 25, 143, 0.25);
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.brand-btn-primary:hover {
+  opacity: 0.95;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px -2px rgba(6, 182, 212, 0.5), 0 0 18px rgba(134, 25, 143, 0.4);
+}
+
+.btn-cyan-glow {
+  background: linear-gradient(135deg, #0284c7 0%, #06b6d4 50%, #38bdf8 100%);
+  color: #ffffff !important;
+  border-radius: 9999px;
+  box-shadow: 0 4px 20px -2px rgba(6, 182, 212, 0.45), 0 0 16px rgba(6, 182, 212, 0.35);
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-cyan-glow:hover {
+  opacity: 0.95;
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 6px 26px -2px rgba(6, 182, 212, 0.65), 0 0 24px rgba(6, 182, 212, 0.5);
+}
+
+.btn-magenta-glow {
+  background: linear-gradient(135deg, #d946ef 0%, #a21caf 50%, #86198f 100%);
+  color: #ffffff !important;
+  border-radius: 9999px;
+  box-shadow: 0 4px 20px -2px rgba(217, 70, 239, 0.45), 0 0 16px rgba(162, 28, 175, 0.35);
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-magenta-glow:hover {
+  opacity: 0.95;
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 6px 26px -2px rgba(217, 70, 239, 0.65), 0 0 24px rgba(162, 28, 175, 0.5);
+}
+
 .cyan-glow {
-    box-shadow: 0 4px 24px -4px var(--shadow-medium), inset 0 1px 0 var(--border-subtle);
+  box-shadow: 0 4px 20px -4px rgba(6, 182, 212, 0.25), inset 0 1px 0 var(--border-subtle);
+}
+
+.magenta-glow {
+  box-shadow: 0 4px 20px -4px rgba(134, 25, 143, 0.25), inset 0 1px 0 var(--border-subtle);
 }
 
 .linear-card {
-    background: radial-gradient(circle at 50% 0%, var(--card-highlight) 0%, transparent 70%), var(--bg-secondary);
-    border: 1px solid var(--card-border);
-    box-shadow: inset 0 1px 0 var(--border-subtle), border-box;
+  background: radial-gradient(circle at 50% 0%, var(--card-highlight) 0%, transparent 70%), var(--bg-secondary);
+  border: 1px solid var(--card-border);
+  box-shadow: inset 0 1px 0 var(--border-subtle), border-box;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.linear-card:hover {
+  border-color: rgba(6, 182, 212, 0.3);
+  box-shadow: 0 8px 30px -8px rgba(6, 182, 212, 0.15);
 }
 
 .linear-button {
-    background: var(--card-element);
-    border: 1px solid var(--card-border);
-    border-radius: 9999px;
-    box-shadow: inset 0 1px 0 var(--border-subtle);
+  background: var(--card-element);
+  border: 1px solid var(--card-border);
+  border-radius: 9999px;
+  box-shadow: inset 0 1px 0 var(--border-subtle);
 }
 .linear-button:hover {
-    background: var(--border-subtle);
+  background: var(--border-subtle);
 }
 
 .linear-button-primary {
-    background: var(--accent);
-    color: var(--accent-foreground);
-    border-radius: 9999px;
-    box-shadow: 0 0 0 1px var(--border-subtle), 0 2px 8px var(--shadow-btn);
-    font-weight: 500;
+  background: var(--accent);
+  color: var(--accent-foreground);
+  border-radius: 9999px;
+  box-shadow: 0 0 0 1px var(--border-subtle), 0 2px 8px var(--shadow-btn);
+  font-weight: 500;
 }
 .linear-button-primary:hover {
-    opacity: 0.9;
-    box-shadow: 0 0 0 1px var(--border-subtle), 0 4px 12px var(--shadow-medium);
+  opacity: 0.9;
+  box-shadow: 0 0 0 1px var(--border-subtle), 0 4px 12px var(--shadow-medium);
 }
 
 .linear-button-secondary {
-    background: var(--card-element);
-    color: var(--text-primary);
-    border: 1px solid var(--card-border);
-    border-radius: 9999px;
-    font-weight: 500;
-    transition: all 0.2s ease;
+  background: var(--card-element);
+  color: var(--text-primary);
+  border: 1px solid var(--card-border);
+  border-radius: 9999px;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 .linear-button-secondary:hover {
-    background: var(--border-subtle);
+  background: var(--border-subtle);
 }

@@ -1,17 +1,33 @@
 import { Link, useLocation } from 'react-router-dom';
-import RhumbLabsLogo from './RhumbLabsLogo';
-import { Menu, X, Sun, Moon } from 'lucide-react';
+import { Menu, X, Sun, Moon, Wand2 } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useBrandTheme } from '../context/BrandThemeContext';
 
 export default function TopBar() {
   const location = useLocation();
-  const isHomeRoute = location.pathname === '/';
-  const isContactRoute = location.pathname === '/contact';
-  const isRhumbNavRoute = location.pathname === '/rhumbnav';
-  const isPogoRoute = location.pathname === '/pogo';
-  const isLegalRoute = location.pathname.startsWith('/legal');
+  const path = location.pathname.toLowerCase().replace(/\/$/, '') || '/';
+  const base = (import.meta.env.BASE_URL || '/').toLowerCase().replace(/\/$/, '');
+  const cleanPath = path.startsWith(base) ? path.slice(base.length) || '/' : path;
+
+  const isLegalRoute = 
+    cleanPath.includes('legal') ||
+    cleanPath.includes('privacy') ||
+    cleanPath.includes('terms') ||
+    cleanPath.includes('delete-account') ||
+    cleanPath.includes('data-deletion');
+
+  const isHomeRoute = cleanPath === '/' || cleanPath === '';
+  const isAboutRoute = cleanPath === '/about';
+  const isProductsRoute = cleanPath === '/products';
+  const isContactRoute = cleanPath === '/contact';
+  const isRhumbNavRoute = cleanPath === '/rhumbnav';
+  const isPogoRoute = cleanPath === '/pogo';
+
+  const isFxRoute = true;
+  
   const basename = import.meta.env.BASE_URL ? import.meta.env.BASE_URL.replace(/\/$/, '') : '';
+  const { brandSmokeEnabled, toggleBrandSmoke } = useBrandTheme();
   
   const [activeSection, setActiveSection] = useState<string>('home');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -60,16 +76,15 @@ export default function TopBar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isHomeRoute]);
 
-  const isProductsRoute = location.pathname === '/products';
-
   useEffect(() => {
     if (!isHomeRoute) {
-      if (isContactRoute) setActiveSection('contact');
+      if (isAboutRoute) setActiveSection('about');
+      else if (isContactRoute) setActiveSection('contact');
       else if (isRhumbNavRoute || isPogoRoute || isProductsRoute) setActiveSection('products');
       else if (isLegalRoute) setActiveSection('legal');
       else setActiveSection('');
     }
-  }, [isHomeRoute, isContactRoute, isRhumbNavRoute, isPogoRoute, isLegalRoute, isProductsRoute]);
+  }, [isHomeRoute, isAboutRoute, isContactRoute, isRhumbNavRoute, isPogoRoute, isLegalRoute, isProductsRoute]);
 
   const scrollToSection = (e: React.MouseEvent, sectionId: string) => {
     setIsMobileMenuOpen(false);
@@ -97,8 +112,7 @@ export default function TopBar() {
       <div className="flex justify-between items-center px-6 md:px-12 max-w-7xl mx-auto">
         <div className="flex items-center">
           <Link to="/" onClick={(e) => scrollToSection(e, 'home')} className="logo-container flex items-center group relative h-12 w-48 md:w-64 -ml-4 md:-ml-6">
-            <img src={`${import.meta.env.BASE_URL}pogo/RL1N.png`} alt="Rhumb Labs" className="show-in-light w-[150px] md:w-[200px] h-auto object-contain scale-[1.1] md:scale-[1.2] origin-left translate-y-0.5" />
-            <img src={`${import.meta.env.BASE_URL}pogo/RL1.png`} alt="Rhumb Labs" className="show-in-dark w-[150px] md:w-[200px] h-auto object-contain scale-[1.1] md:scale-[1.2] origin-left translate-y-0.5" />
+            <img src={`${import.meta.env.BASE_URL}rhumb-labs-logo.png`} alt="Rhumb Labs" className="w-[150px] md:w-[200px] h-auto object-contain scale-[1.1] md:scale-[1.2] origin-left translate-y-0.5" />
           </Link>
         </div>
 
@@ -117,22 +131,55 @@ export default function TopBar() {
               </div>
             </div>
           </div>
-          <Link to="/#about" onClick={(e) => scrollToSection(e, 'about')} className={getLinkClasses('about')}>About</Link>
+          <Link to="/about" className={getLinkClasses('about')}>About</Link>
           <Link to="/legal" className={getLinkClasses('legal')}>Legal</Link>
         </div>
 
         {/* Action Buttons */}
-        <div className="hidden md:flex items-center gap-4">
-           <button onClick={toggleTheme} className="p-2 rounded-full border border-card-border bg-card-element text-text-primary hover:bg-bg-secondary transition-colors" aria-label="Toggle Theme">
+        <div className="hidden md:flex items-center gap-2.5">
+           {isFxRoute && (
+             <button 
+               onClick={toggleBrandSmoke} 
+               className={`p-2 rounded-full border transition-all duration-300 ${
+                 brandSmokeEnabled 
+                   ? 'bg-gradient-to-r from-purple-950/80 to-cyan-950/80 border-cyan-500/50 text-cyan-300 shadow-[0_0_12px_rgba(6,182,212,0.25)]' 
+                   : 'bg-card-element border-card-border text-text-secondary hover:text-text-primary hover:bg-bg-secondary'
+               }`}
+               aria-label="Toggle FX"
+               title={brandSmokeEnabled ? 'Efecto FX: ACTIVADO' : 'Efecto FX: DESACTIVADO'}
+             >
+               <Wand2 className={`w-4 h-4 ${brandSmokeEnabled ? 'text-cyan-400 animate-pulse' : ''}`} />
+             </button>
+           )}
+
+           <button onClick={toggleTheme} className="p-2 rounded-full border border-card-border bg-card-element text-text-primary hover:bg-bg-secondary transition-colors" aria-label="Toggle Theme" title={theme === 'dark' ? 'Modo claro' : 'Modo oscuro'}>
              {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
            </button>
-           <Link to="/contact" className="px-5 py-2 rounded-full bg-accent text-accent-foreground font-semibold text-sm hover:opacity-80 transition-opacity shadow-[0_0_20px_var(--shadow-btn)]">
+           <Link to="/contact" className={`px-5 py-2 rounded-full font-semibold text-sm transition-all duration-300 ${
+             brandSmokeEnabled
+               ? 'brand-btn-primary'
+               : 'bg-accent text-accent-foreground hover:opacity-80 shadow-[0_0_20px_var(--shadow-btn)]'
+           }`}>
              Get in Touch
            </Link>
         </div>
 
         {/* Mobile Menu Button */}
-        <div className="md:hidden flex items-center gap-3">
+        <div className="md:hidden flex items-center gap-2">
+          {isFxRoute && (
+            <button 
+              onClick={toggleBrandSmoke} 
+              className={`p-2 rounded-full border transition-all duration-300 ${
+                brandSmokeEnabled 
+                  ? 'bg-purple-950/50 border-cyan-500/50 text-cyan-300 shadow-[0_0_10px_rgba(6,182,212,0.2)]' 
+                  : 'bg-card-element border-card-border text-text-secondary hover:bg-bg-secondary'
+              }`}
+              aria-label="Toggle FX"
+              title={brandSmokeEnabled ? 'Efecto FX: ACTIVADO' : 'Efecto FX: DESACTIVADO'}
+            >
+              <Wand2 className={`w-4 h-4 ${brandSmokeEnabled ? 'text-cyan-400' : ''}`} />
+            </button>
+          )}
           <button onClick={toggleTheme} className="p-2 rounded-full border border-card-border bg-card-element text-text-primary hover:bg-bg-secondary transition-colors" aria-label="Toggle Theme">
             {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </button>
@@ -163,7 +210,7 @@ export default function TopBar() {
                   <Link to="/pogo" onClick={() => setIsMobileMenuOpen(false)} className="text-lg font-medium text-text-secondary hover:text-text-primary">Pogo</Link>
                 </div>
               </div>
-              <Link to="/#about" onClick={(e) => scrollToSection(e, 'about')} className="text-xl font-medium text-text-secondary hover:text-text-primary">About</Link>
+              <Link to="/about" onClick={() => setIsMobileMenuOpen(false)} className="text-xl font-medium text-text-secondary hover:text-text-primary">About</Link>
               <Link to="/legal" onClick={() => setIsMobileMenuOpen(false)} className="text-xl font-medium text-text-secondary hover:text-text-primary">Legal</Link>
               <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)} className="text-xl font-medium text-text-secondary hover:text-text-primary">Contact</Link>
             </div>

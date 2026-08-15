@@ -31,11 +31,6 @@ export default function LandingPage() {
     return () => observer.disconnect();
   }, []);
 
-  const [activeCard, setActiveCard] = useState(0);
-  const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
-  const [isHovered, setIsHovered] = useState(false);
-  const carouselRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     if (location.hash) {
       const id = location.hash.replace('#', '');
@@ -48,67 +43,106 @@ export default function LandingPage() {
     }
   }, [location]);
 
-  useEffect(() => {
-    if (!autoScrollEnabled || isHovered) return;
-
-    const interval = setInterval(() => {
-      setActiveCard(prev => {
-        const next = prev === 0 ? 1 : 0;
-        const carousel = carouselRef.current;
-        if (carousel) {
-          const cardWidth = carousel.clientWidth;
-          carousel.scrollTo({
-            left: next * cardWidth,
-            behavior: 'smooth'
-          });
-        }
-        return next;
-      });
-    }, 10000);
-
-    return () => clearInterval(interval);
-  }, [autoScrollEnabled, isHovered]);
-
-  const stopAutoScroll = () => {
-    if (autoScrollEnabled) {
-      setAutoScrollEnabled(false);
-    }
-  };
-
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    const scrollLeft = e.currentTarget.scrollLeft;
-    const cardWidth = e.currentTarget.clientWidth;
-    const scrollRatio = scrollLeft / cardWidth;
-    
-    if (scrollRatio > 0.5 && activeCard !== 1) {
-      setActiveCard(1);
-    } else if (scrollRatio <= 0.5 && activeCard !== 0) {
-      setActiveCard(0);
-    }
-  };
-
   return (
     <div className="bg-bg-primary text-text-primary min-h-screen selection:bg-card-border selection:text-text-primary">
       <TopBar />
 
       {/* Modern Hero Section */}
-      <section id="home" className="relative min-h-[100dvh] pt-20 pb-20 overflow-hidden px-6 lg:px-12 flex flex-col justify-center items-center text-center">
-        {/* Subtle glowing orb in background */}
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-sky-500/10 rounded-full blur-[120px] opacity-60 pointer-events-none"></div>
-
+      <section id="home" className="relative min-h-[100dvh] pt-24 md:pt-32 pb-20 px-6 lg:px-12 flex flex-col justify-center items-center text-center">
         <motion.div
            initial={{ opacity: 0, scale: 0.95 }}
            animate={{ opacity: 1, scale: 1 }}
            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-           className="z-20 max-w-5xl mx-auto"
+           className="z-20 max-w-4xl w-full mx-auto flex flex-col items-center justify-center my-auto"
         >
-          <h1 className="text-5xl md:text-7xl lg:text-[6rem] font-bold tracking-tighter mb-8 leading-[1.05] text-text-primary font-headline">
-            RhumbLabs <br className="hidden md:block" />
-            <span className="text-text-secondary">digital products.</span>
+          <h1 className="text-6xl md:text-8xl lg:text-[7.5rem] tracking-tight mb-6 leading-[1.05] font-headline text-center select-none">
+            <span className="brand-hero-title-container">
+              {/* Dynamic curved energy lines traversing letters from left (magenta-purple) to right (cyan-blue) */}
+              <svg 
+                className="brand-traversing-lines-svg"
+                viewBox="0 0 700 120" 
+                fill="none" 
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <defs>
+                  <linearGradient id="titleStrandGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#c026d3" stopOpacity="0.85" />
+                    <stop offset="25%" stopColor="#a855f7" stopOpacity="0.95" />
+                    <stop offset="60%" stopColor="#3b82f6" stopOpacity="0.9" />
+                    <stop offset="85%" stopColor="#06b6d4" stopOpacity="0.95" />
+                    <stop offset="100%" stopColor="#00f2fe" stopOpacity="0.85" />
+                  </linearGradient>
+                  
+                  <linearGradient id="titleStrandGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#9333ea" stopOpacity="0.75" />
+                    <stop offset="30%" stopColor="#c084fc" stopOpacity="0.85" />
+                    <stop offset="65%" stopColor="#2563eb" stopOpacity="0.85" />
+                    <stop offset="100%" stopColor="#38bdf8" stopOpacity="0.8" />
+                  </linearGradient>
+
+                  <linearGradient id="titleStrandGrad3" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#e879f9" stopOpacity="0.6" />
+                    <stop offset="35%" stopColor="#818cf8" stopOpacity="0.75" />
+                    <stop offset="70%" stopColor="#0284c7" stopOpacity="0.75" />
+                    <stop offset="100%" stopColor="#22d3ee" stopOpacity="0.6" />
+                  </linearGradient>
+                  
+                  <filter id="strandGlow" x="-20%" y="-50%" width="140%" height="200%">
+                    <feGaussianBlur stdDeviation="3.5" result="blur" />
+                    <feMerge>
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
+
+                {/* Strand 1: Main undulating curve traversing letters */}
+                <path 
+                  d="M 5 62 C 120 40, 220 78, 350 58 C 480 38, 580 72, 695 56" 
+                  stroke="url(#titleStrandGrad1)" 
+                  strokeWidth="2.8" 
+                  strokeLinecap="round"
+                  filter="url(#strandGlow)"
+                  className="brand-strand-wave-1"
+                />
+
+                {/* Strand 2: Secondary offset wave */}
+                <path 
+                  d="M 15 54 C 130 75, 240 42, 360 66 C 470 88, 570 48, 685 64" 
+                  stroke="url(#titleStrandGrad2)" 
+                  strokeWidth="2" 
+                  strokeLinecap="round"
+                  filter="url(#strandGlow)"
+                  className="brand-strand-wave-2"
+                />
+
+                {/* Strand 3: Delicate fine accent ribbon */}
+                <path 
+                  d="M 25 68 C 145 52, 260 70, 375 52 C 490 35, 595 62, 675 50" 
+                  stroke="url(#titleStrandGrad3)" 
+                  strokeWidth="1.5" 
+                  strokeLinecap="round"
+                  className="brand-strand-wave-3"
+                />
+              </svg>
+
+              {/* Horizontal colorful accent line in the middle */}
+              <span className="brand-middle-line" aria-hidden="true"></span>
+
+              {/* Point / dot of purple & blue light traveling along the letters */}
+              <span className="brand-light-point" aria-hidden="true"></span>
+
+              {/* Exact typography representation: Rhumb (semibold) + Labs (light) */}
+              <span className="relative z-10 text-text-primary">
+                <span className="font-semibold">Rhumb</span>
+                <span className="font-light">Labs</span>
+              </span>
+            </span>
           </h1>
           
-          <p className="text-xl md:text-2xl text-text-secondary font-light max-w-3xl mx-auto tracking-tight mb-12 leading-relaxed">
-            We focus on creating reliable, intuitive, and beautifully crafted software.
+          <p className="text-2xl md:text-3xl text-text-secondary font-light max-w-2xl mx-auto tracking-tight mb-12 leading-relaxed text-center">
+            Designed for What’s Next.
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -118,7 +152,7 @@ export default function LandingPage() {
                  e.preventDefault();
                  el.scrollIntoView({ behavior: 'smooth' });
                }
-             }} className="group relative inline-flex items-center justify-center gap-2 h-14 px-8 rounded-full bg-accent text-accent-foreground font-medium transition-transform hover:scale-105 active:scale-95 shadow-[0_0_40px_var(--shadow-btn)]">
+             }} className="group relative inline-flex items-center justify-center gap-2 h-14 px-8 rounded-full brand-btn-primary font-medium transition-transform hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(6,182,212,0.4)]">
                Our Products
                <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
              </Link>
@@ -126,163 +160,185 @@ export default function LandingPage() {
         </motion.div>
       </section>
 
-      {/* Expanded Products Section */}
-      <section id="products" className="py-24 md:py-40 bg-bg-primary scroll-mt-20">
-        <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
+      {/* Stacked Large Banners Section */}
+      <section id="products" className="py-16 md:py-24 bg-transparent scroll-mt-20 relative z-10">
+        <div className="max-w-[1350px] mx-auto px-6 lg:px-12 flex flex-col gap-12 md:gap-16">
           
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 md:mb-24">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-2">
             <div>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-text-primary">Our Products</h2>
+              <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-text-primary">Our Products</h2>
             </div>
           </div>
 
-          <div 
-            id="products-carousel" 
-            ref={carouselRef} 
-            onScroll={handleScroll} 
-            onPointerDown={stopAutoScroll}
-            onTouchStart={stopAutoScroll}
-            onWheel={stopAutoScroll}
-            onKeyDown={stopAutoScroll}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            className="flex overflow-x-auto snap-x snap-mandatory gap-8 pb-4 no-scrollbar scroll-smooth -mx-6 px-6 lg:-mx-12 lg:px-12" 
-            style={{ scrollbarWidth: 'none' }}
+          {/* Banner 1: RhumbNav - Horizontal Format */}
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.7 }}
+            className="w-full group relative rounded-[1.75rem] md:rounded-[2.5rem] border border-card-border bg-bg-secondary overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
           >
-            {/* RhumbNav - Epic Layout */}
-            <motion.div 
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.8 }}
-              className="snap-center shrink-0 w-full max-w-[1300px] group relative rounded-[2rem] md:rounded-[3rem] border border-card-border bg-bg-secondary overflow-hidden"
-            >
-              <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-blue-500/5 rounded-full blur-[100px] pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
-              
-              <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 lg:gap-16 p-8 md:p-16 lg:p-24 relative z-10">
-                <div className="xl:col-span-5 flex flex-col justify-center">
-                  <div className="relative mb-6 md:mb-8 self-start flex items-center h-16 md:h-20 w-64 md:w-80">
-                    <img src={`${import.meta.env.BASE_URL}pogo/RN2.png`} alt="RhumbNav" className="show-in-light w-[220px] md:w-[300px] h-auto object-contain scale-[1.3] md:scale-[1.4] origin-left" />
-                    <img src={`${import.meta.env.BASE_URL}logo_horizontal.png`} alt="RhumbNav" className="show-in-dark w-[220px] md:w-[300px] h-auto object-contain scale-[1.3] md:scale-[1.4] origin-left" />
-                  </div>
-                  <h3 className="text-4xl md:text-5xl font-bold text-text-primary mb-6 tracking-tight leading-tight">Aviation precision <br className="hidden xl:block"/>in your pocket.</h3>
-                  <p className="text-text-secondary text-lg md:text-xl leading-relaxed mb-10 font-light max-w-lg">
-                    The all-in-one flight planning, navigation, and logbook platform designed exclusively for modern pilots. Beautifully complex, incredibly simple to use.
-                  </p>
-                  
-                  <div className="space-y-4 mb-12">
-                    {['Complete VFR Navigation', 'Digital Logbook & Pilot Credentials', 'Real-time Weather & Airport Info', 'Advanced E6B Flight Computer'].map(feature => (
-                      <div key={feature} className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-full bg-card-element border border-card-border flex items-center justify-center shrink-0">
-                           <CheckCircle2 className="text-text-primary w-5 h-5 opacity-70" />
-                        </div>
-                        <span className="text-text-secondary font-medium">{feature}</span>
+            <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[90px] pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 p-6 md:p-10 lg:p-12 relative z-10 items-start">
+              {/* Text / Info Column - Anchored to top */}
+              <div className="lg:col-span-7 flex flex-col justify-start">
+                {/* Anchored Top-Left Logo */}
+                <div className="mb-6 flex items-center">
+                  <img 
+                    src={`${import.meta.env.BASE_URL}rhumbnav-logo.png`} 
+                    alt="RhumbNav" 
+                    className="h-12 sm:h-14 md:h-16 lg:h-20 w-auto max-w-[280px] sm:max-w-xs md:max-w-md object-contain object-left" 
+                  />
+                </div>
+
+                {/* Title Below Logo */}
+                <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-text-primary tracking-tight leading-snug mb-4">
+                  Aviation precision in your pocket.
+                </h3>
+
+                {/* Subtitle */}
+                <p className="text-text-secondary text-base md:text-lg leading-relaxed mb-6 font-light max-w-xl">
+                  The all-in-one flight planning, navigation, and logbook platform designed exclusively for modern pilots. Beautifully complex, incredibly simple to use.
+                </p>
+                
+                {/* Bullet Points Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5 mb-8">
+                  {['Complete VFR Navigation', 'Digital Logbook & Pilot Credentials', 'Real-time Weather & Airport Info', 'Advanced E6B Flight Computer'].map(feature => (
+                    <div key={feature} className="flex items-center gap-3">
+                      <div className="w-5 h-5 rounded-full bg-card-element border border-card-border flex items-center justify-center shrink-0">
+                         <CheckCircle2 className="text-cyan-400 w-3.5 h-3.5" />
                       </div>
-                    ))}
-                  </div>
-                  
-                  <Link to="/rhumbnav" className="inline-flex items-center justify-center gap-2 h-14 px-8 rounded-full bg-accent text-accent-foreground font-medium w-fit hover:opacity-80 hover:bg-accent transition-colors relative overflow-hidden group/btn">
+                      <span className="text-text-secondary text-xs md:text-sm font-medium">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+                
+                {/* CTA Button */}
+                <Link to="/rhumbnav" className="inline-flex items-center justify-center gap-2 h-12 px-7 rounded-full btn-cyan-glow text-white font-semibold text-sm w-fit group/btn">
+                  <span className="relative z-10 flex items-center gap-2">
+                     Discover RhumbNav
+                     <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
+                  </span>
+                </Link>
+              </div>
+              
+              {/* Image Column - 3 Vertical Phones Stack */}
+              <div className="lg:col-span-5 flex justify-center items-center relative min-h-[300px] md:min-h-[340px] py-4">
+                <div className="flex flex-row items-center justify-center w-full max-w-[380px] md:max-w-[440px] relative">
+                  {/* Left Phone: Flight Plan (FPL) */}
+                  <DeviceMockup 
+                    type="phone"
+                    className="w-[50%] md:w-[54%] shadow-[0_15px_35px_rgba(0,0,0,0.3)] z-10 scale-90 -mr-[20%]"
+                    imageSrc={`${import.meta.env.BASE_URL}rhumbnav-fpl.jpeg`}
+                    alt="RhumbNav Flight Plan"
+                  />
+                  {/* Center Phone (Front): Pilot License */}
+                  <DeviceMockup 
+                    type="phone"
+                    className="w-[58%] md:w-[62%] shadow-[0_25px_60px_var(--shadow-heavy)] z-30 relative"
+                    imageSrc={`${import.meta.env.BASE_URL}rhumbnav-license.jpeg`}
+                    alt="RhumbNav Pilot License"
+                  />
+                  {/* Right Phone: Flight Computer */}
+                  <DeviceMockup 
+                    type="phone"
+                    className="w-[50%] md:w-[54%] shadow-[0_15px_35px_rgba(0,0,0,0.3)] z-10 scale-90 -ml-[20%]"
+                    imageSrc={`${import.meta.env.BASE_URL}rhumbnav-computer.jpeg`}
+                    alt="RhumbNav Precision Flight Computer"
+                  />
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Banner 2: Pogo - Horizontal Format */}
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.7 }}
+            className="w-full group relative rounded-[1.75rem] md:rounded-[2.5rem] border border-card-border bg-bg-secondary overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
+          >
+            <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-purple-500/5 rounded-full blur-[90px] pointer-events-none -translate-y-1/2 -translate-x-1/3"></div>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 p-6 md:p-10 lg:p-12 relative z-10 items-start">
+              {/* Image Column - 3 Vertical Phones Stack */}
+              <div className="lg:col-span-5 order-2 lg:order-1 flex justify-center items-center relative min-h-[300px] md:min-h-[340px] py-4 self-center">
+                 <div className="flex flex-row items-center justify-center w-full max-w-[380px] md:max-w-[440px] relative">
+                   {/* Left Phone: Achievements */}
+                   <DeviceMockup 
+                      type="phone"
+                      className="w-[50%] md:w-[54%] shadow-[0_15px_35px_rgba(0,0,0,0.3)] z-10 scale-90 -mr-[20%]"
+                      imageSrc={`${import.meta.env.BASE_URL}pogo/${isDarkMode ? 'pogo-achievements-dark.jpg' : 'pogo-achievements-light.jpg'}`}
+                      alt="Pogo Achievements View"
+                   />
+                   {/* Center Phone (Front): Summary */}
+                   <DeviceMockup 
+                      type="phone"
+                      className="w-[58%] md:w-[62%] shadow-[0_25px_60px_var(--shadow-heavy)] z-30 relative"
+                      imageSrc={`${import.meta.env.BASE_URL}pogo/${isDarkMode ? 'pogo-summary-dark.jpg' : 'pogo-summary-light.jpg'}`}
+                      alt="Pogo Summary View"
+                   />
+                   {/* Right Phone: Active Session */}
+                   <DeviceMockup 
+                      type="phone"
+                      className="w-[50%] md:w-[54%] shadow-[0_15px_35px_rgba(0,0,0,0.3)] z-10 scale-90 -ml-[20%]"
+                      imageSrc={`${import.meta.env.BASE_URL}pogo/${isDarkMode ? 'pogo-active-session-dark.jpg' : 'pogo-active-session-light.jpg'}`}
+                      alt="Pogo Active Session View"
+                   />
+                </div>
+              </div>
+              
+              {/* Text / Info Column - Anchored to top */}
+              <div className="lg:col-span-7 order-1 lg:order-2 flex flex-col justify-start items-end text-right">
+                {/* Anchored Top-Right Logo */}
+                <div className="mb-6 flex justify-end items-center w-full">
+                  <img 
+                    src={`${import.meta.env.BASE_URL}pogo/pogo-logo.png`} 
+                    alt="Pogo" 
+                    className="h-12 sm:h-14 md:h-16 lg:h-20 w-auto max-w-[280px] sm:max-w-xs md:max-w-md object-contain object-right" 
+                  />
+                </div>
+
+                {/* Title */}
+                <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-text-primary tracking-tight leading-snug mb-4 text-right">
+                  Climb higher, track smarter.
+                </h3>
+
+                {/* Subtitle */}
+                <p className="text-text-secondary text-base md:text-lg leading-relaxed mb-6 font-light max-w-xl text-right">
+                  Log your bouldering sessions, visualize your progress over time, and stay motivated. Built specifically for the climbing community.
+                </p>
+                
+                {/* Bullet Points Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5 mb-8 w-full">
+                  {['Track Grades', 'Performance Analytics', 'Unlock Achievements', 'Session Logging'].map(feature => (
+                    <div key={feature} className="flex items-center justify-end gap-3">
+                      <span className="text-text-secondary text-xs md:text-sm font-medium text-right">{feature}</span>
+                      <div className="w-2 h-2 rounded-full bg-fuchsia-400 shrink-0"></div>
+                    </div>
+                  ))}
+                </div>
+                
+                {/* CTA Button - Aligned Right with Magenta Glow Effect */}
+                <div className="flex justify-end w-full">
+                  <Link to="/pogo" className="inline-flex items-center justify-center gap-2 h-12 px-7 rounded-full btn-magenta-glow text-white font-semibold text-sm w-fit group/btn">
                     <span className="relative z-10 flex items-center gap-2">
-                       Discover RhumbNav
-                       <ArrowRight className="w-5 h-5 transition-transform group-hover/btn:translate-x-1" />
+                      Explore Pogo
+                      <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
                     </span>
                   </Link>
                 </div>
-                
-                <div className="xl:col-span-7 flex justify-center xl:justify-end items-center relative mt-16 md:mt-24 xl:mt-0 min-h-[400px] md:min-h-[500px] xl:min-h-0 overflow-visible">
-                  <div className="flex flex-row items-center justify-center w-full md:w-[100%] xl:w-[190%] max-w-[950px] xl:max-w-[1300px] mt-10 md:mt-0 z-10 relative left-0 xl:left-[4%]">
-                    <DeviceMockup 
-                      type="tablet"
-                      className="hidden md:block w-[75%] md:w-[73%] shadow-[0_30px_100px_var(--shadow-heavy)] z-10"
-                      imageSrc={`${import.meta.env.BASE_URL}LogbookTablet.jpeg`}
-                      alt="RhumbNav Tablet Interface"
-                    />
-                    <DeviceMockup 
-                      type="phone"
-                      className="w-[80%] max-w-[280px] md:w-[32%] md:max-w-none shadow-[0_30px_80px_var(--shadow-heavy)] md:shadow-[-20px_30px_80px_var(--shadow-heavy)] z-20 md:-ml-[6%]"
-                      imageSrc={`${import.meta.env.BASE_URL}FPL.jpeg`}
-                      alt="RhumbNav Mobile Interface"
-                    />
-                  </div>
-                </div>
               </div>
-            </motion.div>
-
-            {/* Pogo - Epic Layout */}
-            <motion.div 
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.8 }}
-              className="snap-center shrink-0 w-full max-w-[1300px] group relative rounded-[2rem] md:rounded-[3rem] border border-card-border bg-bg-secondary overflow-hidden"
-            >
-              <div className="absolute top-0 left-0 w-[800px] h-[800px] bg-purple-500/5 rounded-full blur-[100px] pointer-events-none -translate-y-1/2 -translate-x-1/3"></div>
-              
-              <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 lg:gap-16 p-8 md:p-16 lg:p-24 relative z-10">
-                <div className="xl:col-span-7 order-2 xl:order-1 flex justify-center xl:justify-start items-center relative mt-16 md:mt-24 xl:mt-0">
-                   <div className="relative w-full max-w-[320px] md:max-w-[450px] xl:max-w-[380px] aspect-[9/19] flex justify-center items-center">
-                     <DeviceMockup 
-                        type="phone"
-                        className="w-full z-20 shadow-[0_40px_100px_var(--shadow-heavy)]"
-                        imageSrc={`${import.meta.env.BASE_URL}pogo/${isDarkMode ? 'Resumen.jpg' : 'Summary.jpg'}`}
-                        alt="Pogo Mobile Interface"
-                     />
-                  </div>
-                </div>
-                
-                <div className="xl:col-span-5 order-1 xl:order-2 flex flex-col justify-center">
-                  <div className="relative mb-10 -mt-6 md:-mt-12 self-start flex items-center h-24 md:h-32 w-64 md:w-80">
-                    <img src={`${import.meta.env.BASE_URL}pogo/Pogo2.png`} alt="Pogo" className="show-in-light w-full h-auto object-contain origin-left scale-110 md:scale-125" />
-                    <img src={`${import.meta.env.BASE_URL}pogo/Pogo2.png`} alt="Pogo" className="show-in-dark w-full h-auto object-contain origin-left scale-110 md:scale-125" />
-                  </div>
-                  <h3 className="text-4xl md:text-5xl font-bold text-text-primary mb-6 tracking-tight leading-tight">Climb higher, <br className="hidden xl:block"/>track smarter.</h3>
-                  <p className="text-text-secondary text-lg md:text-xl leading-relaxed mb-10 font-light max-w-lg">
-                    Log your bouldering sessions, visualize your progress over time, and stay motivated. Built specifically for the climbing community.
-                  </p>
-                  
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12">
-                    {['Track Grades', 'Performance Analytics', 'Unlock Achievements', 'Session Logging'].map(feature => (
-                      <div key={feature} className="flex items-center gap-3">
-                         <div className="w-2 h-2 rounded-full bg-card-border"></div>
-                        <span className="text-text-secondary font-medium">{feature}</span>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  <Link to="/pogo" className="inline-flex items-center justify-center gap-2 h-14 px-8 rounded-full bg-accent text-accent-foreground font-medium w-fit hover:opacity-80 hover:bg-accent transition-colors group">
-                    Explore Pogo
-                    <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-                  </Link>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-
-          <div className="flex justify-center items-center gap-4 mt-12 mb-4">
-            <button 
-              onClick={() => { 
-                setActiveCard(0); 
-                carouselRef.current?.scrollTo({ left: 0, behavior: 'smooth' }); 
-              }} 
-              className={`h-2.5 rounded-full transition-all duration-300 ${activeCard === 0 ? 'bg-accent w-8' : 'bg-card-border hover:bg-border-subtle w-2.5'}`} 
-              aria-label="View RhumbNav card"
-            />
-            <button 
-              onClick={() => { 
-                setActiveCard(1); 
-                carouselRef.current?.scrollTo({ left: carouselRef.current?.scrollWidth || 0, behavior: 'smooth' }); 
-              }} 
-              className={`h-2.5 rounded-full transition-all duration-300 ${activeCard === 1 ? 'bg-accent w-8' : 'bg-card-border hover:bg-border-subtle w-2.5'}`} 
-              aria-label="View Pogo card"
-            />
-          </div>
+            </div>
+          </motion.div>
 
         </div>
       </section>
 
       {/* Modern About / Manifesto Section */}
-      <section id="about" className="py-32 md:py-48 relative border-t border-border-subtle scroll-mt-20">
-         <div className="absolute inset-0 bg-bg-secondary opacity-50"></div>
+      <section id="about" className="py-32 md:py-48 relative border-t border-border-subtle scroll-mt-20 z-10 bg-transparent">
          <div className="max-w-4xl mx-auto px-6 lg:px-12 text-center relative z-10">
            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-text-primary mb-10">
              Crafting Software <br className="hidden md:block"/> with intention.
@@ -292,9 +348,14 @@ export default function LandingPage() {
              We care deeply about clarity, functionality, and creating tools that feel intuitive from the very first tap. By bringing together design and robust engineering, we shape digital products that are simple, reliable, and built with purpose.
            </p>
            
-           <Link to="/contact" className="inline-flex items-center justify-center gap-2 h-14 px-10 rounded-full bg-card-element border border-card-border text-text-primary font-medium hover:bg-card-border transition-colors">
-             Get in touch
-           </Link>
+           <div className="flex flex-wrap items-center justify-center gap-4">
+             <Link to="/about" className="inline-flex items-center justify-center gap-2 h-14 px-8 rounded-full bg-card-element border border-card-border text-text-primary font-medium hover:bg-card-border transition-colors">
+               About Rhumb Labs →
+             </Link>
+             <Link to="/contact" className="inline-flex items-center justify-center gap-2 h-14 px-8 rounded-full brand-btn-primary font-medium transition-all">
+               Get in touch
+             </Link>
+           </div>
          </div>
       </section>
 

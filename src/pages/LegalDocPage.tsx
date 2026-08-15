@@ -14,25 +14,80 @@ export default function LegalDocPage() {
   const location = useLocation();
   const pathParts = location.pathname.split('/').filter(Boolean);
   
-  // Format the title from the path
-  const rawTitle = pathParts[pathParts.length - 1] || 'Document';
-  // format 'privacy-policy' -> 'Privacy Policy'
-  const title = rawTitle.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ').replace(' Of ', ' of ');
+  // Format the title and strip any .html suffix
+  let rawTitle = pathParts[pathParts.length - 1] || 'Document';
+  rawTitle = rawTitle.replace(/\.html$/i, '');
   
-  // Determine subtitle/context
+  // Handle common shorthand aliases
+  if (rawTitle === 'privacy') rawTitle = 'privacy-policy';
+  if (rawTitle === 'terms') rawTitle = 'terms-of-use';
+  if (rawTitle === 'refund') rawTitle = 'subscription-refund-policy';
+  if (rawTitle === 'aviation') rawTitle = 'aviation-disclaimer';
+
+  // Determine product context
+  const isRhumbNav = pathParts.some(p => p.toLowerCase().includes('rhumbnav'));
+  const isPogo = pathParts.some(p => p.toLowerCase().includes('pogo'));
+  const isCompany = pathParts.some(p => p.toLowerCase().includes('company'));
+
   let subtitle = 'Rhumb Labs';
   let filenamePrefix = '';
-  if (pathParts.includes('rhumbnav')) {
+  if (isRhumbNav) {
     subtitle = 'RhumbNav';
     filenamePrefix = 'rhumbnav-';
-  } else if (pathParts.includes('pogo')) {
+  } else if (isPogo) {
     subtitle = 'Pogo';
     filenamePrefix = 'pogo-';
+  } else if (isCompany) {
+    subtitle = 'Rhumb Labs';
+    filenamePrefix = 'company-';
   }
 
-  // Attempt to load the specific document synchronously
-  const docPath = `/src/data/legal/${filenamePrefix}${rawTitle}.md`;
-  const content = (docs[docPath] as string) || null;
+  // Format title for display
+  const displayTitle = rawTitle
+    .replace(/^(pogo-|rhumbnav-|company-)/i, '')
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
+    .replace(' Of ', ' of ')
+    .replace(' And ', ' & ');
+
+  // Search through all loaded markdown docs
+  // Candidate 1: /src/data/legal/${filenamePrefix}${cleanTitle}.md
+  // Candidate 2: /src/data/legal/${cleanTitle}.md
+  // Candidate 3: Fuzzy matching across doc keys
+  const cleanTitle = rawTitle.replace(/^(pogo-|rhumbnav-|company-)/i, '');
+  
+  let content: string | null = null;
+  const pathCandidates = [
+    `/src/data/legal/${filenamePrefix}${cleanTitle}.md`,
+    `/src/data/legal/${rawTitle}.md`,
+    `/src/data/legal/${cleanTitle}.md`,
+  ];
+
+  for (const candidate of pathCandidates) {
+    if (docs[candidate]) {
+      content = docs[candidate] as string;
+      break;
+    }
+  }
+
+  if (!content) {
+    // Try fuzzy match
+    const entries = Object.entries(docs);
+    for (const [key, value] of entries) {
+      const lowerKey = key.toLowerCase();
+      const lowerClean = cleanTitle.toLowerCase();
+      if (
+        (isPogo && lowerKey.includes('pogo') && lowerKey.includes(lowerClean)) ||
+        (isRhumbNav && lowerKey.includes('rhumbnav') && lowerKey.includes(lowerClean)) ||
+        (lowerKey.includes(lowerClean))
+      ) {
+        content = value as string;
+        break;
+      }
+    }
+  }
+
   const loading = false;
 
   return (
@@ -94,7 +149,7 @@ export default function LegalDocPage() {
             <div className="w-20 h-20 bg-card-element rounded-2xl flex items-center justify-center mx-auto mb-8 border border-card-border shadow-[inset_0_1px_1px_var(--border-subtle)]">
               <FileText className="w-10 h-10 text-text-secondary" />
             </div>
-            <h3 className="text-2xl font-bold text-text-primary mb-4">{title}</h3>
+            <h3 className="text-2xl font-bold text-text-primary mb-4">{displayTitle}</h3>
             <p className="text-lg text-text-secondary font-light mb-10 max-w-md mx-auto leading-relaxed">
               This document will be available soon. Please check back later or contact support if you have immediate questions.
             </p>

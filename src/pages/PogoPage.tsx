@@ -2,7 +2,7 @@ import TopBar from '../components/TopBar';
 import Footer from '../components/Footer';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { DeviceMockup } from '../components/DeviceMockup';
-import { Activity, MapPin, TrendingUp, NotebookPen, Mountain } from 'lucide-react';
+import { Activity, MapPin, TrendingUp, NotebookPen, Mountain, Instagram, ArrowUpRight, Sparkles } from 'lucide-react';
 import { useRef } from 'react';
 
 export default function PogoPage() {
@@ -31,10 +31,13 @@ export default function PogoPage() {
               initial={{ opacity: 0, scale: 0.9, filter: "blur(10px)" }}
               animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-              className="inline-flex items-center justify-center -mt-4 md:-mt-8 mb-20 md:mb-28 relative h-24 md:h-36 w-72 md:w-96"
+              className="inline-flex items-center justify-center mb-10 md:mb-14 relative h-[110px] md:h-[136px] w-auto"
             >
-              <img src={`${import.meta.env.BASE_URL}pogo/Pogo2.png`} alt="Pogo Logo" className="show-in-light w-full h-auto object-contain scale-[1.5] md:scale-[1.8] origin-center" />
-              <img src={`${import.meta.env.BASE_URL}pogo/Pogo2.png`} alt="Pogo Logo" className="show-in-dark w-full h-auto object-contain scale-[1.5] md:scale-[1.8] origin-center" />
+              <img 
+                src={`${import.meta.env.BASE_URL}pogo/pogo-logo.png`} 
+                alt="Pogo Logo" 
+                className="h-[110px] md:h-[136px] max-w-[90vw] md:max-w-none w-auto object-contain pointer-events-none" 
+              />
             </motion.div>
             
             <motion.h1 
@@ -73,14 +76,17 @@ export default function PogoPage() {
                 Download for Android
               </a>
 
-              <div
-                className="inline-flex items-center gap-3 px-8 py-4 bg-card-element border border-card-border rounded-full text-text-primary font-medium opacity-80 cursor-default"
+              <a
+                href="https://testflight.apple.com/join/rW2JwgUW"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-3 px-8 py-4 bg-card-element border border-card-border rounded-full text-text-primary font-medium shadow-[0_0_40px_rgba(168,85,247,0.15)] hover:bg-bg-secondary hover:border-purple-500/50 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
               >
                 <svg viewBox="0 0 24 24" className="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg">
                   <path d="M17.05 13.974a4.428 4.428 0 0 1 2.112-3.705A4.475 4.475 0 0 0 15.344 8c-1.921-.194-3.749 1.127-4.73 1.127-1.002 0-2.518-1.082-4.093-1.052-2.062.03-3.957 1.2-5.016 3.037-2.152 3.73-.55 9.255 1.547 12.274.996 1.485 2.197 3.161 3.784 3.096 1.503-.06 2.083-1.026 3.901-1.026 1.803 0 2.342 1.026 3.918 1.056 1.637.03 2.648-1.442 3.633-2.88 1.139-1.666 1.608-3.284 1.637-3.37l-.022-.012a4.4 4.4 0 0 1-3.853-4.275zm-1.1-6.793a4.238 4.238 0 0 0 1.01-3.031 4.3 4.3 0 0 0-2.827 1.44 4.098 4.098 0 0 0-1.037 2.949 3.513 3.513 0 0 0 2.854-1.358z"/>
                 </svg>
-                Coming Soon for iOS
-              </div>
+                Join the Beta Testing
+              </a>
             </motion.div>
           </div>
 
@@ -109,13 +115,13 @@ export default function PogoPage() {
                       <DeviceMockup 
                         type="phone"
                         className="show-in-light w-[45%] max-w-[160px] md:max-w-[210px] shadow-[0_20px_60px_var(--shadow-heavy)] rotate-[-6deg]"
-                        imageSrc={`${import.meta.env.BASE_URL}pogo/Active_session.jpg`}
+                        imageSrc={`${import.meta.env.BASE_URL}pogo/pogo-active-session-light.jpg`}
                         alt="Log Active Session Light"
                       />
                       <DeviceMockup 
                         type="phone"
                         className="show-in-light w-[45%] max-w-[160px] md:max-w-[210px] shadow-[0_20px_60px_var(--shadow-heavy)] rotate-[6deg] translate-y-6"
-                        imageSrc={`${import.meta.env.BASE_URL}pogo/Session_Detail.jpg`}
+                        imageSrc={`${import.meta.env.BASE_URL}pogo/pogo-session-detail-light.jpg`}
                         alt="Session Detail Light"
                       />
 
@@ -123,13 +129,13 @@ export default function PogoPage() {
                       <DeviceMockup 
                         type="phone"
                         className="show-in-dark w-[45%] max-w-[160px] md:max-w-[210px] shadow-[0_20px_60px_var(--shadow-heavy)] rotate-[-6deg]"
-                        imageSrc={`${import.meta.env.BASE_URL}pogo/Sesion_Activa.jpg`}
+                        imageSrc={`${import.meta.env.BASE_URL}pogo/pogo-active-session-dark.jpg`}
                         alt="Log Active Session Dark"
                       />
                       <DeviceMockup 
                         type="phone"
                         className="show-in-dark w-[45%] max-w-[160px] md:max-w-[210px] shadow-[0_20px_60px_var(--shadow-heavy)] rotate-[6deg] translate-y-6"
-                        imageSrc={`${import.meta.env.BASE_URL}pogo/Detalle_Sesion.jpg`}
+                        imageSrc={`${import.meta.env.BASE_URL}pogo/pogo-session-detail-dark.jpg`}
                         alt="Session Detail Dark"
                       />
                    </motion.div>
@@ -155,14 +161,14 @@ export default function PogoPage() {
                    <DeviceMockup 
                       type="phone"
                       className="show-in-light w-[50%] max-w-[250px] shadow-[0_20px_50px_var(--shadow-medium)]"
-                      imageSrc={`${import.meta.env.BASE_URL}pogo/Summary2.jpg`}
+                      imageSrc={`${import.meta.env.BASE_URL}pogo/pogo-summary-light.jpg`}
                       alt="Clear Progression Light"
                    />
                    {/* Dark Mode Mockup (Spanish) */}
                    <DeviceMockup 
                       type="phone"
                       className="show-in-dark w-[50%] max-w-[250px] shadow-[0_20px_50px_var(--shadow-medium)]"
-                      imageSrc={`${import.meta.env.BASE_URL}pogo/Resumen.jpg`}
+                      imageSrc={`${import.meta.env.BASE_URL}pogo/pogo-summary-dark.jpg`}
                       alt="Clear Progression Dark"
                    />
                 </div>
@@ -187,14 +193,14 @@ export default function PogoPage() {
                    <DeviceMockup 
                       type="phone"
                       className="show-in-light w-[50%] max-w-[250px] shadow-[0_20px_50px_var(--shadow-medium)]"
-                      imageSrc={`${import.meta.env.BASE_URL}pogo/History.jpg`}
+                      imageSrc={`${import.meta.env.BASE_URL}pogo/pogo-history-light.jpg`}
                       alt="Climbing History Light"
                    />
                    {/* Dark Mode Mockup (Spanish) */}
                    <DeviceMockup 
                       type="phone"
                       className="show-in-dark w-[50%] max-w-[250px] shadow-[0_20px_50px_var(--shadow-medium)]"
-                      imageSrc={`${import.meta.env.BASE_URL}pogo/Historial.jpg`}
+                      imageSrc={`${import.meta.env.BASE_URL}pogo/pogo-history-dark.jpg`}
                       alt="Climbing History Dark"
                    />
                 </div>
@@ -223,14 +229,14 @@ export default function PogoPage() {
                       <DeviceMockup 
                         type="phone"
                         className="show-in-light w-[60%] md:w-[70%] max-w-[300px] shadow-[0_20px_60px_var(--shadow-heavy)] rotate-[4deg]"
-                        imageSrc={`${import.meta.env.BASE_URL}pogo/Achievements.jpg`}
+                        imageSrc={`${import.meta.env.BASE_URL}pogo/pogo-achievements-light.jpg`}
                         alt="Unlock Achievements Light"
                       />
                       {/* Dark Mode Mockup (Spanish) */}
                       <DeviceMockup 
                         type="phone"
                         className="show-in-dark w-[60%] md:w-[70%] max-w-[300px] shadow-[0_20px_60px_var(--shadow-heavy)] rotate-[4deg]"
-                        imageSrc={`${import.meta.env.BASE_URL}pogo/Logros.jpg`}
+                        imageSrc={`${import.meta.env.BASE_URL}pogo/pogo-achievements-dark.jpg`}
                         alt="Unlock Achievements Dark"
                       />
                    </motion.div>
@@ -238,14 +244,82 @@ export default function PogoPage() {
              </motion.div>
           </div>
 
-          {/* Bottom Callout */}
-          <div className="mt-24 mb-10 p-12 md:p-20 rounded-[2.5rem] border border-card-border bg-card-element text-center relative overflow-hidden backdrop-blur-xl">
-             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[300px] bg-slate-500/5 rounded-[100%] blur-[80px] pointer-events-none"></div>
-             <Mountain className="w-12 h-12 text-text-secondary mx-auto mb-8 opacity-60" />
-             <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">A smarter way to climb</h2>
-             <p className="text-text-secondary text-xl font-light leading-relaxed max-w-2xl mx-auto">
-               From quick session logging to long-term statistics, Pogo offers climbers a personal space to record, analyze, and grow in the world of bouldering.
-             </p>
+          {/* Bottom Promotional Callout */}
+          <div className="mt-24 mb-10 p-10 sm:p-14 md:p-20 rounded-[2.5rem] border border-card-border bg-bg-secondary text-center relative overflow-hidden shadow-2xl">
+             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[100px] pointer-events-none translate-x-1/3 -translate-y-1/3"></div>
+             <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-fuchsia-600/10 rounded-full blur-[100px] pointer-events-none -translate-x-1/3 translate-y-1/3"></div>
+             
+             <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center">
+               {/* Icon / Emblem */}
+               <div className="w-16 h-16 rounded-2xl bg-purple-500/10 border border-purple-500/25 flex items-center justify-center mb-8 shadow-sm">
+                  <Mountain className="w-8 h-8 text-fuchsia-400" />
+               </div>
+
+               {/* Headline */}
+               <h2 className="text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-6 leading-tight text-text-primary">
+                 Join the Community Now!
+               </h2>
+
+               {/* Body */}
+               <p className="text-text-secondary text-lg sm:text-xl font-light leading-relaxed mb-10 max-w-2xl">
+                 From quick session logging to long-term statistics, Pogo offers climbers a personal space to record, analyze, and grow. Download the app today and connect with our community on Instagram.
+               </p>
+
+               {/* Action Buttons: App Download & Instagram */}
+               <div className="flex flex-wrap items-center justify-center gap-4 w-full mb-8">
+                 {/* Google Play Download */}
+                 <a
+                   href="https://play.google.com/store/apps/details?id=com.rhumblabs.pogo&hl=es_419"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-card-element border border-card-border hover:border-purple-500/50 hover:bg-bg-primary rounded-full text-text-primary font-semibold text-sm shadow-[0_0_30px_rgba(168,85,247,0.2)] transition-all duration-300 group"
+                 >
+                   <svg viewBox="0 0 24 24" className="w-5 h-5 fill-[#3DDC84] shrink-0" xmlns="http://www.w3.org/2000/svg">
+                     <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4483-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993.0004.5511-.4482.9997-.9993.9997zm-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997zm11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0216 3.503C15.5902 8.244 13.8533 7.85 12 7.85c-1.8533 0-3.5902.394-5.1375 1.1002L4.841 5.447a.416.416 0 00-.5676-.1521.416.416 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3432-4.1021-2.6889-7.5743-6.1185-9.44z"/>
+                   </svg>
+                   <span>Download on Android</span>
+                   <ArrowUpRight className="w-4 h-4 text-text-secondary group-hover:text-fuchsia-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                 </a>
+
+                 {/* iOS TestFlight Beta Link */}
+                 <a
+                   href="https://testflight.apple.com/join/rW2JwgUW"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-card-element border border-card-border hover:border-purple-500/50 hover:bg-bg-primary rounded-full text-text-primary font-semibold text-sm shadow-[0_0_30px_rgba(168,85,247,0.2)] transition-all duration-300 group"
+                 >
+                   <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current shrink-0" xmlns="http://www.w3.org/2000/svg">
+                     <path d="M17.05 13.974a4.428 4.428 0 0 1 2.112-3.705A4.475 4.475 0 0 0 15.344 8c-1.921-.194-3.749 1.127-4.73 1.127-1.002 0-2.518-1.082-4.093-1.052-2.062.03-3.957 1.2-5.016 3.037-2.152 3.73-.55 9.255 1.547 12.274.996 1.485 2.197 3.161 3.784 3.096 1.503-.06 2.083-1.026 3.901-1.026 1.803 0 2.342 1.026 3.918 1.056 1.637.03 2.648-1.442 3.633-2.88 1.139-1.666 1.608-3.284 1.637-3.37l-.022-.012a4.4 4.4 0 0 1-3.853-4.275zm-1.1-6.793a4.238 4.238 0 0 0 1.01-3.031 4.3 4.3 0 0 0-2.827 1.44 4.098 4.098 0 0 0-1.037 2.949 3.513 3.513 0 0 0 2.854-1.358z"/>
+                   </svg>
+                   <span>Join iOS Beta</span>
+                   <ArrowUpRight className="w-4 h-4 text-text-secondary group-hover:text-purple-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                 </a>
+
+                 {/* Instagram Community Link */}
+                 <a
+                   href="https://www.instagram.com/app.pogoclimb/"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-fuchsia-600/20 via-pink-600/20 to-amber-600/20 border border-fuchsia-500/40 hover:border-fuchsia-500 rounded-full text-text-primary font-semibold text-sm shadow-[0_0_25px_rgba(217,70,239,0.15)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 group"
+                 >
+                   <Instagram className="w-5 h-5 text-pink-400 group-hover:scale-110 transition-transform" />
+                   <span>Follow on Instagram</span>
+                   <ArrowUpRight className="w-4 h-4 text-pink-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                 </a>
+               </div>
+
+               {/* Sub-Badges / Quick Info */}
+               <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-text-secondary font-mono">
+                 <span className="flex items-center gap-1.5">
+                   <Sparkles className="w-3.5 h-3.5 text-fuchsia-400" />
+                   Free on Google Play
+                 </span>
+                 <span className="text-border-subtle">•</span>
+                 <span>TestFlight iOS Open Beta</span>
+                 <span className="text-border-subtle">•</span>
+                 <span>@app.pogoclimb</span>
+               </div>
+             </div>
           </div>
 
         </div>
