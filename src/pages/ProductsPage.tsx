@@ -5,6 +5,7 @@ import { Link, useLocation } from 'react-router-dom';
 import TopBar from '../components/TopBar';
 import Footer from '../components/Footer';
 import { motion } from 'motion/react';
+import { getAssetUrl } from '../utils/assets';
 
 // Products Page - RhumbLabs
 export default function ProductsPage() {
@@ -63,7 +64,7 @@ export default function ProductsPage() {
                 {/* Logo Area - Aligned to bottom, matching optical weight */}
                 <div className="h-[52%] flex items-end justify-center w-full px-2 pb-4">
                   <img 
-                    src={`${import.meta.env.BASE_URL}rhumbnav-logo.png`} 
+                    src={getAssetUrl('rhumbnav-logo.png')} 
                     alt="RhumbNav Logo" 
                     className="w-[220px] sm:w-[260px] md:w-[290px] max-h-[85px] md:max-h-[95px] h-auto object-contain" 
                   />
@@ -98,7 +99,7 @@ export default function ProductsPage() {
                 {/* Logo Area - Aligned to bottom, matching optical weight */}
                 <div className="h-[52%] flex items-end justify-center w-full px-2 pb-4">
                   <img 
-                    src={`${import.meta.env.BASE_URL}pogo/pogo-logo.png`} 
+                    src={getAssetUrl('pogo/pogo-logo.png')} 
                     alt="Pogo Logo" 
                     className="w-[220px] sm:w-[260px] md:w-[290px] max-h-[85px] md:max-h-[95px] h-auto object-contain" 
                   />

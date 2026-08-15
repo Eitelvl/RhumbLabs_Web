@@ -5,6 +5,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import TopBar from '../components/TopBar';
 import Footer from '../components/Footer';
 import { motion } from 'motion/react';
+import { getAssetUrl } from '../utils/assets';
 
 const AndroidIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
@@ -186,7 +187,7 @@ export default function LandingPage() {
                 {/* Anchored Top-Left Logo */}
                 <div className="mb-6 flex items-center">
                   <img 
-                    src={`${import.meta.env.BASE_URL}rhumbnav-logo.png`} 
+                    src={getAssetUrl('rhumbnav-logo.png')} 
                     alt="RhumbNav" 
                     className="h-12 sm:h-14 md:h-16 lg:h-20 w-auto max-w-[280px] sm:max-w-xs md:max-w-md object-contain object-left" 
                   />
@@ -230,21 +231,21 @@ export default function LandingPage() {
                   <DeviceMockup 
                     type="phone"
                     className="w-[50%] md:w-[54%] shadow-[0_15px_35px_rgba(0,0,0,0.3)] z-10 scale-90 -mr-[20%]"
-                    imageSrc={`${import.meta.env.BASE_URL}rhumbnav-fpl.jpeg`}
+                    imageSrc={getAssetUrl('rhumbnav-fpl.jpeg')}
                     alt="RhumbNav Flight Plan"
                   />
                   {/* Center Phone (Front): Pilot License */}
                   <DeviceMockup 
                     type="phone"
                     className="w-[58%] md:w-[62%] shadow-[0_25px_60px_var(--shadow-heavy)] z-30 relative"
-                    imageSrc={`${import.meta.env.BASE_URL}rhumbnav-license.jpeg`}
+                    imageSrc={getAssetUrl('rhumbnav-license.jpeg')}
                     alt="RhumbNav Pilot License"
                   />
                   {/* Right Phone: Flight Computer */}
                   <DeviceMockup 
                     type="phone"
                     className="w-[50%] md:w-[54%] shadow-[0_15px_35px_rgba(0,0,0,0.3)] z-10 scale-90 -ml-[20%]"
-                    imageSrc={`${import.meta.env.BASE_URL}rhumbnav-computer.jpeg`}
+                    imageSrc={getAssetUrl('rhumbnav-computer.jpeg')}
                     alt="RhumbNav Precision Flight Computer"
                   />
                 </div>
@@ -270,21 +271,21 @@ export default function LandingPage() {
                    <DeviceMockup 
                       type="phone"
                       className="w-[50%] md:w-[54%] shadow-[0_15px_35px_rgba(0,0,0,0.3)] z-10 scale-90 -mr-[20%]"
-                      imageSrc={`${import.meta.env.BASE_URL}pogo/${isDarkMode ? 'pogo-achievements-dark.jpg' : 'pogo-achievements-light.jpg'}`}
+                      imageSrc={getAssetUrl(isDarkMode ? 'pogo/pogo-achievements-dark.jpg' : 'pogo/pogo-achievements-light.jpg')}
                       alt="Pogo Achievements View"
                    />
                    {/* Center Phone (Front): Summary */}
                    <DeviceMockup 
                       type="phone"
                       className="w-[58%] md:w-[62%] shadow-[0_25px_60px_var(--shadow-heavy)] z-30 relative"
-                      imageSrc={`${import.meta.env.BASE_URL}pogo/${isDarkMode ? 'pogo-summary-dark.jpg' : 'pogo-summary-light.jpg'}`}
+                      imageSrc={getAssetUrl(isDarkMode ? 'pogo/pogo-summary-dark.jpg' : 'pogo/pogo-summary-light.jpg')}
                       alt="Pogo Summary View"
                    />
                    {/* Right Phone: Active Session */}
                    <DeviceMockup 
                       type="phone"
                       className="w-[50%] md:w-[54%] shadow-[0_15px_35px_rgba(0,0,0,0.3)] z-10 scale-90 -ml-[20%]"
-                      imageSrc={`${import.meta.env.BASE_URL}pogo/${isDarkMode ? 'pogo-active-session-dark.jpg' : 'pogo-active-session-light.jpg'}`}
+                      imageSrc={getAssetUrl(isDarkMode ? 'pogo/pogo-active-session-dark.jpg' : 'pogo/pogo-active-session-light.jpg')}
                       alt="Pogo Active Session View"
                    />
                 </div>
@@ -295,7 +296,7 @@ export default function LandingPage() {
                 {/* Anchored Top-Right Logo */}
                 <div className="mb-6 flex justify-end items-center w-full">
                   <img 
-                    src={`${import.meta.env.BASE_URL}pogo/pogo-logo.png`} 
+                    src={getAssetUrl('pogo/pogo-logo.png')} 
                     alt="Pogo" 
                     className="h-12 sm:h-14 md:h-16 lg:h-20 w-auto max-w-[280px] sm:max-w-xs md:max-w-md object-contain object-right" 
                   />

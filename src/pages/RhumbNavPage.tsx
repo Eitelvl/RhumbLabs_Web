@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform } from 'motion/react';
 import { DeviceMockup } from '../components/DeviceMockup';
 import { Compass, BookText, Calculator, Map, Crosshair, IdCard } from 'lucide-react';
 import { useRef } from 'react';
+import { getAssetUrl } from '../utils/assets';
 
 export default function RhumbNavPage() {
   const containerRef = useRef(null);
@@ -35,7 +36,7 @@ export default function RhumbNavPage() {
               className="inline-flex items-center justify-center mb-10 md:mb-14 relative h-[110px] md:h-[136px] w-auto"
             >
               <img 
-                src={`${import.meta.env.BASE_URL}rhumbnav-logo.png`} 
+                src={getAssetUrl('rhumbnav-logo.png')} 
                 alt="RhumbNav Logo" 
                 className="h-[110px] md:h-[136px] max-w-[90vw] md:max-w-none w-auto object-contain pointer-events-none" 
               />
@@ -96,7 +97,7 @@ export default function RhumbNavPage() {
                       <DeviceMockup 
                         type="phone"
                         className="w-[50%] max-w-[280px] shadow-[0_20px_60px_var(--shadow-medium)]"
-                        imageSrc={`${import.meta.env.BASE_URL}rhumbnav-computer.jpeg`}
+                        imageSrc={getAssetUrl('rhumbnav-computer.jpeg')}
                         alt="Precision Calculation"
                       />
                    </motion.div>
@@ -115,7 +116,7 @@ export default function RhumbNavPage() {
                       <DeviceMockup 
                         type="phone"
                         className="w-[60%] md:w-[65%] max-w-[260px] shadow-[0_20px_60px_var(--shadow-heavy)]"
-                        imageSrc={`${import.meta.env.BASE_URL}rhumbnav-all-flights.jpeg`}
+                        imageSrc={getAssetUrl('rhumbnav-all-flights.jpeg')}
                         alt="Logbook Phone"
                       />
                    </motion.div>
@@ -144,7 +145,7 @@ export default function RhumbNavPage() {
                      <DeviceMockup 
                         type="phone"
                         className="w-[70%] md:w-[65%] max-w-[340px] shadow-[0_30px_80px_var(--shadow-heavy)] z-10"
-                        imageSrc={`${import.meta.env.BASE_URL}rhumbnav-license.jpeg`}
+                        imageSrc={getAssetUrl('rhumbnav-license.jpeg')}
                         alt="Licenses Interface"
                      />
                    </motion.div>
@@ -181,13 +182,13 @@ export default function RhumbNavPage() {
                      <DeviceMockup 
                         type="tablet"
                         className="hidden md:block w-[75%] md:w-[73%] shadow-[0_30px_80px_var(--shadow-heavy)] z-10"
-                        imageSrc={`${import.meta.env.BASE_URL}rhumbnav-nav.jpeg`}
+                        imageSrc={getAssetUrl('rhumbnav-nav.jpeg')}
                         alt="Confident Flying Interface"
                      />
                      <DeviceMockup 
                         type="phone"
                         className="w-[70%] max-w-[280px] md:w-[32%] md:max-w-none shadow-[0_30px_80px_var(--shadow-heavy)] md:shadow-[-20px_20px_60px_var(--shadow-heavy)] z-20 md:-ml-[6%]"
-                        imageSrc={`${import.meta.env.BASE_URL}rhumbnav-fpl.jpeg`}
+                        imageSrc={getAssetUrl('rhumbnav-fpl.jpeg')}
                         alt="Flight Plan Interface"
                      />
                    </div>
