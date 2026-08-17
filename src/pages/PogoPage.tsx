@@ -5,6 +5,7 @@ import { DeviceMockup } from '../components/DeviceMockup';
 import { Activity, MapPin, TrendingUp, NotebookPen, Mountain, Instagram, ArrowUpRight, Sparkles } from 'lucide-react';
 import { useRef } from 'react';
 import { getAssetUrl } from '../utils/assets';
+import { SafeImage } from '../components/SafeImage';
 
 export default function PogoPage() {
   const containerRef = useRef(null);
@@ -19,25 +20,25 @@ export default function PogoPage() {
     <div className="bg-bg-primary text-text-primary min-h-screen selection:bg-purple-500/30 selection:text-text-primary">
       <TopBar />
       
-      <main className="pt-32 pb-32 relative overflow-hidden" ref={containerRef}>
+      <main className="pt-20 md:pt-24 pb-24 relative overflow-hidden" ref={containerRef}>
         
         {/* Background Effects */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1200px] h-[600px] bg-purple-600/10 rounded-[100%] blur-[120px] pointer-events-none opacity-50"></div>
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1200px] h-[500px] bg-purple-600/10 rounded-[100%] blur-[120px] pointer-events-none opacity-50"></div>
 
         <div className="max-w-[1400px] mx-auto px-6 lg:px-12 relative z-10">
           
           {/* Hero Section */}
-          <div className="flex flex-col items-center text-center mt-12 mb-32 md:mb-48">
+          <div className="flex flex-col items-center text-center mt-2 md:mt-4 mb-20 md:mb-32">
             <motion.div
               initial={{ opacity: 0, scale: 0.9, filter: "blur(10px)" }}
               animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-              className="inline-flex items-center justify-center mb-10 md:mb-14 relative h-[110px] md:h-[136px] w-auto"
+              className="inline-flex items-center justify-center mb-3 md:mb-4 relative h-[200px] sm:h-[240px] md:h-[280px] lg:h-[300px] w-auto"
             >
-              <img 
+              <SafeImage 
                 src={getAssetUrl('pogo/pogo-logo.png')} 
                 alt="Pogo Logo" 
-                className="h-[110px] md:h-[136px] max-w-[90vw] md:max-w-none w-auto object-contain pointer-events-none" 
+                className="h-[200px] sm:h-[240px] md:h-[280px] lg:h-[300px] max-w-[90vw] md:max-w-none w-auto object-contain pointer-events-none" 
               />
             </motion.div>
             
@@ -45,7 +46,7 @@ export default function PogoPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.1 }}
-              className="text-5xl md:text-7xl lg:text-[6rem] font-bold tracking-tighter mb-8 leading-[1.05] text-text-primary"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-[4.5rem] font-bold tracking-tight mb-4 md:mb-5 leading-[1.08] text-text-primary"
             >
               Master every route. <br className="hidden md:block"/> Elevate your climb.
             </motion.h1>
@@ -54,7 +55,7 @@ export default function PogoPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-xl md:text-2xl text-text-secondary max-w-3xl mx-auto leading-relaxed font-light mb-16"
+              className="text-lg sm:text-xl md:text-2xl text-text-secondary max-w-3xl mx-auto leading-relaxed font-light mb-8 md:mb-10"
             >
               Designed exclusively for the climbing community. Log your sessions, analyze your progress, and stay motivated with a digital companion built for the wall.
             </motion.p>
@@ -96,7 +97,7 @@ export default function PogoPage() {
              {/* Feature 1 - Wide Card */}
              <motion.div 
                whileHover={{ y: -5 }}
-               className="md:col-span-2 group relative rounded-[2.5rem] border border-card-border bg-bg-secondary overflow-hidden min-h-[500px] md:min-h-[600px] flex flex-col md:flex-row items-center"
+               className="md:col-span-2 group relative rounded-[2.5rem] linear-card backdrop-blur-xl overflow-hidden min-h-[500px] md:min-h-[600px] flex flex-col md:flex-row items-center"
              >
                 <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-purple-500/10 rounded-full blur-[100px] pointer-events-none translate-x-1/3 -translate-y-1/3"></div>
                 
@@ -146,7 +147,7 @@ export default function PogoPage() {
              {/* Feature 2 - Tall Card */}
              <motion.div 
                whileHover={{ y: -5 }}
-               className="group relative rounded-[2.5rem] border border-card-border bg-bg-secondary overflow-hidden min-h-[500px] flex flex-col"
+               className="group relative rounded-[2.5rem] linear-card backdrop-blur-xl overflow-hidden min-h-[500px] flex flex-col"
              >
                 <div className="p-10 md:p-14 z-10">
                   <div className="w-14 h-14 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mb-8">
@@ -178,7 +179,7 @@ export default function PogoPage() {
              {/* Feature 3 - Tall Card */}
              <motion.div 
                whileHover={{ y: -5 }}
-               className="group relative rounded-[2.5rem] border border-card-border bg-bg-secondary overflow-hidden min-h-[500px] flex flex-col"
+               className="group relative rounded-[2.5rem] linear-card backdrop-blur-xl overflow-hidden min-h-[500px] flex flex-col"
              >
                 <div className="p-10 md:p-14 z-10">
                   <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-8">
@@ -210,7 +211,7 @@ export default function PogoPage() {
              {/* Feature 4 - Wide Card */}
              <motion.div 
                whileHover={{ y: -5 }}
-               className="md:col-span-2 group relative rounded-[2.5rem] border border-card-border bg-bg-secondary overflow-hidden min-h-[500px] md:min-h-[600px] flex flex-col md:flex-row items-center"
+               className="md:col-span-2 group relative rounded-[2.5rem] linear-card backdrop-blur-xl overflow-hidden min-h-[500px] md:min-h-[600px] flex flex-col md:flex-row items-center"
              >
                 <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none translate-x-1/3 -translate-y-1/3"></div>
                 
@@ -246,7 +247,7 @@ export default function PogoPage() {
           </div>
 
           {/* Bottom Promotional Callout */}
-          <div className="mt-24 mb-10 p-10 sm:p-14 md:p-20 rounded-[2.5rem] border border-card-border bg-bg-secondary text-center relative overflow-hidden shadow-2xl">
+          <div className="mt-24 mb-10 p-10 sm:p-14 md:p-20 rounded-[2.5rem] linear-card text-center relative overflow-hidden backdrop-blur-xl">
              <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[100px] pointer-events-none translate-x-1/3 -translate-y-1/3"></div>
              <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-fuchsia-600/10 rounded-full blur-[100px] pointer-events-none -translate-x-1/3 translate-y-1/3"></div>
              

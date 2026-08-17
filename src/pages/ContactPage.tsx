@@ -111,20 +111,20 @@ export default function ContactPage() {
                   </div>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    <Link to="/rhumbnav/delete-account" className="flex items-center justify-between p-3 rounded-xl border border-sky-500/30 bg-sky-500/10 hover:bg-sky-500/20 transition-colors group">
+                    <Link to="/rhumbnav/delete-account" className="flex items-center justify-between p-3 rounded-xl border border-sky-600/25 bg-sky-500/10 hover:bg-sky-500/15 dark:border-sky-500/30 dark:bg-sky-500/10 dark:hover:bg-sky-500/20 transition-colors group">
                       <div className="flex flex-col text-left">
-                        <span className="text-xs text-sky-800 dark:text-sky-200 font-semibold">RhumbNav Account Deletion</span>
-                        <span className="text-[10px] text-sky-900/70 dark:text-gray-300 font-normal">Flight logbook data deletion</span>
+                        <span className="text-xs text-sky-950 dark:text-sky-200 font-bold group-hover:text-sky-800 dark:group-hover:text-sky-100 transition-colors">RhumbNav Account Deletion</span>
+                        <span className="text-[10px] text-sky-900/80 dark:text-gray-300 font-medium">Flight logbook data deletion</span>
                       </div>
-                      <ArrowUpRight className="w-3.5 h-3.5 text-sky-700 dark:text-sky-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0 ml-1" />
+                      <ArrowUpRight className="w-3.5 h-3.5 text-sky-800 dark:text-sky-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0 ml-1" />
                     </Link>
 
-                    <Link to="/pogo/delete-account" className="flex items-center justify-between p-3 rounded-xl border border-fuchsia-500/30 bg-fuchsia-500/10 hover:bg-fuchsia-500/20 transition-colors group">
+                    <Link to="/pogo/delete-account" className="flex items-center justify-between p-3 rounded-xl border border-fuchsia-600/25 bg-fuchsia-500/10 hover:bg-fuchsia-500/15 dark:border-fuchsia-500/30 dark:bg-fuchsia-500/10 dark:hover:bg-fuchsia-500/20 transition-colors group">
                       <div className="flex flex-col text-left">
-                        <span className="text-xs text-fuchsia-800 dark:text-fuchsia-200 font-semibold">Pogo Account Deletion</span>
-                        <span className="text-[10px] text-fuchsia-900/70 dark:text-gray-300 font-normal">Climbing profile data deletion</span>
+                        <span className="text-xs text-fuchsia-950 dark:text-fuchsia-200 font-bold group-hover:text-fuchsia-800 dark:group-hover:text-fuchsia-100 transition-colors">Pogo Account Deletion</span>
+                        <span className="text-[10px] text-fuchsia-900/80 dark:text-gray-300 font-medium">Climbing profile data deletion</span>
                       </div>
-                      <ArrowUpRight className="w-3.5 h-3.5 text-fuchsia-700 dark:text-fuchsia-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0 ml-1" />
+                      <ArrowUpRight className="w-3.5 h-3.5 text-fuchsia-800 dark:text-fuchsia-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0 ml-1" />
                     </Link>
                   </div>
                 </div>

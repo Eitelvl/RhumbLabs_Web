@@ -5,6 +5,7 @@ import { DeviceMockup } from '../components/DeviceMockup';
 import { Compass, BookText, Calculator, Map, Crosshair, IdCard } from 'lucide-react';
 import { useRef } from 'react';
 import { getAssetUrl } from '../utils/assets';
+import { SafeImage } from '../components/SafeImage';
 
 export default function RhumbNavPage() {
   const containerRef = useRef(null);
@@ -20,25 +21,25 @@ export default function RhumbNavPage() {
     <div className="bg-bg-primary text-text-primary min-h-screen selection:bg-blue-500/30 selection:text-text-primary">
       <TopBar />
       
-      <main className="pt-32 pb-32 relative overflow-hidden" ref={containerRef}>
+      <main className="pt-20 md:pt-24 pb-24 relative overflow-hidden" ref={containerRef}>
         
         {/* Background Effects */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1200px] h-[600px] bg-blue-600/10 rounded-[100%] blur-[120px] pointer-events-none opacity-50"></div>
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1200px] h-[500px] bg-blue-600/10 rounded-[100%] blur-[120px] pointer-events-none opacity-50"></div>
 
         <div className="max-w-[1400px] mx-auto px-6 lg:px-12 relative z-10">
           
           {/* Hero Section */}
-          <div className="flex flex-col items-center text-center mt-12 mb-32 md:mb-48">
+          <div className="flex flex-col items-center text-center mt-2 md:mt-4 mb-20 md:mb-32">
             <motion.div
               initial={{ opacity: 0, scale: 0.9, filter: "blur(10px)" }}
               animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-              className="inline-flex items-center justify-center mb-10 md:mb-14 relative h-[110px] md:h-[136px] w-auto"
+              className="inline-flex items-center justify-center mb-3 md:mb-4 relative h-[200px] sm:h-[240px] md:h-[280px] lg:h-[300px] w-auto"
             >
-              <img 
+              <SafeImage 
                 src={getAssetUrl('rhumbnav-logo.png')} 
                 alt="RhumbNav Logo" 
-                className="h-[110px] md:h-[136px] max-w-[90vw] md:max-w-none w-auto object-contain pointer-events-none" 
+                className="h-[200px] sm:h-[240px] md:h-[280px] lg:h-[300px] max-w-[90vw] md:max-w-none w-auto object-contain pointer-events-none" 
               />
             </motion.div>
             
@@ -46,7 +47,7 @@ export default function RhumbNavPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.1 }}
-              className="text-5xl md:text-7xl lg:text-[6rem] font-bold tracking-tighter mb-8 leading-[1.05] text-text-primary"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-[4.5rem] font-bold tracking-tight mb-4 md:mb-5 leading-[1.08] text-text-primary"
             >
               Flight simplified. <br className="hidden md:block"/> Navigation perfected.
             </motion.h1>
@@ -55,7 +56,7 @@ export default function RhumbNavPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-xl md:text-2xl text-text-secondary max-w-3xl mx-auto leading-relaxed font-light mb-16"
+              className="text-lg sm:text-xl md:text-2xl text-text-secondary max-w-3xl mx-auto leading-relaxed font-light mb-8 md:mb-10"
             >
               RhumbNav is a new light EFB shaped by real flight experience, bringing flight planning, navigation, and in-flight awareness into one seamless experience.
             </motion.p>
@@ -64,12 +65,28 @@ export default function RhumbNavPage() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="inline-flex items-center gap-3 px-8 py-4 bg-card-element border border-card-border rounded-full text-text-primary font-medium shadow-[0_0_40px_rgba(59,130,246,0.15)]"
+              className="flex flex-col sm:flex-row items-center justify-center gap-4"
             >
-              <svg viewBox="0 0 24 24" className="w-6 h-6 fill-[#3DDC84]" xmlns="http://www.w3.org/2000/svg">
-                <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4483-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993.0004.5511-.4482.9997-.9993.9997zm-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997zm11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0216 3.503C15.5902 8.244 13.8533 7.85 12 7.85c-1.8533 0-3.5902.394-5.1375 1.1002L4.841 5.447a.416.416 0 00-.5676-.1521.416.416 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3432-4.1021-2.6889-7.5743-6.1185-9.44z"/>
-              </svg>
-              Coming Soon for Android
+              <div
+                className="inline-flex items-center gap-3 px-8 py-4 bg-card-element border border-card-border rounded-full text-text-primary font-medium shadow-[0_0_40px_rgba(59,130,246,0.15)]"
+              >
+                <svg viewBox="0 0 24 24" className="w-6 h-6 fill-[#3DDC84]" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4483-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993.0004.5511-.4482.9997-.9993.9997zm-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997zm11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0216 3.503C15.5902 8.244 13.8533 7.85 12 7.85c-1.8533 0-3.5902.394-5.1375 1.1002L4.841 5.447a.416.416 0 00-.5676-.1521.416.416 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3432-4.1021-2.6889-7.5743-6.1185-9.44z"/>
+                </svg>
+                Coming Soon for Android
+              </div>
+
+              <a
+                href="https://testflight.apple.com/join/rW2JwgUW"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-3 px-8 py-4 bg-card-element border border-card-border rounded-full text-text-primary font-medium shadow-[0_0_40px_rgba(59,130,246,0.15)] hover:bg-bg-secondary hover:border-blue-500/50 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+              >
+                <svg viewBox="0 0 24 24" className="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M17.05 13.974a4.428 4.428 0 0 1 2.112-3.705A4.475 4.475 0 0 0 15.344 8c-1.921-.194-3.749 1.127-4.73 1.127-1.002 0-2.518-1.082-4.093-1.052-2.062.03-3.957 1.2-5.016 3.037-2.152 3.73-.55 9.255 1.547 12.274.996 1.485 2.197 3.161 3.784 3.096 1.503-.06 2.083-1.026 3.901-1.026 1.803 0 2.342 1.026 3.918 1.056 1.637.03 2.648-1.442 3.633-2.88 1.139-1.666 1.608-3.284 1.637-3.37l-.022-.012a4.4 4.4 0 0 1-3.853-4.275zm-1.1-6.793a4.238 4.238 0 0 0 1.01-3.031 4.3 4.3 0 0 0-2.827 1.44 4.098 4.098 0 0 0-1.037 2.949 3.513 3.513 0 0 0 2.854-1.358z"/>
+                </svg>
+                Join the Beta Testing
+              </a>
             </motion.div>
           </div>
 
@@ -78,7 +95,7 @@ export default function RhumbNavPage() {
              {/* Feature 1 - Left Column Tall */}
              <motion.div 
                whileHover={{ y: -5 }}
-               className="md:col-span-1 group relative rounded-[2.5rem] border border-card-border bg-bg-secondary overflow-hidden min-h-[600px] flex flex-col"
+               className="md:col-span-1 group relative rounded-[2.5rem] linear-card backdrop-blur-xl overflow-hidden min-h-[600px] flex flex-col"
              >
                 <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-sky-500/10 rounded-full blur-[80px] pointer-events-none translate-x-1/3 -translate-y-1/3"></div>
                 
@@ -107,7 +124,7 @@ export default function RhumbNavPage() {
              {/* Feature 2 - Right Column Tall */}
              <motion.div 
                whileHover={{ y: -5 }}
-               className="md:col-span-1 group relative rounded-[2.5rem] border border-card-border bg-bg-secondary overflow-hidden min-h-[600px] flex flex-col pt-10"
+               className="md:col-span-1 group relative rounded-[2.5rem] linear-card backdrop-blur-xl overflow-hidden min-h-[600px] flex flex-col pt-10"
              >
                 <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-500/10 rounded-full blur-[80px] pointer-events-none -translate-x-1/3 translate-y-1/3"></div>
 
@@ -136,7 +153,7 @@ export default function RhumbNavPage() {
              {/* Feature 3 - Wide bottom card (Licenses) */}
              <motion.div 
                whileHover={{ y: -5 }}
-               className="md:col-span-2 group relative rounded-[2.5rem] border border-card-border bg-bg-secondary overflow-hidden min-h-[500px] flex flex-col md:flex-row items-center"
+               className="md:col-span-2 group relative rounded-[2.5rem] linear-card backdrop-blur-xl overflow-hidden min-h-[500px] flex flex-col md:flex-row items-center"
              >
                 <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-emerald-500/10 rounded-full blur-[80px] pointer-events-none translate-x-1/3 translate-y-1/3"></div>
                 
@@ -165,7 +182,7 @@ export default function RhumbNavPage() {
              {/* Feature 4 - Wide bottom card (Navigation - reversed) */}
              <motion.div 
                whileHover={{ y: -5 }}
-               className="md:col-span-2 group relative rounded-[2.5rem] border border-card-border bg-bg-secondary overflow-hidden min-h-[500px] flex flex-col md:flex-row items-center"
+               className="md:col-span-2 group relative rounded-[2.5rem] linear-card backdrop-blur-xl overflow-hidden min-h-[500px] flex flex-col md:flex-row items-center"
              >
                 <div className="flex-1 p-10 md:p-16 lg:p-20 z-10 order-2 md:order-1">
                   <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-8">
@@ -197,7 +214,7 @@ export default function RhumbNavPage() {
           </div>
 
           {/* Bottom Callout */}
-          <div className="mt-24 mb-10 p-12 md:p-20 rounded-[2.5rem] border border-card-border bg-card-element text-center relative overflow-hidden backdrop-blur-xl">
+          <div className="mt-24 mb-10 p-12 md:p-20 rounded-[2.5rem] linear-card text-center relative overflow-hidden backdrop-blur-xl">
              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[300px] bg-sky-500/5 rounded-[100%] blur-[80px] pointer-events-none"></div>
              <Crosshair className="w-12 h-12 text-text-secondary mx-auto mb-8 opacity-60" />
              <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">Aviation in your pocket.</h2>

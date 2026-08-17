@@ -6,6 +6,7 @@ import TopBar from '../components/TopBar';
 import Footer from '../components/Footer';
 import { motion } from 'motion/react';
 import { getAssetUrl } from '../utils/assets';
+import { SafeImage } from '../components/SafeImage';
 
 const AndroidIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
@@ -177,24 +178,24 @@ export default function LandingPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.7 }}
-            className="w-full group relative rounded-[1.75rem] md:rounded-[2.5rem] linear-card backdrop-blur-xl overflow-hidden"
+            className="w-full group relative rounded-[1.75rem] md:rounded-[2.5rem] linear-card backdrop-blur-xl overflow-hidden p-6 sm:p-10 md:p-12 lg:p-14 min-h-[560px] md:min-h-[600px] lg:min-h-[640px] flex flex-col justify-center"
           >
             <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[90px] pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
             
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 p-6 md:p-10 lg:p-12 relative z-10 items-start">
-              {/* Text / Info Column - Anchored to top */}
-              <div className="lg:col-span-7 flex flex-col justify-start">
-                {/* Anchored Top-Left Logo */}
-                <div className="mb-6 flex items-center">
-                  <img 
-                    src={getAssetUrl('rhumbnav-logo.png')} 
-                    alt="RhumbNav" 
-                    className="h-12 sm:h-14 md:h-16 lg:h-20 w-auto max-w-[280px] sm:max-w-xs md:max-w-md object-contain object-left" 
-                  />
-                </div>
+            {/* Top-Left Corner Logo - Snug in corner without overlapping text */}
+            <div className="absolute top-4 left-5 sm:top-6 sm:left-8 md:top-7 md:left-10 z-20 pointer-events-none">
+              <SafeImage 
+                src={getAssetUrl('rhumbnav-logo.png')} 
+                alt="RhumbNav" 
+                className="h-16 sm:h-20 md:h-24 lg:h-28 w-auto max-w-[240px] sm:max-w-xs md:max-w-sm object-contain object-left" 
+              />
+            </div>
 
-                {/* Title Below Logo */}
-                <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-text-primary tracking-tight leading-snug mb-4">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center relative z-10 pt-20 sm:pt-24 lg:pt-8">
+              {/* Text / Info Column - Centered vertically on the card */}
+              <div className="lg:col-span-7 flex flex-col justify-center items-start text-left">
+                {/* Title */}
+                <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.6rem] font-bold text-text-primary tracking-tight leading-snug mb-4">
                   Aviation precision in your pocket.
                 </h3>
 
@@ -204,7 +205,7 @@ export default function LandingPage() {
                 </p>
                 
                 {/* Bullet Points Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5 mb-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 mb-8">
                   {['Complete VFR Navigation', 'Digital Logbook & Pilot Credentials', 'Real-time Weather & Airport Info', 'Advanced E6B Flight Computer'].map(feature => (
                     <div key={feature} className="flex items-center gap-3">
                       <div className="w-5 h-5 rounded-full bg-card-element border border-card-border flex items-center justify-center shrink-0">
@@ -216,7 +217,7 @@ export default function LandingPage() {
                 </div>
                 
                 {/* CTA Button */}
-                <Link to="/rhumbnav" className="inline-flex items-center justify-center gap-2 h-12 px-7 rounded-full btn-cyan-glow text-white font-semibold text-sm w-fit group/btn">
+                <Link to="/rhumbnav" className="inline-flex items-center justify-center gap-2 h-12 px-8 rounded-full btn-cyan-glow text-white font-semibold text-sm w-fit group/btn">
                   <span className="relative z-10 flex items-center gap-2">
                      Discover RhumbNav
                      <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
@@ -225,7 +226,7 @@ export default function LandingPage() {
               </div>
               
               {/* Image Column - 3 Vertical Phones Stack */}
-              <div className="lg:col-span-5 flex justify-center items-center relative min-h-[300px] md:min-h-[340px] py-4">
+              <div className="lg:col-span-5 flex justify-center items-center relative min-h-[300px] md:min-h-[360px] py-4 self-center">
                 <div className="flex flex-row items-center justify-center w-full max-w-[380px] md:max-w-[440px] relative">
                   {/* Left Phone: Pilot License */}
                   <DeviceMockup 
@@ -259,13 +260,22 @@ export default function LandingPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.7 }}
-            className="w-full group relative rounded-[1.75rem] md:rounded-[2.5rem] linear-card backdrop-blur-xl overflow-hidden"
+            className="w-full group relative rounded-[1.75rem] md:rounded-[2.5rem] linear-card backdrop-blur-xl overflow-hidden p-6 sm:p-10 md:p-12 lg:p-14 min-h-[560px] md:min-h-[600px] lg:min-h-[640px] flex flex-col justify-center"
           >
             <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-purple-500/5 rounded-full blur-[90px] pointer-events-none -translate-y-1/2 -translate-x-1/3"></div>
             
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 p-6 md:p-10 lg:p-12 relative z-10 items-start">
+            {/* Top-Right Corner Logo - Snug in corner without overlapping text */}
+            <div className="absolute top-4 right-5 sm:top-6 sm:right-8 md:top-7 md:right-10 z-20 pointer-events-none">
+              <SafeImage 
+                src={getAssetUrl('pogo/pogo-logo.png')} 
+                alt="Pogo" 
+                className="h-16 sm:h-20 md:h-24 lg:h-28 w-auto max-w-[240px] sm:max-w-xs md:max-w-sm object-contain object-right" 
+              />
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center relative z-10 pt-20 sm:pt-24 lg:pt-8">
               {/* Image Column - 3 Vertical Phones Stack */}
-              <div className="lg:col-span-5 order-2 lg:order-1 flex justify-center items-center relative min-h-[300px] md:min-h-[340px] py-4 self-center">
+              <div className="lg:col-span-5 order-2 lg:order-1 flex justify-center items-center relative min-h-[300px] md:min-h-[360px] py-4 self-center">
                  <div className="flex flex-row items-center justify-center w-full max-w-[380px] md:max-w-[440px] relative">
                    {/* Left Phone: Summary */}
                    <DeviceMockup 
@@ -291,19 +301,10 @@ export default function LandingPage() {
                 </div>
               </div>
               
-              {/* Text / Info Column - Anchored to top */}
-              <div className="lg:col-span-7 order-1 lg:order-2 flex flex-col justify-start items-end text-right">
-                {/* Anchored Top-Right Logo */}
-                <div className="mb-6 flex justify-end items-center w-full">
-                  <img 
-                    src={getAssetUrl('pogo/pogo-logo.png')} 
-                    alt="Pogo" 
-                    className="h-12 sm:h-14 md:h-16 lg:h-20 w-auto max-w-[280px] sm:max-w-xs md:max-w-md object-contain object-right" 
-                  />
-                </div>
-
+              {/* Text / Info Column - Centered vertically on the card, aligned right */}
+              <div className="lg:col-span-7 order-1 lg:order-2 flex flex-col justify-center items-end text-right">
                 {/* Title */}
-                <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-text-primary tracking-tight leading-snug mb-4 text-right">
+                <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.6rem] font-bold text-text-primary tracking-tight leading-snug mb-4 text-right">
                   Climb higher, track smarter.
                 </h3>
 
@@ -313,7 +314,7 @@ export default function LandingPage() {
                 </p>
                 
                 {/* Bullet Points Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5 mb-8 w-full">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 mb-8 w-full">
                   {['Track Grades', 'Performance Analytics', 'Unlock Achievements', 'Session Logging'].map(feature => (
                     <div key={feature} className="flex items-center justify-end gap-3">
                       <span className="text-text-secondary text-xs md:text-sm font-medium text-right">{feature}</span>
@@ -322,9 +323,9 @@ export default function LandingPage() {
                   ))}
                 </div>
                 
-                {/* CTA Button - Aligned Right with Magenta Glow Effect */}
+                {/* CTA Button */}
                 <div className="flex justify-end w-full">
-                  <Link to="/pogo" className="inline-flex items-center justify-center gap-2 h-12 px-7 rounded-full btn-magenta-glow text-white font-semibold text-sm w-fit group/btn">
+                  <Link to="/pogo" className="inline-flex items-center justify-center gap-2 h-12 px-8 rounded-full btn-magenta-glow text-white font-semibold text-sm w-fit group/btn">
                     <span className="relative z-10 flex items-center gap-2">
                       Explore Pogo
                       <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />

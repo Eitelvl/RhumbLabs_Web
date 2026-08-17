@@ -4,6 +4,7 @@ import { motion, useInView } from 'motion/react';
 import TopBar from '../components/TopBar';
 import Footer from '../components/Footer';
 import { getAssetUrl } from '../utils/assets';
+import { SafeImage } from '../components/SafeImage';
 import { 
   ArrowRight, 
   Sparkles, 
@@ -268,7 +269,7 @@ export default function AboutPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
               
               {/* Pillar 1: PRODUCTS */}
-              <div className="bg-bg-secondary border border-card-border rounded-3xl p-8 flex flex-col justify-between hover:border-cyan-500/40 transition-all duration-300 shadow-md relative overflow-hidden group">
+              <div className="linear-card backdrop-blur-xl rounded-3xl p-8 flex flex-col justify-between hover:border-cyan-500/40 transition-all duration-300 relative overflow-hidden group">
                 <div>
                   <div className="flex items-center justify-between mb-8">
                     <span className="text-xs font-mono font-bold tracking-widest text-cyan-400 uppercase px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-800/60">
@@ -285,7 +286,7 @@ export default function AboutPage() {
                   </p>
 
                   <div className="space-y-4 pt-6 border-t border-border-subtle">
-                    <Link to="/rhumbnav" className="block p-4 rounded-2xl bg-bg-primary border border-card-border hover:border-cyan-500/50 transition-colors">
+                    <Link to="/rhumbnav" className="block p-4 rounded-2xl linear-card hover:border-cyan-500/50 transition-colors">
                       <div className="flex items-center justify-between mb-1">
                         <span className="font-semibold text-text-primary text-sm flex items-center gap-1.5">
                           <Compass className="w-4 h-4 text-cyan-400" />
@@ -296,7 +297,7 @@ export default function AboutPage() {
                       <p className="text-xs text-text-secondary font-light">A navigation-focused product developed by Rhumb Labs.</p>
                     </Link>
 
-                    <Link to="/pogo" className="block p-4 rounded-2xl bg-bg-primary border border-card-border hover:border-fuchsia-500/50 transition-colors">
+                    <Link to="/pogo" className="block p-4 rounded-2xl linear-card hover:border-fuchsia-500/50 transition-colors">
                       <div className="flex items-center justify-between mb-1">
                         <span className="font-semibold text-text-primary text-sm flex items-center gap-1.5">
                           <Flame className="w-4 h-4 text-fuchsia-400" />
@@ -321,7 +322,7 @@ export default function AboutPage() {
               </div>
 
               {/* Pillar 2: CUSTOM */}
-              <div className="bg-bg-secondary border border-card-border rounded-3xl p-8 flex flex-col justify-between hover:border-purple-500/40 transition-all duration-300 shadow-md relative overflow-hidden group">
+              <div className="linear-card backdrop-blur-xl rounded-3xl p-8 flex flex-col justify-between hover:border-purple-500/40 transition-all duration-300 relative overflow-hidden group">
                 <div>
                   <div className="flex items-center justify-between mb-8">
                     <span className="text-xs font-mono font-bold tracking-widest text-purple-400 uppercase px-3 py-1 rounded-full bg-purple-950/80 border border-purple-800/60">
@@ -365,7 +366,7 @@ export default function AboutPage() {
               </div>
 
               {/* Pillar 3: EXPERIMENTS */}
-              <div className="bg-bg-secondary border border-card-border rounded-3xl p-8 flex flex-col justify-between hover:border-cyan-400/40 transition-all duration-300 shadow-md relative overflow-hidden group">
+              <div className="linear-card backdrop-blur-xl rounded-3xl p-8 flex flex-col justify-between hover:border-cyan-400/40 transition-all duration-300 relative overflow-hidden group">
                 <div>
                   <div className="flex items-center justify-between mb-8">
                     <span className="text-xs font-mono font-bold tracking-widest text-text-secondary uppercase px-3 py-1 rounded-full bg-card-element border border-card-border">
@@ -424,7 +425,7 @@ export default function AboutPage() {
               {/* Product 1: RhumbNav */}
               <Link 
                 to="/rhumbnav"
-                className="bg-bg-secondary border border-card-border rounded-3xl p-8 flex flex-col justify-between hover:border-cyan-500/50 hover:shadow-[0_0_30px_rgba(6,182,212,0.12)] transition-all duration-300 group shadow-md"
+                className="linear-card backdrop-blur-xl rounded-3xl p-8 flex flex-col justify-between hover:border-cyan-500/50 hover:shadow-[0_0_30px_rgba(6,182,212,0.12)] transition-all duration-300 group"
               >
                 <div>
                   {/* Card Header: Status Badge & Arrow */}
@@ -438,7 +439,7 @@ export default function AboutPage() {
 
                   {/* Logo Area: Left-Aligned */}
                   <div className="h-20 sm:h-24 flex items-center justify-start mb-6">
-                    <img 
+                    <SafeImage 
                       src={getAssetUrl('rhumbnav-logo.png')} 
                       alt="RhumbNav" 
                       className="h-10 sm:h-12 md:h-14 w-auto object-contain"
@@ -459,7 +460,7 @@ export default function AboutPage() {
               {/* Product 2: Pogo */}
               <Link 
                 to="/pogo"
-                className="bg-bg-secondary border border-card-border rounded-3xl p-8 flex flex-col justify-between hover:border-fuchsia-500/50 hover:shadow-[0_0_30px_rgba(192,38,211,0.12)] transition-all duration-300 group shadow-md"
+                className="linear-card backdrop-blur-xl rounded-3xl p-8 flex flex-col justify-between hover:border-fuchsia-500/50 hover:shadow-[0_0_30px_rgba(192,38,211,0.12)] transition-all duration-300 group"
               >
                 <div>
                   {/* Card Header: Status Badge & Arrow */}
@@ -473,7 +474,7 @@ export default function AboutPage() {
 
                   {/* Logo Area: Left-Aligned */}
                   <div className="h-20 sm:h-24 flex items-center justify-start mb-6">
-                    <img 
+                    <SafeImage 
                       src={getAssetUrl('pogo/pogo-logo.png')} 
                       alt="Pogo" 
                       className="h-10 sm:h-12 md:h-14 w-auto object-contain" 
@@ -492,7 +493,7 @@ export default function AboutPage() {
               </Link>
 
               {/* Product 3: More Experiments Card */}
-              <div className="bg-bg-secondary border border-dashed border-card-border rounded-3xl p-8 flex flex-col justify-between shadow-md">
+              <div className="linear-card backdrop-blur-xl border-dashed rounded-3xl p-8 flex flex-col justify-between">
                 <div>
                   {/* Card Header: Status Badge & Sparkle */}
                   <div className="flex items-center justify-between mb-6">
@@ -534,7 +535,7 @@ export default function AboutPage() {
             ========================================================================= */}
         <section className="py-20 md:py-32 px-6 lg:px-12 border-t border-border-subtle">
           <div className="max-w-5xl mx-auto">
-            <div className="bg-bg-secondary border border-card-border rounded-3xl p-8 sm:p-12 md:p-16 shadow-2xl relative overflow-hidden">
+            <div className="linear-card backdrop-blur-xl rounded-3xl p-8 sm:p-12 md:p-16 relative overflow-hidden">
               
               <div className="max-w-3xl relative z-10">
                 <span className="text-xs font-mono font-semibold tracking-widest text-cyan-400 uppercase block mb-4">
@@ -586,7 +587,7 @@ export default function AboutPage() {
               {workSteps.map((step) => (
                 <div 
                   key={step.num}
-                  className="bg-bg-secondary border border-card-border rounded-3xl p-7 flex flex-col justify-between hover:border-cyan-500/40 hover:bg-card-element transition-all duration-300 shadow-md group"
+                  className="linear-card rounded-3xl p-7 flex flex-col justify-between hover:border-cyan-500/40 transition-all duration-300 group"
                 >
                   <div>
                     <span className="text-2xl md:text-3xl font-mono font-bold text-text-secondary/40 group-hover:text-cyan-400 transition-colors block mb-6">
@@ -660,7 +661,7 @@ export default function AboutPage() {
                   return (
                     <div 
                       key={area.title}
-                      className="bg-bg-secondary border border-card-border rounded-2xl p-6 hover:border-cyan-500/40 transition-all duration-300 shadow-md"
+                      className="linear-card rounded-2xl p-6 hover:border-cyan-500/40 transition-all duration-300"
                     >
                       <div className="w-10 h-10 rounded-xl bg-bg-primary flex items-center justify-center border border-card-border mb-4 text-cyan-400">
                         <Icon className="w-5 h-5" />

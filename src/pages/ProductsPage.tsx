@@ -6,6 +6,7 @@ import TopBar from '../components/TopBar';
 import Footer from '../components/Footer';
 import { motion } from 'motion/react';
 import { getAssetUrl } from '../utils/assets';
+import { SafeImage } from '../components/SafeImage';
 
 // Products Page - RhumbLabs
 export default function ProductsPage() {
@@ -51,34 +52,34 @@ export default function ProductsPage() {
             <h1 className="text-5xl md:text-6xl lg:text-[5rem] font-bold tracking-tighter text-text-primary">Our Products</h1>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pb-4 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pb-4 max-w-5xl mx-auto">
             {/* RhumbNav - Summary Layout */}
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="w-full group relative rounded-[2rem] linear-card backdrop-blur-xl overflow-hidden flex flex-col p-8 md:p-12 aspect-square"
+              className="w-full group relative rounded-[2rem] linear-card backdrop-blur-xl overflow-hidden aspect-square flex flex-col p-6 sm:p-8 md:p-10 justify-between"
             >
-              <div className="flex flex-col items-center text-center h-full w-full justify-between">
-                {/* Logo Area - Aligned to bottom, matching optical weight */}
-                <div className="h-[52%] flex items-end justify-center w-full px-2 pb-4">
-                  <img 
+              <div className="flex flex-col items-center justify-between h-full w-full text-center">
+                {/* Logo Area - 3x larger */}
+                <div className="flex-1 flex items-center justify-center w-full min-h-0 pt-1 pb-1">
+                  <SafeImage 
                     src={getAssetUrl('rhumbnav-logo.png')} 
                     alt="RhumbNav Logo" 
-                    className="w-[220px] sm:w-[260px] md:w-[290px] max-h-[85px] md:max-h-[95px] h-auto object-contain" 
+                    className="w-auto max-w-full max-h-[200px] sm:max-h-[250px] md:max-h-[290px] object-contain scale-125 sm:scale-140 md:scale-150 origin-center" 
                   />
                 </div>
                 
-                {/* Text Area */}
-                <div className="h-[22%] flex items-center justify-center w-full">
-                  <p className="text-text-secondary text-base md:text-lg leading-relaxed font-light max-w-xs">
+                {/* Text Area - Small margin directly below the logo */}
+                <div className="pt-2 pb-3 flex items-center justify-center w-full">
+                  <p className="text-text-secondary text-base sm:text-lg md:text-xl leading-relaxed font-light max-w-xs">
                     Aviation precision in your pocket.
                   </p>
                 </div>
                 
                 {/* Button Area */}
-                <div className="h-[26%] flex items-end justify-center w-full">
+                <div className="pb-1 flex items-center justify-center w-full">
                   <Link to="/rhumbnav" className="inline-flex shrink-0 items-center justify-center gap-2 h-12 px-8 rounded-full btn-cyan-glow text-white font-semibold group/btn">
                     Discover RhumbNav
                     <ArrowRight className="w-5 h-5 transition-transform group-hover/btn:translate-x-1" />
@@ -93,27 +94,27 @@ export default function ProductsPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="w-full group relative rounded-[2rem] linear-card backdrop-blur-xl overflow-hidden flex flex-col p-8 md:p-12 aspect-square"
+              className="w-full group relative rounded-[2rem] linear-card backdrop-blur-xl overflow-hidden aspect-square flex flex-col p-6 sm:p-8 md:p-10 justify-between"
             >
-              <div className="flex flex-col items-center text-center h-full w-full justify-between">
-                {/* Logo Area - Aligned to bottom, matching optical weight */}
-                <div className="h-[52%] flex items-end justify-center w-full px-2 pb-4">
-                  <img 
+              <div className="flex flex-col items-center justify-between h-full w-full text-center">
+                {/* Logo Area - 3x larger */}
+                <div className="flex-1 flex items-center justify-center w-full min-h-0 pt-1 pb-1">
+                  <SafeImage 
                     src={getAssetUrl('pogo/pogo-logo.png')} 
                     alt="Pogo Logo" 
-                    className="w-[220px] sm:w-[260px] md:w-[290px] max-h-[85px] md:max-h-[95px] h-auto object-contain" 
+                    className="w-auto max-w-full max-h-[200px] sm:max-h-[250px] md:max-h-[290px] object-contain scale-125 sm:scale-140 md:scale-150 origin-center" 
                   />
                 </div>
                 
-                {/* Text Area */}
-                <div className="h-[22%] flex items-center justify-center w-full">
-                  <p className="text-text-secondary text-base md:text-lg leading-relaxed font-light max-w-xs">
+                {/* Text Area - Small margin directly below the logo */}
+                <div className="pt-2 pb-3 flex items-center justify-center w-full">
+                  <p className="text-text-secondary text-base sm:text-lg md:text-xl leading-relaxed font-light max-w-xs">
                     Climb higher, track smarter.
                   </p>
                 </div>
                 
                 {/* Button Area */}
-                <div className="h-[26%] flex items-end justify-center w-full">
+                <div className="pb-1 flex items-center justify-center w-full">
                   <Link to="/pogo" className="inline-flex shrink-0 items-center justify-center gap-2 h-12 px-8 rounded-full btn-magenta-glow text-white font-semibold group/btn">
                     Explore Pogo
                     <ArrowRight className="w-5 h-5 transition-transform group-hover/btn:translate-x-1" />
