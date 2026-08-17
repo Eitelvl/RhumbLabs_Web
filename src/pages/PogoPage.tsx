@@ -36,7 +36,7 @@ export default function PogoPage() {
               className="inline-flex items-center justify-center mb-3 md:mb-4 relative h-[200px] sm:h-[240px] md:h-[280px] lg:h-[300px] w-auto"
             >
               <SafeImage 
-                src={getAssetUrl('pogo/pogo-logo.png')} 
+                src="/images/pogo-logo.png" 
                 alt="Pogo Logo" 
                 className="h-[200px] sm:h-[240px] md:h-[280px] lg:h-[300px] max-w-[90vw] md:max-w-none w-auto object-contain pointer-events-none" 
               />
@@ -117,13 +117,13 @@ export default function PogoPage() {
                       <DeviceMockup 
                         type="phone"
                         className="show-in-light w-[45%] max-w-[160px] md:max-w-[210px] shadow-[0_20px_60px_var(--shadow-heavy)] rotate-[-6deg]"
-                        imageSrc={getAssetUrl('pogo/pogo-active-session-light.jpg')}
+                        imageSrc="/images/pogo-active-session-light.jpg"
                         alt="Log Active Session Light"
                       />
                       <DeviceMockup 
                         type="phone"
                         className="show-in-light w-[45%] max-w-[160px] md:max-w-[210px] shadow-[0_20px_60px_var(--shadow-heavy)] rotate-[6deg] translate-y-6"
-                        imageSrc={getAssetUrl('pogo/pogo-session-detail-light.jpg')}
+                        imageSrc="/images/pogo-session-detail-light.jpg"
                         alt="Session Detail Light"
                       />
 
@@ -131,13 +131,13 @@ export default function PogoPage() {
                       <DeviceMockup 
                         type="phone"
                         className="show-in-dark w-[45%] max-w-[160px] md:max-w-[210px] shadow-[0_20px_60px_var(--shadow-heavy)] rotate-[-6deg]"
-                        imageSrc={getAssetUrl('pogo/pogo-active-session-dark.jpg')}
+                        imageSrc="/images/pogo-active-session-dark.jpg"
                         alt="Log Active Session Dark"
                       />
                       <DeviceMockup 
                         type="phone"
                         className="show-in-dark w-[45%] max-w-[160px] md:max-w-[210px] shadow-[0_20px_60px_var(--shadow-heavy)] rotate-[6deg] translate-y-6"
-                        imageSrc={getAssetUrl('pogo/pogo-session-detail-dark.jpg')}
+                        imageSrc="/images/pogo-session-detail-dark.jpg"
                         alt="Session Detail Dark"
                       />
                    </motion.div>
@@ -163,14 +163,14 @@ export default function PogoPage() {
                    <DeviceMockup 
                       type="phone"
                       className="show-in-light w-[50%] max-w-[250px] shadow-[0_20px_50px_var(--shadow-medium)]"
-                      imageSrc={getAssetUrl('pogo/pogo-summary-light.jpg')}
+                      imageSrc="/images/pogo-summary-light.jpg"
                       alt="Clear Progression Light"
                    />
                    {/* Dark Mode Mockup (Spanish) */}
                    <DeviceMockup 
                       type="phone"
                       className="show-in-dark w-[50%] max-w-[250px] shadow-[0_20px_50px_var(--shadow-medium)]"
-                      imageSrc={getAssetUrl('pogo/pogo-summary-dark.jpg')}
+                      imageSrc="/images/pogo-summary-dark.jpg"
                       alt="Clear Progression Dark"
                    />
                 </div>
@@ -195,14 +195,14 @@ export default function PogoPage() {
                    <DeviceMockup 
                       type="phone"
                       className="show-in-light w-[50%] max-w-[250px] shadow-[0_20px_50px_var(--shadow-medium)]"
-                      imageSrc={getAssetUrl('pogo/pogo-history-light.jpg')}
+                      imageSrc="/images/pogo-history-light.jpg"
                       alt="Climbing History Light"
                    />
                    {/* Dark Mode Mockup (Spanish) */}
                    <DeviceMockup 
                       type="phone"
                       className="show-in-dark w-[50%] max-w-[250px] shadow-[0_20px_50px_var(--shadow-medium)]"
-                      imageSrc={getAssetUrl('pogo/pogo-history-dark.jpg')}
+                      imageSrc="/images/pogo-history-dark.jpg"
                       alt="Climbing History Dark"
                    />
                 </div>
@@ -231,14 +231,14 @@ export default function PogoPage() {
                       <DeviceMockup 
                         type="phone"
                         className="show-in-light w-[60%] md:w-[70%] max-w-[300px] shadow-[0_20px_60px_var(--shadow-heavy)] rotate-[4deg]"
-                        imageSrc={getAssetUrl('pogo/pogo-achievements-light.jpg')}
+                        imageSrc="/images/pogo-achievements-light.jpg"
                         alt="Unlock Achievements Light"
                       />
                       {/* Dark Mode Mockup (Spanish) */}
                       <DeviceMockup 
                         type="phone"
                         className="show-in-dark w-[60%] md:w-[70%] max-w-[300px] shadow-[0_20px_60px_var(--shadow-heavy)] rotate-[4deg]"
-                        imageSrc={getAssetUrl('pogo/pogo-achievements-dark.jpg')}
+                        imageSrc="/images/pogo-achievements-dark.jpg"
                         alt="Unlock Achievements Dark"
                       />
                    </motion.div>

@@ -440,7 +440,7 @@ export default function AboutPage() {
                   {/* Logo Area: Left-Aligned */}
                   <div className="h-20 sm:h-24 flex items-center justify-start mb-6">
                     <SafeImage 
-                      src={getAssetUrl('rhumbnav-logo.png')} 
+                      src="/images/rhumbnav-logo.png" 
                       alt="RhumbNav" 
                       className="h-10 sm:h-12 md:h-14 w-auto object-contain"
                     />
@@ -475,7 +475,7 @@ export default function AboutPage() {
                   {/* Logo Area: Left-Aligned */}
                   <div className="h-20 sm:h-24 flex items-center justify-start mb-6">
                     <SafeImage 
-                      src={getAssetUrl('pogo/pogo-logo.png')} 
+                      src="/images/pogo-logo.png" 
                       alt="Pogo" 
                       className="h-10 sm:h-12 md:h-14 w-auto object-contain" 
                     />

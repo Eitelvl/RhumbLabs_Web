@@ -24,7 +24,7 @@ export default function Footer() {
           <div className="max-w-xs flex justify-center md:justify-start">
             <a href={`${basename}/`} onClick={(e) => scrollToSection(e, 'home')} className="flex items-center group relative h-16 md:h-20 w-56 md:w-72 -ml-6 md:-ml-8">
               <SafeImage 
-                src={getAssetUrl('rhumb-labs-logo.png')} 
+                src="/images/rhumb-labs-logo.png" 
                 alt="Rhumb Labs" 
                 className="w-[200px] md:w-[280px] h-auto object-contain scale-[1.3] md:scale-[1.5] origin-left" 
               />

@@ -65,7 +65,7 @@ export default function ProductsPage() {
                 {/* Logo Area - 3x larger */}
                 <div className="flex-1 flex items-center justify-center w-full min-h-0 pt-1 pb-1">
                   <SafeImage 
-                    src={getAssetUrl('rhumbnav-logo.png')} 
+                    src="/images/rhumbnav-logo.png" 
                     alt="RhumbNav Logo" 
                     className="w-auto max-w-full max-h-[200px] sm:max-h-[250px] md:max-h-[290px] object-contain scale-125 sm:scale-140 md:scale-150 origin-center" 
                   />
@@ -100,7 +100,7 @@ export default function ProductsPage() {
                 {/* Logo Area - 3x larger */}
                 <div className="flex-1 flex items-center justify-center w-full min-h-0 pt-1 pb-1">
                   <SafeImage 
-                    src={getAssetUrl('pogo/pogo-logo.png')} 
+                    src="/images/pogo-logo.png" 
                     alt="Pogo Logo" 
                     className="w-auto max-w-full max-h-[200px] sm:max-h-[250px] md:max-h-[290px] object-contain scale-125 sm:scale-140 md:scale-150 origin-center" 
                   />
