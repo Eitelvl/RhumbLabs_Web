@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useBrandTheme } from '../context/BrandThemeContext';
 import { getAssetUrl } from '../utils/assets';
 import { SafeImage } from './SafeImage';
-import RhumbLabsLogo from './RhumbLabsLogo';
 
 export default function TopBar() {
   const location = useLocation();
@@ -119,7 +118,6 @@ export default function TopBar() {
               src={getAssetUrl('rhumb-labs-logo.png')} 
               alt="Rhumb Labs" 
               className="w-[150px] md:w-[200px] h-auto object-contain scale-[1.1] md:scale-[1.2] origin-left translate-y-0.5" 
-              fallbackComponent={<RhumbLabsLogo showText={true} className="scale-[0.85] origin-left" />}
             />
           </Link>
         </div>

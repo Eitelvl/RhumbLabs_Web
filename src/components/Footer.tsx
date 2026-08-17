@@ -2,7 +2,6 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { getAssetUrl } from '../utils/assets';
 import { SafeImage } from './SafeImage';
-import RhumbLabsLogo from './RhumbLabsLogo';
 
 export default function Footer() {
   const location = useLocation();
@@ -28,7 +27,6 @@ export default function Footer() {
                 src={getAssetUrl('rhumb-labs-logo.png')} 
                 alt="Rhumb Labs" 
                 className="w-[200px] md:w-[280px] h-auto object-contain scale-[1.3] md:scale-[1.5] origin-left" 
-                fallbackComponent={<RhumbLabsLogo showText={true} />}
               />
             </a>
           </div>

@@ -7,8 +7,6 @@ import Footer from '../components/Footer';
 import { motion } from 'motion/react';
 import { getAssetUrl } from '../utils/assets';
 import { SafeImage } from '../components/SafeImage';
-import RhumbNavLogo from '../components/RhumbNavLogo';
-import PogoLogo from '../components/PogoLogo';
 
 const AndroidIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
@@ -190,7 +188,6 @@ export default function LandingPage() {
                 src={getAssetUrl('rhumbnav-logo.png')} 
                 alt="RhumbNav" 
                 className="h-16 sm:h-20 md:h-24 lg:h-28 w-auto max-w-[240px] sm:max-w-xs md:max-w-sm object-contain object-left" 
-                fallbackComponent={<RhumbNavLogo size="lg" />}
               />
             </div>
 
@@ -273,7 +270,6 @@ export default function LandingPage() {
                 src={getAssetUrl('pogo/pogo-logo.png')} 
                 alt="Pogo" 
                 className="h-16 sm:h-20 md:h-24 lg:h-28 w-auto max-w-[240px] sm:max-w-xs md:max-w-sm object-contain object-right" 
-                fallbackComponent={<PogoLogo size="lg" />}
               />
             </div>
 

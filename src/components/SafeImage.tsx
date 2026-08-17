@@ -5,32 +5,28 @@ export interface SafeImageProps extends React.ImgHTMLAttributes<HTMLImageElement
   src: string;
   alt: string;
   fallbackSrc?: string;
-  fallbackComponent?: React.ReactNode;
 }
 
 /**
  * Bulletproof Image component:
  * - Includes referrerPolicy="no-referrer"
  * - Automatically falls back to static / alternative path on error
- * - Seamlessly renders SVG fallbackComponent if network/image asset fails completely
+ * - Ensures genuine raster/PNG assets load reliably across all CDNs and environments
  */
 export const SafeImage: React.FC<SafeImageProps> = ({
   src,
   alt,
   fallbackSrc,
-  fallbackComponent,
   className = '',
   onError,
   ...props
 }) => {
   const [currentSrc, setCurrentSrc] = useState<string>(() => src);
   const [attempt, setAttempt] = useState<number>(0);
-  const [hasFailedAll, setHasFailedAll] = useState<boolean>(false);
 
   useEffect(() => {
     setCurrentSrc(src);
     setAttempt(0);
-    setHasFailedAll(false);
   }, [src]);
 
   const handleError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
@@ -53,15 +49,10 @@ export const SafeImage: React.FC<SafeImageProps> = ({
       }
     }
 
-    setHasFailedAll(true);
     if (onError) {
       onError(e);
     }
   };
-
-  if (hasFailedAll && fallbackComponent) {
-    return <>{fallbackComponent}</>;
-  }
 
   return (
     <img

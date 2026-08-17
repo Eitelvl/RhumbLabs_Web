@@ -5,8 +5,6 @@ import TopBar from '../components/TopBar';
 import Footer from '../components/Footer';
 import { getAssetUrl } from '../utils/assets';
 import { SafeImage } from '../components/SafeImage';
-import RhumbNavLogo from '../components/RhumbNavLogo';
-import PogoLogo from '../components/PogoLogo';
 import { 
   ArrowRight, 
   Sparkles, 
@@ -445,7 +443,6 @@ export default function AboutPage() {
                       src={getAssetUrl('rhumbnav-logo.png')} 
                       alt="RhumbNav" 
                       className="h-10 sm:h-12 md:h-14 w-auto object-contain"
-                      fallbackComponent={<RhumbNavLogo size="sm" />}
                     />
                   </div>
 
@@ -481,7 +478,6 @@ export default function AboutPage() {
                       src={getAssetUrl('pogo/pogo-logo.png')} 
                       alt="Pogo" 
                       className="h-10 sm:h-12 md:h-14 w-auto object-contain" 
-                      fallbackComponent={<PogoLogo size="sm" />}
                     />
                   </div>
 
