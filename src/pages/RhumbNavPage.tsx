@@ -6,6 +6,7 @@ import { Compass, BookText, Calculator, Map, Crosshair, IdCard } from 'lucide-re
 import { useRef } from 'react';
 import { getAssetUrl } from '../utils/assets';
 import { SafeImage } from '../components/SafeImage';
+import RhumbNavLogo from '../components/RhumbNavLogo';
 
 export default function RhumbNavPage() {
   const containerRef = useRef(null);
@@ -40,6 +41,7 @@ export default function RhumbNavPage() {
                 src={getAssetUrl('rhumbnav-logo.png')} 
                 alt="RhumbNav Logo" 
                 className="h-[200px] sm:h-[240px] md:h-[280px] lg:h-[300px] max-w-[90vw] md:max-w-none w-auto object-contain pointer-events-none" 
+                fallbackComponent={<RhumbNavLogo size="hero" />}
               />
             </motion.div>
             

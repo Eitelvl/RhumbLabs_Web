@@ -6,6 +6,7 @@ import { Activity, MapPin, TrendingUp, NotebookPen, Mountain, Instagram, ArrowUp
 import { useRef } from 'react';
 import { getAssetUrl } from '../utils/assets';
 import { SafeImage } from '../components/SafeImage';
+import PogoLogo from '../components/PogoLogo';
 
 export default function PogoPage() {
   const containerRef = useRef(null);
@@ -39,6 +40,7 @@ export default function PogoPage() {
                 src={getAssetUrl('pogo/pogo-logo.png')} 
                 alt="Pogo Logo" 
                 className="h-[200px] sm:h-[240px] md:h-[280px] lg:h-[300px] max-w-[90vw] md:max-w-none w-auto object-contain pointer-events-none" 
+                fallbackComponent={<PogoLogo size="hero" />}
               />
             </motion.div>
             

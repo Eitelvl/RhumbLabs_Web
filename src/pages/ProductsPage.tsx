@@ -7,6 +7,8 @@ import Footer from '../components/Footer';
 import { motion } from 'motion/react';
 import { getAssetUrl } from '../utils/assets';
 import { SafeImage } from '../components/SafeImage';
+import RhumbNavLogo from '../components/RhumbNavLogo';
+import PogoLogo from '../components/PogoLogo';
 
 // Products Page - RhumbLabs
 export default function ProductsPage() {
@@ -68,6 +70,7 @@ export default function ProductsPage() {
                     src={getAssetUrl('rhumbnav-logo.png')} 
                     alt="RhumbNav Logo" 
                     className="w-auto max-w-full max-h-[200px] sm:max-h-[250px] md:max-h-[290px] object-contain scale-125 sm:scale-140 md:scale-150 origin-center" 
+                    fallbackComponent={<RhumbNavLogo size="xl" />}
                   />
                 </div>
                 
@@ -103,6 +106,7 @@ export default function ProductsPage() {
                     src={getAssetUrl('pogo/pogo-logo.png')} 
                     alt="Pogo Logo" 
                     className="w-auto max-w-full max-h-[200px] sm:max-h-[250px] md:max-h-[290px] object-contain scale-125 sm:scale-140 md:scale-150 origin-center" 
+                    fallbackComponent={<PogoLogo size="xl" />}
                   />
                 </div>
                 

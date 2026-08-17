@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useBrandTheme } from '../context/BrandThemeContext';
 import { getAssetUrl } from '../utils/assets';
 import { SafeImage } from './SafeImage';
+import RhumbLabsLogo from './RhumbLabsLogo';
 
 export default function TopBar() {
   const location = useLocation();
@@ -114,7 +115,12 @@ export default function TopBar() {
       <div className="flex justify-between items-center px-6 md:px-12 max-w-7xl mx-auto">
         <div className="flex items-center">
           <Link to="/" onClick={(e) => scrollToSection(e, 'home')} className="logo-container flex items-center group relative h-12 w-48 md:w-64 -ml-4 md:-ml-6">
-            <SafeImage src={getAssetUrl('rhumb-labs-logo.png')} alt="Rhumb Labs" className="w-[150px] md:w-[200px] h-auto object-contain scale-[1.1] md:scale-[1.2] origin-left translate-y-0.5" />
+            <SafeImage 
+              src={getAssetUrl('rhumb-labs-logo.png')} 
+              alt="Rhumb Labs" 
+              className="w-[150px] md:w-[200px] h-auto object-contain scale-[1.1] md:scale-[1.2] origin-left translate-y-0.5" 
+              fallbackComponent={<RhumbLabsLogo showText={true} className="scale-[0.85] origin-left" />}
+            />
           </Link>
         </div>
 
