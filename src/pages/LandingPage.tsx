@@ -182,11 +182,11 @@ export default function LandingPage() {
             <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[90px] pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
             
             {/* Top-Left Corner Logo - Snug in corner without overlapping text */}
-            <div className="absolute top-4 left-5 sm:top-6 sm:left-8 md:top-7 md:left-10 z-20 pointer-events-none">
+            <div className="absolute top-4 left-2 sm:top-6 sm:left-3 md:top-7 md:left-3 z-20 pointer-events-none">
               <SafeImage 
                 src="/images/rhumbnav-logo.png" 
                 alt="RhumbNav" 
-                className="h-16 sm:h-20 md:h-24 lg:h-28 w-auto max-w-[240px] sm:max-w-xs md:max-w-sm object-contain object-left" 
+                className="h-16 sm:h-20 md:h-24 lg:h-28 w-auto max-w-[240px] sm:max-w-xs md:max-w-sm object-contain object-left origin-[left_center] scale-[1.45] sm:scale-[1.8] md:scale-[2] lg:scale-[2.2]"
               />
             </div>
 
@@ -268,7 +268,7 @@ export default function LandingPage() {
               <SafeImage 
                 src="/images/pogo-logo.png" 
                 alt="Pogo" 
-                className="h-16 sm:h-20 md:h-24 lg:h-28 w-auto max-w-[240px] sm:max-w-xs md:max-w-sm object-contain object-right" 
+                className="h-16 sm:h-20 md:h-24 lg:h-28 w-auto max-w-[240px] sm:max-w-xs md:max-w-sm object-contain object-right origin-[right_center] scale-[2] sm:scale-[2.5] md:scale-[2.75] lg:scale-[3]"
               />
             </div>
 

@@ -37,7 +37,7 @@ export default function PogoPage() {
               <SafeImage 
                 src="/images/pogo-logo.png" 
                 alt="Pogo Logo" 
-                className="h-[200px] sm:h-[240px] md:h-[280px] lg:h-[300px] max-w-[90vw] md:max-w-none w-auto object-contain pointer-events-none" 
+                className="h-[200px] sm:h-[240px] md:h-[280px] lg:h-[300px] max-w-[90vw] md:max-w-none w-auto object-contain pointer-events-none origin-center scale-[1.75]"
               />
             </motion.div>
             

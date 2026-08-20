@@ -61,17 +61,17 @@ export default function ProductsPage() {
               className="w-full group relative rounded-[2rem] linear-card backdrop-blur-xl overflow-hidden aspect-square flex flex-col p-6 sm:p-8 md:p-10 justify-between"
             >
               <div className="flex flex-col items-center justify-between h-full w-full text-center">
-                {/* Logo Area - 3x larger */}
+                {/* Logo Area - optically aligned with Pogo */}
                 <div className="flex-1 flex items-center justify-center w-full min-h-0 pt-1 pb-1">
                   <SafeImage 
                     src="/images/rhumbnav-logo.png" 
                     alt="RhumbNav Logo" 
-                    className="w-auto max-w-full max-h-[200px] sm:max-h-[250px] md:max-h-[290px] object-contain scale-125 sm:scale-140 md:scale-150 origin-center" 
+                    className="w-auto max-w-full max-h-[200px] sm:max-h-[250px] md:max-h-[290px] object-contain origin-center scale-[1.12] sm:scale-[1.25] md:scale-[1.35] translate-y-4 sm:translate-y-6 md:translate-y-10"
                   />
                 </div>
                 
-                {/* Text Area - Small margin directly below the logo */}
-                <div className="pt-2 pb-3 flex items-center justify-center w-full">
+                {/* Text Area */}
+                <div className="pt-2 pb-6 sm:pb-8 flex items-center justify-center w-full">
                   <p className="text-text-secondary text-base sm:text-lg md:text-xl leading-relaxed font-light max-w-xs">
                     Aviation precision in your pocket.
                   </p>
@@ -96,7 +96,7 @@ export default function ProductsPage() {
               className="w-full group relative rounded-[2rem] linear-card backdrop-blur-xl overflow-hidden aspect-square flex flex-col p-6 sm:p-8 md:p-10 justify-between"
             >
               <div className="flex flex-col items-center justify-between h-full w-full text-center">
-                {/* Logo Area - 3x larger */}
+                {/* Logo Area */}
                 <div className="flex-1 flex items-center justify-center w-full min-h-0 pt-1 pb-1">
                   <SafeImage 
                     src="/images/pogo-logo.png" 
@@ -105,8 +105,8 @@ export default function ProductsPage() {
                   />
                 </div>
                 
-                {/* Text Area - Small margin directly below the logo */}
-                <div className="pt-2 pb-3 flex items-center justify-center w-full">
+                {/* Text Area */}
+                <div className="pt-2 pb-6 sm:pb-8 flex items-center justify-center w-full">
                   <p className="text-text-secondary text-base sm:text-lg md:text-xl leading-relaxed font-light max-w-xs">
                     Climb higher, track smarter.
                   </p>

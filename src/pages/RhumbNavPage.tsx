@@ -38,7 +38,7 @@ export default function RhumbNavPage() {
               <SafeImage 
                 src="/images/rhumbnav-logo.png" 
                 alt="RhumbNav Logo" 
-                className="h-[200px] sm:h-[240px] md:h-[280px] lg:h-[300px] max-w-[90vw] md:max-w-none w-auto object-contain pointer-events-none" 
+                className="h-[200px] sm:h-[240px] md:h-[280px] lg:h-[300px] max-w-[90vw] md:max-w-none w-auto object-contain pointer-events-none origin-center scale-[1.35]"
               />
             </motion.div>
             

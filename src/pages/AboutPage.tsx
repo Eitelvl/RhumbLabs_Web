@@ -441,7 +441,7 @@ export default function AboutPage() {
                     <SafeImage 
                       src="/images/rhumbnav-logo.png" 
                       alt="RhumbNav" 
-                      className="h-10 sm:h-12 md:h-14 w-auto object-contain"
+                      className="h-10 sm:h-12 md:h-14 w-auto object-contain origin-left scale-[3] -translate-x-3"
                     />
                   </div>
 
@@ -476,7 +476,7 @@ export default function AboutPage() {
                     <SafeImage 
                       src="/images/pogo-logo.png" 
                       alt="Pogo" 
-                      className="h-10 sm:h-12 md:h-14 w-auto object-contain" 
+                      className="h-10 sm:h-12 md:h-14 w-auto object-contain origin-left scale-[3] -translate-y-3"
                     />
                   </div>
 
