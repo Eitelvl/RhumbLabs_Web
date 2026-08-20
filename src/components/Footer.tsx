@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { getAssetUrl } from '../utils/assets';
 import { SafeImage } from './SafeImage';
 
 export default function Footer() {

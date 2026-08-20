@@ -4,7 +4,6 @@ import { motion, useScroll, useTransform } from 'motion/react';
 import { DeviceMockup } from '../components/DeviceMockup';
 import { Activity, MapPin, TrendingUp, NotebookPen, Mountain, Instagram, ArrowUpRight, Sparkles } from 'lucide-react';
 import { useRef } from 'react';
-import { getAssetUrl } from '../utils/assets';
 import { SafeImage } from '../components/SafeImage';
 
 export default function PogoPage() {

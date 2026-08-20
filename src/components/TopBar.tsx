@@ -3,7 +3,6 @@ import { Menu, X, Sun, Moon, Wand2 } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useBrandTheme } from '../context/BrandThemeContext';
-import { getAssetUrl } from '../utils/assets';
 import { SafeImage } from './SafeImage';
 
 export default function TopBar() {

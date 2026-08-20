@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { motion, useInView } from 'motion/react';
 import TopBar from '../components/TopBar';
 import Footer from '../components/Footer';
-import { getAssetUrl } from '../utils/assets';
 import { SafeImage } from '../components/SafeImage';
 import { 
   ArrowRight, 

@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import TopBar from '../components/TopBar';
 import Footer from '../components/Footer';
-import { getAssetUrl } from '../utils/assets';
 import { SafeImage } from '../components/SafeImage';
 import { motion, AnimatePresence } from 'motion/react';
 

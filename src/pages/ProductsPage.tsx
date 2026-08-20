@@ -5,7 +5,6 @@ import { Link, useLocation } from 'react-router-dom';
 import TopBar from '../components/TopBar';
 import Footer from '../components/Footer';
 import { motion } from 'motion/react';
-import { getAssetUrl } from '../utils/assets';
 import { SafeImage } from '../components/SafeImage';
 
 // Products Page - RhumbLabs
