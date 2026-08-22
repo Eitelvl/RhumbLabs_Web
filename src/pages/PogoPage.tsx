@@ -1,8 +1,9 @@
 import TopBar from '../components/TopBar';
 import Footer from '../components/Footer';
+import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { DeviceMockup } from '../components/DeviceMockup';
-import { Activity, MapPin, TrendingUp, NotebookPen, Mountain, Instagram, ArrowUpRight, Sparkles } from 'lucide-react';
+import { Activity, MapPin, TrendingUp, NotebookPen, Mountain, Instagram, ArrowUpRight, Sparkles, Smartphone, QrCode } from 'lucide-react';
 import { useRef } from 'react';
 import { SafeImage } from '../components/SafeImage';
 
@@ -63,8 +64,16 @@ export default function PogoPage() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4"
+              className="flex flex-wrap items-center justify-center gap-4"
             >
+              <Link
+                to="/pogo/event"
+                className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-fuchsia-600 to-purple-600 text-white font-semibold shadow-[0_0_40px_rgba(168,85,247,0.3)] hover:brightness-110 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+              >
+                <QrCode className="w-6 h-6" aria-hidden="true" />
+                Open Pogo Event
+              </Link>
+
               <a
                 href="https://play.google.com/store/apps/details?id=com.rhumblabs.pogo&hl=es_419"
                 target="_blank"
@@ -83,9 +92,7 @@ export default function PogoPage() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-3 px-8 py-4 bg-card-element border border-card-border rounded-full text-text-primary font-medium shadow-[0_0_40px_rgba(168,85,247,0.15)] hover:bg-bg-secondary hover:border-purple-500/50 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
               >
-                <svg viewBox="0 0 24 24" className="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M17.05 13.974a4.428 4.428 0 0 1 2.112-3.705A4.475 4.475 0 0 0 15.344 8c-1.921-.194-3.749 1.127-4.73 1.127-1.002 0-2.518-1.082-4.093-1.052-2.062.03-3.957 1.2-5.016 3.037-2.152 3.73-.55 9.255 1.547 12.274.996 1.485 2.197 3.161 3.784 3.096 1.503-.06 2.083-1.026 3.901-1.026 1.803 0 2.342 1.026 3.918 1.056 1.637.03 2.648-1.442 3.633-2.88 1.139-1.666 1.608-3.284 1.637-3.37l-.022-.012a4.4 4.4 0 0 1-3.853-4.275zm-1.1-6.793a4.238 4.238 0 0 0 1.01-3.031 4.3 4.3 0 0 0-2.827 1.44 4.098 4.098 0 0 0-1.037 2.949 3.513 3.513 0 0 0 2.854-1.358z"/>
-                </svg>
+                <Smartphone className="w-6 h-6" aria-hidden="true" />
                 Join the Beta Testing
               </a>
             </motion.div>
@@ -289,9 +296,7 @@ export default function PogoPage() {
                    rel="noopener noreferrer"
                    className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-card-element border border-card-border hover:border-purple-500/50 hover:bg-bg-primary rounded-full text-text-primary font-semibold text-sm shadow-[0_0_30px_rgba(168,85,247,0.2)] transition-all duration-300 group"
                  >
-                   <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current shrink-0" xmlns="http://www.w3.org/2000/svg">
-                     <path d="M17.05 13.974a4.428 4.428 0 0 1 2.112-3.705A4.475 4.475 0 0 0 15.344 8c-1.921-.194-3.749 1.127-4.73 1.127-1.002 0-2.518-1.082-4.093-1.052-2.062.03-3.957 1.2-5.016 3.037-2.152 3.73-.55 9.255 1.547 12.274.996 1.485 2.197 3.161 3.784 3.096 1.503-.06 2.083-1.026 3.901-1.026 1.803 0 2.342 1.026 3.918 1.056 1.637.03 2.648-1.442 3.633-2.88 1.139-1.666 1.608-3.284 1.637-3.37l-.022-.012a4.4 4.4 0 0 1-3.853-4.275zm-1.1-6.793a4.238 4.238 0 0 0 1.01-3.031 4.3 4.3 0 0 0-2.827 1.44 4.098 4.098 0 0 0-1.037 2.949 3.513 3.513 0 0 0 2.854-1.358z"/>
-                   </svg>
+                   <Smartphone className="w-5 h-5 shrink-0" aria-hidden="true" />
                    <span>Join iOS Beta</span>
                    <ArrowUpRight className="w-4 h-4 text-text-secondary group-hover:text-purple-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
                  </a>

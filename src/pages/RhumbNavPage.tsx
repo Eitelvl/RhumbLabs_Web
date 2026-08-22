@@ -75,17 +75,6 @@ export default function RhumbNavPage() {
                 Coming Soon for Android
               </div>
 
-              <a
-                href="https://testflight.apple.com/join/rW2JwgUW"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 px-8 py-4 bg-card-element border border-card-border rounded-full text-text-primary font-medium shadow-[0_0_40px_rgba(59,130,246,0.15)] hover:bg-bg-secondary hover:border-blue-500/50 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
-              >
-                <svg viewBox="0 0 24 24" className="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M17.05 13.974a4.428 4.428 0 0 1 2.112-3.705A4.475 4.475 0 0 0 15.344 8c-1.921-.194-3.749 1.127-4.73 1.127-1.002 0-2.518-1.082-4.093-1.052-2.062.03-3.957 1.2-5.016 3.037-2.152 3.73-.55 9.255 1.547 12.274.996 1.485 2.197 3.161 3.784 3.096 1.503-.06 2.083-1.026 3.901-1.026 1.803 0 2.342 1.026 3.918 1.056 1.637.03 2.648-1.442 3.633-2.88 1.139-1.666 1.608-3.284 1.637-3.37l-.022-.012a4.4 4.4 0 0 1-3.853-4.275zm-1.1-6.793a4.238 4.238 0 0 0 1.01-3.031 4.3 4.3 0 0 0-2.827 1.44 4.098 4.098 0 0 0-1.037 2.949 3.513 3.513 0 0 0 2.854-1.358z"/>
-                </svg>
-                Join the Beta Testing
-              </a>
             </motion.div>
           </div>
 
