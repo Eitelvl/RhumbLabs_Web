@@ -1,10 +1,10 @@
 import {FormEvent, useEffect, useMemo, useState} from 'react';
 import {
-  Activity,
   ArrowLeft,
   CheckCircle2,
   CircleStop,
   Clock3,
+  Crown,
   LogIn,
   LogOut,
   Medal,
@@ -40,6 +40,7 @@ import {getPogoEventFirebase} from '../lib/pogoEventFirebase';
 const sessionStorageKey = 'pogo.event.active-session.v1';
 const sessionIdPattern = /^js_[a-f0-9]{32}$/;
 const tokenPattern = /^[A-Za-z0-9_-]{32,128}$/;
+const defaultEventName = 'Evento Pogo';
 
 type RoomStatus = 'LOBBY' | 'ACTIVE' | 'FINISHED';
 
@@ -68,6 +69,14 @@ interface EventParticipant {
   updatedAtMillis: number;
 }
 
+function normalizeEventName(value?: string) {
+  const name = value?.trim();
+  if (!name || /^(?:(?:pogo|power|pow) event|evento\s*pow)$/i.test(name)) {
+    return defaultEventName;
+  }
+  return name;
+}
+
 function readStoredSession(): StoredEventSession | null {
   try {
     const raw = localStorage.getItem(sessionStorageKey);
@@ -83,7 +92,7 @@ function readStoredSession(): StoredEventSession | null {
     return {
       sessionId: value.sessionId!,
       inviteToken: value.inviteToken!,
-      eventName: value.eventName?.trim() || 'Pogo Event',
+      eventName: normalizeEventName(value.eventName),
       maxParticipants: Math.min(100, Math.max(2, value.maxParticipants ?? 100)),
     };
   } catch {
@@ -150,7 +159,7 @@ export default function PogoEventPage() {
   const [authLoading, setAuthLoading] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [eventName, setEventName] = useState('Pogo Event');
+  const [eventName, setEventName] = useState(defaultEventName);
   const [capacity, setCapacity] = useState(100);
   const [eventSession, setEventSession] = useState<StoredEventSession | null>(readStoredSession);
   const [room, setRoom] = useState<EventRoom | null>(null);
@@ -229,7 +238,7 @@ export default function PogoEventPage() {
           const data = snapshot.data();
           setRoom({
             eventName: typeof data.eventName === 'string'
-              ? data.eventName
+              ? normalizeEventName(data.eventName)
               : eventSession.eventName,
             status: ['LOBBY', 'ACTIVE', 'FINISHED'].includes(data.status)
               ? data.status as RoomStatus
@@ -339,7 +348,7 @@ export default function PogoEventPage() {
       const {functions} = await getPogoEventFirebase();
       const result = await httpsCallable(functions, 'createJointSession')({
         eventMode: true,
-        eventName: eventName.trim() || 'Pogo Event',
+        eventName: eventName.trim() || defaultEventName,
         maxParticipants: capacity,
       });
       const data = result.data as Record<string, unknown>;
@@ -351,7 +360,7 @@ export default function PogoEventPage() {
       const createdSession = {
         sessionId,
         inviteToken,
-        eventName: eventName.trim() || 'Pogo Event',
+        eventName: eventName.trim() || defaultEventName,
         maxParticipants: capacity,
       };
       localStorage.setItem(sessionStorageKey, JSON.stringify(createdSession));
@@ -515,13 +524,12 @@ export default function PogoEventPage() {
       <main className="mx-auto min-h-[calc(100vh-72px)] max-w-[1600px] px-4 py-5 sm:px-6 lg:px-8">
         <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <div className="flex items-center gap-3 text-xs font-black uppercase tracking-[.26em] text-fuchsia-300"><Activity className="h-4 w-4" /> Pogo Event</div>
-            <h1 className="mt-2 text-3xl font-black tracking-[-.04em] text-white sm:text-5xl">{displayName}</h1>
+            <h1 className="text-3xl font-black tracking-[-.04em] text-white sm:text-5xl">{displayName}</h1>
           </div>
           <div className="flex items-center gap-3">
             <StatusPill status={room?.status ?? 'LOBBY'} connected={liveConnected} />
             {room?.status === 'LOBBY' && <button disabled={busy} onClick={() => changeStatus('startJointSession')} className="flex items-center gap-2 rounded-xl bg-emerald-500 px-4 py-3 text-sm font-black text-white transition hover:bg-emerald-400 disabled:opacity-50"><Play className="h-4 w-4 fill-current" /> Iniciar</button>}
-            {room?.status === 'ACTIVE' && <button disabled={busy} onClick={() => changeStatus('finishJointSession')} className="flex items-center gap-2 rounded-xl border border-rose-400/30 bg-rose-400/10 px-4 py-3 text-sm font-black text-rose-100 transition hover:bg-rose-400/20 disabled:opacity-50"><CircleStop className="h-4 w-4" /> Finalizar</button>}
+            {room?.status === 'ACTIVE' && <button disabled={busy} onClick={() => changeStatus('finishJointSession')} className="flex items-center gap-2 rounded-xl border border-rose-400/30 bg-rose-400/10 px-4 py-3 text-sm font-black text-rose-100 transition hover:bg-rose-400/20 disabled:opacity-50"><CircleStop className="h-4 w-4" /> {busy ? 'Finalizando…' : 'Finalizar sesión'}</button>}
             {room?.status === 'FINISHED' && <button onClick={prepareAnotherEvent} className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[.06] px-4 py-3 text-sm font-black text-white hover:bg-white/10"><Plus className="h-4 w-4" /> Nuevo</button>}
           </div>
         </div>
@@ -529,24 +537,28 @@ export default function PogoEventPage() {
         {error && <EventError message={error} />}
 
         <div className="grid gap-5 lg:grid-cols-[minmax(340px,.78fr)_minmax(540px,1.22fr)]">
-          <section className="relative overflow-hidden rounded-[2rem] border border-fuchsia-300/15 bg-gradient-to-br from-fuchsia-500/10 via-white/[.055] to-purple-500/10 p-5 sm:p-7">
-            <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-fuchsia-500/15 blur-3xl" />
-            <div className="relative flex h-full flex-col items-center text-center">
-              <div className="rounded-[1.75rem] bg-white p-4 shadow-2xl shadow-fuchsia-950/50 sm:p-5">
-                {qrDataUrl ? <img src={qrDataUrl} alt="QR para unirse al evento con Pogo" className="aspect-square w-full max-w-[390px]" /> : <div className="grid aspect-square w-[320px] place-items-center"><QrCode className="h-16 w-16 animate-pulse text-slate-300" /></div>}
+          {room?.status === 'FINISHED' ? (
+            <WinnersPanel ranking={ranking} finishedAt={room.finishedAt} />
+          ) : (
+            <section className="relative overflow-hidden rounded-[2rem] border border-fuchsia-300/15 bg-gradient-to-br from-fuchsia-500/10 via-white/[.055] to-purple-500/10 p-5 sm:p-7">
+              <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-fuchsia-500/15 blur-3xl" />
+              <div className="relative flex h-full flex-col items-center text-center">
+                <div className="rounded-[1.75rem] bg-white p-4 shadow-2xl shadow-fuchsia-950/50 sm:p-5">
+                  {qrDataUrl ? <img src={qrDataUrl} alt="QR para unirse al evento con Pogo" className="aspect-square w-full max-w-[390px]" /> : <div className="grid aspect-square w-[320px] place-items-center"><QrCode className="h-16 w-16 animate-pulse text-slate-300" /></div>}
+                </div>
+                <h2 className="mt-5 text-2xl font-black text-white">Escanea con Pogo para participar</h2>
+                <p className="mt-2 text-sm text-white">Pogo Card → Escanear QR</p>
+                <div className="mt-6 flex w-full items-baseline justify-center gap-2 rounded-2xl border border-white/10 bg-black/20 px-5 py-4">
+                  <span className="text-5xl font-black tabular-nums text-white">{displayCount}</span>
+                  <span className="text-xl font-bold text-slate-400">/ {displayCapacity} participantes</span>
+                </div>
               </div>
-              <h2 className="mt-5 text-2xl font-black text-white">Escanea con Pogo para participar</h2>
-              <p className="mt-2 text-sm text-slate-400">Pogo Card → Escanear QR</p>
-              <div className="mt-6 flex w-full items-baseline justify-center gap-2 rounded-2xl border border-white/10 bg-black/20 px-5 py-4">
-                <span className="text-5xl font-black tabular-nums text-white">{displayCount}</span>
-                <span className="text-xl font-bold text-slate-400">/ {displayCapacity} participantes</span>
-              </div>
-            </div>
-          </section>
+            </section>
+          )}
 
           <section className="rounded-[2rem] border border-white/10 bg-white/[.05] p-5 shadow-2xl shadow-black/20 sm:p-7">
             <div className="mb-5 flex items-center justify-between">
-              <div className="flex items-center gap-3"><div className="grid h-11 w-11 place-items-center rounded-2xl bg-amber-300/10 text-amber-300"><Trophy className="h-6 w-6" /></div><div><p className="text-xs font-black uppercase tracking-[.24em] text-slate-500">Clasificación</p><h2 className="text-2xl font-black text-white">Top 10</h2></div></div>
+              <div className="flex items-center gap-3"><div className="grid h-11 w-11 place-items-center rounded-2xl bg-amber-300/10 text-amber-300"><Trophy className="h-6 w-6" /></div><div><p className="text-xs font-black uppercase tracking-[.24em] text-slate-500">Clasificación</p><h2 className="text-2xl font-black text-white">{room?.status === 'FINISHED' ? 'Resultados finales' : 'Top 10'}</h2></div></div>
               <span className="text-xs font-bold text-slate-500">Puntaje Pogo</span>
             </div>
             <div className="space-y-2.5">
@@ -606,6 +618,54 @@ function StatusPill({status, connected}: {status: RoomStatus; connected: boolean
   const label = status === 'LOBBY' ? 'Esperando' : status === 'ACTIVE' ? 'En vivo' : 'Finalizado';
   const color = status === 'ACTIVE' ? 'text-emerald-200 bg-emerald-400/10 border-emerald-400/20' : status === 'FINISHED' ? 'text-slate-300 bg-white/5 border-white/10' : 'text-amber-200 bg-amber-400/10 border-amber-400/20';
   return <div className={`flex items-center gap-2 rounded-xl border px-3 py-2 text-xs font-black uppercase tracking-[.16em] ${color}`}><span className={`h-2 w-2 rounded-full ${connected ? 'bg-current' : 'bg-rose-400'} ${status === 'ACTIVE' && connected ? 'animate-pulse' : ''}`} />{label}</div>;
+}
+
+function WinnersPanel({ranking, finishedAt}: {ranking: EventParticipant[]; finishedAt?: Date}) {
+  return (
+    <section className="relative overflow-hidden rounded-[2rem] border border-amber-300/20 bg-gradient-to-br from-amber-300/10 via-fuchsia-500/[.08] to-purple-500/10 p-5 shadow-2xl shadow-amber-950/20 sm:p-7">
+      <div className="absolute -left-20 -top-20 h-64 w-64 rounded-full bg-amber-300/10 blur-3xl" />
+      <div className="absolute -bottom-24 -right-16 h-64 w-64 rounded-full bg-fuchsia-500/15 blur-3xl" />
+      <div className="relative text-center">
+        <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl border border-amber-200/20 bg-amber-300/10 text-amber-200">
+          <Crown className="h-8 w-8" />
+        </div>
+        <p className="mt-5 text-xs font-black uppercase tracking-[.28em] text-amber-200/80">Evento finalizado</p>
+        <h2 className="mt-2 text-3xl font-black tracking-[-.04em] text-white">Ganadores del Evento Pogo</h2>
+        <p className="mt-2 text-sm text-slate-400">{finishedAt ? `Resultados cerrados a las ${formatTime(finishedAt)}` : 'Resultados finales'}</p>
+
+        {ranking.length === 0 ? (
+          <div className="mt-8 grid min-h-[270px] place-items-center rounded-2xl border border-dashed border-white/10 bg-black/10 px-6">
+            <div><Medal className="mx-auto h-12 w-12 text-slate-600" /><p className="mt-4 font-bold text-slate-300">La sesión terminó sin puntajes registrados.</p></div>
+          </div>
+        ) : (
+          <div className="mt-8 grid gap-3 sm:grid-cols-3 sm:items-end">
+            {ranking.slice(0, 3).map((participant, index) => (
+              <WinnerCard key={participant.uid} participant={participant} position={index + 1} />
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function WinnerCard({participant, position}: {participant: EventParticipant; position: number}) {
+  const style = position === 1
+    ? 'border-amber-200/35 bg-amber-300/[.12] sm:order-2 sm:min-h-[250px]'
+    : position === 2
+      ? 'border-slate-200/20 bg-slate-200/[.07] sm:order-1 sm:min-h-[215px]'
+      : 'border-orange-300/20 bg-orange-300/[.07] sm:order-3 sm:min-h-[195px]';
+  const medalColor = position === 1 ? 'text-amber-200' : position === 2 ? 'text-slate-200' : 'text-orange-300';
+
+  return (
+    <div className={`flex flex-col items-center justify-center rounded-2xl border p-4 ${style}`}>
+      {position === 1 ? <Crown className={`h-8 w-8 ${medalColor}`} /> : <Medal className={`h-7 w-7 ${medalColor}`} />}
+      <p className={`mt-3 text-xs font-black uppercase tracking-[.18em] ${medalColor}`}>{position}.° lugar</p>
+      <p className="mt-2 max-w-full truncate text-lg font-black text-white">{participant.displayName}</p>
+      <p className="mt-3 text-2xl font-black tabular-nums text-white">{formatPoints(participant.totalPoints)}</p>
+      <p className="text-[10px] font-black uppercase tracking-[.16em] text-fuchsia-300">pts</p>
+    </div>
+  );
 }
 
 function RankingRow({participant, position}: {participant: EventParticipant; position: number}) {

@@ -71,7 +71,7 @@ export default function PogoPage() {
                 className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-fuchsia-600 to-purple-600 text-white font-semibold shadow-[0_0_40px_rgba(168,85,247,0.3)] hover:brightness-110 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
               >
                 <QrCode className="w-6 h-6" aria-hidden="true" />
-                Open Pogo Event
+                Abrir Evento Pogo
               </Link>
 
               <a

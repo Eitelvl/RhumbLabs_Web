@@ -1,4 +1,4 @@
-# Pogo Event: configuración operativa
+# Evento Pogo: configuración operativa
 
 La ruta `/pogo/event` usa el mismo proyecto Firebase y las mismas sesiones
 compartidas que Pogo. No usa Firebase Admin SDK ni secretos en el navegador.
