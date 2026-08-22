@@ -17,7 +17,14 @@ import {
   Wifi,
 } from 'lucide-react';
 import {Link} from 'react-router-dom';
-import {getIdTokenResult, onAuthStateChanged, signInWithEmailAndPassword, signOut} from 'firebase/auth';
+import {
+  GoogleAuthProvider,
+  getIdTokenResult,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+} from 'firebase/auth';
 import {
   Timestamp,
   collection,
@@ -27,8 +34,7 @@ import {
 import {httpsCallable} from 'firebase/functions';
 import QRCode from 'qrcode';
 
-import PogoLogo from '../components/PogoLogo';
-import RhumbLabsLogo from '../components/RhumbLabsLogo';
+import {SafeImage} from '../components/SafeImage';
 import {getPogoEventFirebase} from '../lib/pogoEventFirebase';
 
 const sessionStorageKey = 'pogo.event.active-session.v1';
@@ -105,6 +111,15 @@ function friendlyFirebaseError(error: unknown) {
   }
   if (code.includes('invalid-credential') || code.includes('wrong-password')) {
     return 'Correo o contraseña incorrectos.';
+  }
+  if (code.includes('popup-closed-by-user')) {
+    return 'Se cerró la ventana de Google antes de completar el ingreso.';
+  }
+  if (code.includes('popup-blocked')) {
+    return 'El navegador bloqueó la ventana de Google. Habilita las ventanas emergentes e inténtalo nuevamente.';
+  }
+  if (code.includes('unauthorized-domain')) {
+    return 'Este dominio no está autorizado para iniciar sesión con Google.';
   }
   if (code.includes('too-many-requests')) {
     return 'Demasiados intentos. Espera un momento y vuelve a intentarlo.';
@@ -296,6 +311,21 @@ export default function PogoEventPage() {
     }
   }
 
+  async function handleGoogleLogin() {
+    setBusy(true);
+    setError(null);
+    try {
+      const {auth} = await getPogoEventFirebase();
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({prompt: 'select_account'});
+      await signInWithPopup(auth, provider);
+    } catch (loginError) {
+      setError(friendlyFirebaseError(loginError));
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function handleLogout() {
     const {auth} = await getPogoEventFirebase();
     await signOut(auth);
@@ -394,8 +424,22 @@ export default function PogoEventPage() {
           <form onSubmit={handleLogin} className="rounded-[2rem] border border-white/10 bg-white/[.055] p-7 shadow-2xl shadow-fuchsia-950/30 backdrop-blur-xl sm:p-9">
             <LogIn className="mb-5 h-9 w-9 text-fuchsia-300" />
             <h2 className="text-2xl font-black text-white">Administración del evento</h2>
-            <p className="mt-2 text-sm leading-6 text-slate-400">Usa una cuenta Firebase con el rol pogoEventAdmin.</p>
-            <label className="mt-7 block text-sm font-bold text-slate-200" htmlFor="event-email">Correo</label>
+            <p className="mt-2 text-sm leading-6 text-slate-400">Ingresa con la cuenta Google que tiene el rol pogoEventAdmin.</p>
+            <button
+              type="button"
+              disabled={busy}
+              onClick={handleGoogleLogin}
+              className="mt-7 flex w-full items-center justify-center gap-3 rounded-2xl border border-white/15 bg-white px-5 py-4 font-black text-slate-900 shadow-lg shadow-black/20 transition hover:bg-slate-100 disabled:cursor-wait disabled:opacity-60"
+            >
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white font-black text-blue-600 shadow-sm" aria-hidden="true">G</span>
+              {busy ? 'Conectando con Google…' : 'Ingresar con Google'}
+            </button>
+            <div className="my-6 flex items-center gap-4 text-xs font-bold uppercase tracking-[.18em] text-slate-500" aria-hidden="true">
+              <span className="h-px flex-1 bg-white/10" />
+              o usa contraseña
+              <span className="h-px flex-1 bg-white/10" />
+            </div>
+            <label className="block text-sm font-bold text-slate-200" htmlFor="event-email">Correo</label>
             <input id="event-email" type="email" autoComplete="username" required value={email} onChange={(event) => setEmail(event.target.value)} className="mt-2 w-full rounded-2xl border border-white/10 bg-black/25 px-4 py-3.5 text-white outline-none transition focus:border-fuchsia-400/60 focus:ring-4 focus:ring-fuchsia-500/10" />
             <label className="mt-5 block text-sm font-bold text-slate-200" htmlFor="event-password">Contraseña</label>
             <input id="event-password" type="password" autoComplete="current-password" required value={password} onChange={(event) => setPassword(event.target.value)} className="mt-2 w-full rounded-2xl border border-white/10 bg-black/25 px-4 py-3.5 text-white outline-none transition focus:border-fuchsia-400/60 focus:ring-4 focus:ring-fuchsia-500/10" />
@@ -532,7 +576,13 @@ function EventShell({children, onLogout, compact = false}: {children: React.Reac
       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(217,70,239,.14),transparent_32%),radial-gradient(circle_at_85%_90%,rgba(124,58,237,.12),transparent_34%)]" />
       <header className={`relative z-10 border-b border-white/8 bg-black/20 backdrop-blur-xl ${compact ? 'py-3' : 'py-4'}`}>
         <div className="mx-auto flex max-w-[1600px] items-center justify-between px-5 sm:px-7">
-          <div className="flex items-center gap-5"><Link to="/pogo" aria-label="Volver a Pogo"><PogoLogo size="sm" /></Link><span className="hidden h-6 w-px bg-white/10 sm:block" /><RhumbLabsLogo className="hidden opacity-70 sm:flex" /></div>
+          <Link to="/" aria-label="Ir al inicio de RhumbLabs" className="flex h-12 w-36 items-center sm:w-52">
+            <SafeImage
+              src="/images/rhumb-labs-logo.png"
+              alt="RhumbLabs"
+              className="h-auto w-[145px] origin-left object-contain sm:w-[185px]"
+            />
+          </Link>
           <div className="flex items-center gap-2">
             <Link to="/pogo" className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-bold text-slate-400 transition hover:bg-white/5 hover:text-white"><ArrowLeft className="h-4 w-4" /> Pogo</Link>
             {onLogout && <button onClick={onLogout} className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-bold text-slate-400 transition hover:bg-white/5 hover:text-white"><LogOut className="h-4 w-4" /> Salir</button>}
@@ -545,7 +595,7 @@ function EventShell({children, onLogout, compact = false}: {children: React.Reac
 }
 
 function EventLoading() {
-  return <div className="grid min-h-[80vh] place-items-center"><div className="text-center"><PogoLogo size="lg" /><p className="mt-5 animate-pulse text-sm font-bold text-slate-400">Preparando el evento…</p></div></div>;
+  return <div className="grid min-h-[80vh] place-items-center"><div className="text-center"><SafeImage src="/images/rhumb-labs-logo.png" alt="RhumbLabs" className="mx-auto h-auto w-56 object-contain" /><p className="mt-5 animate-pulse text-sm font-bold text-slate-400">Preparando el evento…</p></div></div>;
 }
 
 function EventError({message}: {message: string}) {

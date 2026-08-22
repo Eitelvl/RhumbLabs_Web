@@ -93,7 +93,7 @@ export default function PogoPage() {
                 className="inline-flex items-center gap-3 px-8 py-4 bg-card-element border border-card-border rounded-full text-text-primary font-medium shadow-[0_0_40px_rgba(168,85,247,0.15)] hover:bg-bg-secondary hover:border-purple-500/50 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
               >
                 <Smartphone className="w-6 h-6" aria-hidden="true" />
-                Join the Beta Testing
+                Join iOS beta
               </a>
             </motion.div>
           </div>
@@ -297,7 +297,7 @@ export default function PogoPage() {
                    className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-card-element border border-card-border hover:border-purple-500/50 hover:bg-bg-primary rounded-full text-text-primary font-semibold text-sm shadow-[0_0_30px_rgba(168,85,247,0.2)] transition-all duration-300 group"
                  >
                    <Smartphone className="w-5 h-5 shrink-0" aria-hidden="true" />
-                   <span>Join iOS Beta</span>
+                   <span>Join iOS beta</span>
                    <ArrowUpRight className="w-4 h-4 text-text-secondary group-hover:text-purple-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
                  </a>
 
