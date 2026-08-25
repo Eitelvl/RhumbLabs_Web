@@ -466,12 +466,16 @@ export default function PogoEventPage() {
     ? simulatedParticipants
     : eventParticipants;
 
-  const liveRanking = useMemo(() => [...displayedParticipants]
+  const completeLiveRanking = useMemo(() => [...displayedParticipants]
     .sort((first, second) => {
       const byPoints = second.totalPoints - first.totalPoints;
       return byPoints !== 0 ? byPoints : first.joinedAtMillis - second.joinedAtMillis;
-    })
-    .slice(0, 10), [displayedParticipants]);
+    }), [displayedParticipants]);
+
+  const liveRanking = useMemo(
+    () => completeLiveRanking.slice(0, 10),
+    [completeLiveRanking],
+  );
 
   const lobbyParticipants = useMemo(() => [...displayedParticipants]
     .sort((first, second) => first.joinedAtMillis - second.joinedAtMillis),
@@ -480,6 +484,7 @@ export default function PogoEventPage() {
   const ranking = simulationSize === 0 && room?.status === 'FINISHED' && room.finalRanking
     ? room.finalRanking
     : liveRanking;
+  const completeRanking = completeLiveRanking.length > 0 ? completeLiveRanking : ranking;
 
   async function handleAccessKey(event: FormEvent) {
     event.preventDefault();
@@ -727,6 +732,7 @@ export default function PogoEventPage() {
         {currentStatus === 'ACTIVE' && (
           <RankingPanel
             ranking={ranking}
+            completeRanking={completeRanking}
             participantCount={displayCount}
             capacity={displayCapacity}
           />
@@ -737,6 +743,7 @@ export default function PogoEventPage() {
             <WinnersPanel ranking={ranking} finishedAt={room?.finishedAt} />
             <RankingPanel
               ranking={ranking}
+              completeRanking={completeRanking}
               participantCount={displayCount}
               capacity={displayCapacity}
               finished
@@ -935,46 +942,125 @@ function TextInstruction({
 
 function RankingPanel({
   ranking,
+  completeRanking,
   participantCount,
   capacity,
   finished = false,
 }: {
   ranking: EventParticipant[];
+  completeRanking: EventParticipant[];
   participantCount: number;
   capacity: number;
   finished?: boolean;
 }) {
   return (
-    <section className={`rounded-[2rem] border border-white/10 bg-white/[.05] p-5 shadow-2xl shadow-black/20 sm:p-7 2xl:p-9 ${finished ? 'min-h-[calc(100vh-190px)]' : 'flex min-h-[calc(100vh-190px)] flex-col xl:h-[calc(100vh-190px)] xl:min-h-0'}`}>
-      <div className="mb-5 flex shrink-0 flex-wrap items-end justify-between gap-4 border-b border-white/10 pb-5">
-        <div className="flex items-center gap-4">
-          <div className="grid h-14 w-14 place-items-center rounded-2xl bg-amber-300/10 text-amber-300 2xl:h-16 2xl:w-16">
-            <Trophy className="h-8 w-8 2xl:h-9 2xl:w-9" />
+    <div className="grid min-h-[calc(100vh-190px)] gap-5 xl:h-[calc(100vh-190px)] xl:min-h-0 xl:grid-cols-[minmax(0,65fr)_minmax(340px,35fr)]">
+      <section className="flex min-h-[620px] flex-col rounded-[2rem] border border-white/10 bg-white/[.05] p-5 shadow-2xl shadow-black/20 sm:p-7 xl:min-h-0 2xl:p-9">
+        <div className="mb-5 flex shrink-0 flex-wrap items-end justify-between gap-4 border-b border-white/10 pb-5">
+          <div className="flex items-center gap-4">
+            <div className="grid h-14 w-14 place-items-center rounded-2xl bg-amber-300/10 text-amber-300 2xl:h-16 2xl:w-16">
+              <Trophy className="h-8 w-8 2xl:h-9 2xl:w-9" />
+            </div>
+            <div>
+              <p className="text-xs font-black uppercase tracking-[.24em] text-slate-400 2xl:text-sm">Clasificación</p>
+              <h2 className="text-3xl font-black text-white 2xl:text-5xl">{finished ? 'Top 5 final' : 'Top 5'}</h2>
+            </div>
           </div>
-          <div>
-            <p className="text-xs font-black uppercase tracking-[.24em] text-slate-500 2xl:text-sm">Clasificación</p>
-            <h2 className="text-3xl font-black text-white 2xl:text-5xl">{finished ? 'Resultados finales' : 'Top 10'}</h2>
+          <div className="text-right">
+            <p className="text-[clamp(1.75rem,2.4vw,3.5rem)] font-black leading-none tabular-nums text-white">{participantCount} <span className="text-slate-400">/ {capacity}</span></p>
+            <p className="mt-1 text-sm font-black uppercase tracking-[.18em] text-slate-400">participantes</p>
           </div>
         </div>
-        <div className="text-right">
-          <p className="text-[clamp(1.75rem,2.4vw,3.5rem)] font-black leading-none tabular-nums text-white">{participantCount} <span className="text-slate-500">/ {capacity}</span></p>
-          <p className="mt-1 text-sm font-black uppercase tracking-[.18em] text-slate-500">participantes</p>
-        </div>
-      </div>
 
-      <div className={`space-y-2.5 2xl:space-y-3 ${finished ? '' : 'min-h-0 flex-1 overflow-y-auto pr-1'}`}>
         {ranking.length === 0 ? (
-          <div className="grid min-h-[calc(100vh-370px)] place-items-center rounded-2xl border border-dashed border-white/10 bg-black/10 text-center">
+          <div className="grid min-h-0 flex-1 place-items-center rounded-2xl border border-dashed border-white/10 bg-black/10 text-center">
             <div>
               <Medal className="mx-auto h-16 w-16 text-slate-600" />
               <p className="mt-5 text-2xl font-bold text-slate-300">El ranking aparecerá con el primer progreso.</p>
             </div>
           </div>
-        ) : ranking.map((participant, index) => (
-          <RankingRow key={participant.uid} participant={participant} position={index + 1} />
-        ))}
+        ) : (
+          <div className="min-h-0 flex-1 space-y-2.5 2xl:space-y-3">
+            {ranking.slice(0, 5).map((participant, index) => (
+              <RankingRow key={participant.uid} participant={participant} position={index + 1} />
+            ))}
+          </div>
+        )}
+      </section>
+
+      <CompleteRankingTable
+        ranking={completeRanking}
+        participantCount={participantCount}
+      />
+    </div>
+  );
+}
+
+function CompleteRankingTable({
+  ranking,
+  participantCount,
+}: {
+  ranking: EventParticipant[];
+  participantCount: number;
+}) {
+  return (
+    <section className="flex min-h-[620px] flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-black/20 p-5 shadow-2xl shadow-black/20 sm:p-6 xl:min-h-0 2xl:p-7">
+      <div className="shrink-0 border-b border-white/10 pb-5">
+        <p className="text-xs font-black uppercase tracking-[.22em] text-fuchsia-300">Todos los participantes</p>
+        <div className="mt-2 flex items-end justify-between gap-3">
+          <h3 className="text-2xl font-black text-white 2xl:text-3xl">Tabla completa</h3>
+          <p className="pb-0.5 text-sm font-extrabold tabular-nums text-slate-300">{participantCount} en total</p>
+        </div>
+      </div>
+
+      <div className="mt-4 grid shrink-0 grid-cols-[38px_minmax(0,1fr)_auto] gap-2 px-3 text-[10px] font-black uppercase tracking-[.16em] text-slate-500 2xl:text-xs">
+        <span className="text-center">Pos.</span>
+        <span>Nombre</span>
+        <span className="text-right">Puntaje</span>
+      </div>
+
+      <div className="mt-2 min-h-0 flex-1 overflow-y-auto pr-1">
+        {ranking.length === 0 ? (
+          <div className="grid h-full min-h-48 place-items-center rounded-2xl border border-dashed border-white/10 bg-white/[.025] px-5 text-center">
+            <p className="font-bold text-slate-400">Esperando puntajes…</p>
+          </div>
+        ) : (
+          <ol className="space-y-1.5">
+            {ranking.map((participant, index) => (
+              <CompleteRankingRow
+                key={participant.uid}
+                participant={participant}
+                position={index + 1}
+              />
+            ))}
+          </ol>
+        )}
       </div>
     </section>
+  );
+}
+
+function CompleteRankingRow({
+  participant,
+  position,
+}: {
+  participant: EventParticipant;
+  position: number;
+}) {
+  const positionColor = position === 1
+    ? 'border-amber-300/35 bg-amber-300/15 text-amber-200'
+    : position === 2
+      ? 'border-slate-200/30 bg-slate-200/10 text-slate-100'
+      : position === 3
+        ? 'border-orange-300/30 bg-orange-300/10 text-orange-200'
+        : 'border-white/10 bg-white/[.04] text-slate-400';
+
+  return (
+    <li className="grid grid-cols-[38px_minmax(0,1fr)_auto] items-center gap-2 rounded-xl border border-white/[.06] bg-white/[.035] px-3 py-2.5 2xl:py-3">
+      <span className={`grid h-8 w-8 place-items-center rounded-lg border text-sm font-black tabular-nums ${positionColor}`}>{position}</span>
+      <span className="truncate text-sm font-extrabold text-white 2xl:text-base">{participant.displayName}</span>
+      <span className="text-right text-sm font-black tabular-nums text-slate-100 2xl:text-base">{formatPoints(participant.totalPoints)}</span>
+    </li>
   );
 }
 
