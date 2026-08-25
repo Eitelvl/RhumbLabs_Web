@@ -3,7 +3,6 @@ import {
   ArrowLeft,
   CheckCircle2,
   CircleStop,
-  Clock3,
   Crown,
   KeyRound,
   LogOut,
@@ -36,6 +35,7 @@ import {SafeImage} from '../components/SafeImage';
 import {getPogoEventFirebase} from '../lib/pogoEventFirebase';
 
 const operatorIdStorageKey = 'pogo.event.operator-id.v1';
+const transientEventSessionKey = 'pogo.event.active-tab-session.v1';
 const obsoleteSessionStorageKeys = [
   'pogo.event.active-session.v1',
   'pogo.event.active-session.v2',
@@ -53,6 +53,7 @@ interface EventSession {
   hostUid: string;
   eventName: string;
   maxParticipants: number;
+  lastKnownStatus: RoomStatus;
 }
 interface EventRoom {
   eventName: string;
@@ -80,6 +81,51 @@ function normalizeEventName(value?: string) {
     return defaultEventName;
   }
   return name;
+}
+
+function readTransientEventSession(): EventSession | null {
+  try {
+    const raw = sessionStorage.getItem(transientEventSessionKey);
+    if (!raw) return null;
+    const value = JSON.parse(raw) as Partial<EventSession>;
+    if (
+      !sessionIdPattern.test(value.sessionId ?? '') ||
+      !tokenPattern.test(value.inviteToken ?? '') ||
+      !eventHostUidPattern.test(value.hostUid ?? '')
+    ) {
+      sessionStorage.removeItem(transientEventSessionKey);
+      return null;
+    }
+    return {
+      sessionId: value.sessionId!,
+      inviteToken: value.inviteToken!,
+      hostUid: value.hostUid!,
+      eventName: normalizeEventName(value.eventName),
+      maxParticipants: Math.min(100, Math.max(2, finiteInteger(value.maxParticipants, 100))),
+      lastKnownStatus: ['LOBBY', 'ACTIVE', 'FINISHED'].includes(value.lastKnownStatus ?? '')
+        ? value.lastKnownStatus as RoomStatus
+        : 'LOBBY',
+    };
+  } catch {
+    sessionStorage.removeItem(transientEventSessionKey);
+    return null;
+  }
+}
+
+function writeTransientEventSession(session: EventSession) {
+  try {
+    sessionStorage.setItem(transientEventSessionKey, JSON.stringify(session));
+  } catch {
+    // The live event remains usable even when browser storage is unavailable.
+  }
+}
+
+function clearTransientEventSession() {
+  try {
+    sessionStorage.removeItem(transientEventSessionKey);
+  } catch {
+    // Nothing else is required when browser storage is unavailable.
+  }
 }
 
 function readOrCreateOperatorId() {
@@ -183,13 +229,21 @@ export default function PogoEventPage() {
   const [accessKey, setAccessKey] = useState('');
   const [eventName, setEventName] = useState(defaultEventName);
   const [capacity, setCapacity] = useState(100);
-  const [eventSession, setEventSession] = useState<EventSession | null>(null);
+  const [eventSession, setEventSession] = useState<EventSession | null>(readTransientEventSession);
   const [room, setRoom] = useState<EventRoom | null>(null);
   const [participants, setParticipants] = useState<EventParticipant[]>([]);
   const [qrDataUrl, setQrDataUrl] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [liveConnected, setLiveConnected] = useState(false);
+
+  useEffect(() => {
+    const handleOffline = () => setLiveConnected(false);
+    window.addEventListener('offline', handleOffline);
+    return () => {
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
 
   useEffect(() => {
     obsoleteSessionStorageKeys.forEach((key) => localStorage.removeItem(key));
@@ -208,6 +262,11 @@ export default function PogoEventPage() {
                 user.uid.startsWith('pogo_event_') &&
                 token.claims.pogoEventAdmin === true;
               setAuthorized(isAuthorized);
+              setEventSession((current) => {
+                if (!current || (isAuthorized && current.hostUid === user.uid)) return current;
+                clearTransientEventSession();
+                return null;
+              });
             } catch (authError) {
               setError(friendlyFirebaseError(authError));
             }
@@ -225,18 +284,24 @@ export default function PogoEventPage() {
   }, []);
 
   useEffect(() => {
-    if (!eventSession) {
+    if (!eventSession || eventSession.lastKnownStatus !== 'LOBBY') {
       setQrDataUrl('');
       return;
     }
+    let cancelled = false;
     const payload = `pogo://joint/${eventSession.sessionId}?token=${eventSession.inviteToken}`;
     QRCode.toDataURL(payload, {
       width: 1000,
       margin: 2,
       errorCorrectionLevel: 'M',
       color: {dark: '#12051f', light: '#ffffff'},
-    }).then(setQrDataUrl).catch(() => setError('No pudimos generar el QR del evento.'));
-  }, [eventSession]);
+    }).then((dataUrl) => {
+      if (!cancelled) setQrDataUrl(dataUrl);
+    }).catch(() => setError('No pudimos generar el QR del evento.'));
+    return () => {
+      cancelled = true;
+    };
+  }, [eventSession?.inviteToken, eventSession?.lastKnownStatus, eventSession?.sessionId]);
 
   useEffect(() => {
     if (!authorized || !eventSession) {
@@ -253,28 +318,40 @@ export default function PogoEventPage() {
       if (cancelled) return;
       stopRoom = onSnapshot(
         doc(firestore, 'jointSessions', eventSession.sessionId),
+        {includeMetadataChanges: true},
         (snapshot) => {
+          const fromCache = snapshot.metadata.fromCache;
           if (!snapshot.exists()) {
+            setLiveConnected(false);
+            if (fromCache) return;
             setError('La sesión del evento expiró o ya no está disponible.');
             setRoom(null);
-            setLiveConnected(false);
+            clearTransientEventSession();
+            setEventSession(null);
             return;
           }
           const data = snapshot.data();
+          const status = ['LOBBY', 'ACTIVE', 'FINISHED'].includes(data.status)
+            ? data.status as RoomStatus
+            : 'LOBBY';
           setRoom({
             eventName: typeof data.eventName === 'string'
               ? normalizeEventName(data.eventName)
               : eventSession.eventName,
-            status: ['LOBBY', 'ACTIVE', 'FINISHED'].includes(data.status)
-              ? data.status as RoomStatus
-              : 'LOBBY',
+            status,
             participantCount: Math.max(0, Number(data.participantCount ?? 0)),
             maxParticipants: Math.min(100, Math.max(2, Number(data.maxParticipants ?? 100))),
             startedAt: asDate(data.startedAt),
             finishedAt: asDate(data.finishedAt),
             finalRanking: asFinalRanking(data.finalRanking),
           });
-          setLiveConnected(true);
+          setEventSession((current) => {
+            if (!current || current.lastKnownStatus === status) return current;
+            const updated = {...current, lastKnownStatus: status};
+            writeTransientEventSession(updated);
+            return updated;
+          });
+          setLiveConnected(!fromCache && navigator.onLine);
         },
         (snapshotError) => {
           setError(friendlyFirebaseError(snapshotError));
@@ -283,6 +360,7 @@ export default function PogoEventPage() {
       );
       stopParticipants = onSnapshot(
         collection(firestore, 'jointSessions', eventSession.sessionId, 'participants'),
+        {includeMetadataChanges: true},
         (snapshot) => {
           setParticipants(snapshot.docs.map((participantDocument) => {
             const data = participantDocument.data();
@@ -299,7 +377,6 @@ export default function PogoEventPage() {
               updatedAtMillis: asDate(data.updatedAt)?.getTime() ?? 0,
             };
           }));
-          setLiveConnected(true);
         },
         (snapshotError) => {
           setError(friendlyFirebaseError(snapshotError));
@@ -313,7 +390,7 @@ export default function PogoEventPage() {
       stopRoom();
       stopParticipants();
     };
-  }, [authorized, eventSession]);
+  }, [authorized, eventSession?.sessionId]);
 
   const eventParticipants = useMemo(
     () => participants.filter((participant) => participant.uid !== eventSession?.hostUid),
@@ -327,18 +404,13 @@ export default function PogoEventPage() {
     })
     .slice(0, 10), [eventParticipants]);
 
+  const lobbyParticipants = useMemo(() => [...eventParticipants]
+    .sort((first, second) => first.joinedAtMillis - second.joinedAtMillis),
+  [eventParticipants]);
+
   const ranking = room?.status === 'FINISHED' && room.finalRanking
     ? room.finalRanking
     : liveRanking;
-
-  const stats = useMemo(() => ({
-    totalTops: eventParticipants.reduce((total, participant) => total + participant.climbCount, 0),
-    totalPoints: eventParticipants.reduce((total, participant) => total + participant.totalPoints, 0),
-    lastUpdate: eventParticipants.reduce(
-      (latest, participant) => Math.max(latest, participant.updatedAtMillis),
-      0,
-    ),
-  }), [eventParticipants]);
 
   async function handleAccessKey(event: FormEvent) {
     event.preventDefault();
@@ -367,6 +439,8 @@ export default function PogoEventPage() {
 
   async function handleLogout() {
     const {auth} = await getPogoEventFirebase();
+    clearTransientEventSession();
+    setEventSession(null);
     await signOut(auth);
   }
 
@@ -399,7 +473,9 @@ export default function PogoEventPage() {
         hostUid,
         eventName: eventName.trim() || defaultEventName,
         maxParticipants: capacity,
+        lastKnownStatus: 'LOBBY' as RoomStatus,
       };
+      writeTransientEventSession(createdSession);
       setEventSession(createdSession);
     } catch (creationError) {
       setError(friendlyFirebaseError(creationError));
@@ -415,6 +491,13 @@ export default function PogoEventPage() {
     try {
       const {functions} = await getPogoEventFirebase();
       await httpsCallable(functions, functionName)({sessionId: eventSession.sessionId});
+      const nextStatus: RoomStatus = functionName === 'startJointSession' ? 'ACTIVE' : 'FINISHED';
+      setEventSession((current) => {
+        if (!current) return current;
+        const updated = {...current, lastKnownStatus: nextStatus};
+        writeTransientEventSession(updated);
+        return updated;
+      });
     } catch (statusError) {
       setError(friendlyFirebaseError(statusError));
     } finally {
@@ -423,6 +506,7 @@ export default function PogoEventPage() {
   }
 
   function prepareAnotherEvent() {
+    clearTransientEventSession();
     setEventSession(null);
     setRoom(null);
     setParticipants([]);
@@ -537,65 +621,53 @@ export default function PogoEventPage() {
   );
   const displayCapacity = room?.maxParticipants ?? eventSession.maxParticipants;
   const displayName = room?.eventName ?? eventSession.eventName;
+  const currentStatus = room?.status ?? eventSession.lastKnownStatus;
 
   return (
     <EventShell onLogout={handleLogout} compact>
-      <main className="mx-auto min-h-[calc(100vh-72px)] max-w-[1600px] px-4 py-5 sm:px-6 lg:px-8">
+      <main className="mx-auto min-h-[calc(100vh-72px)] max-w-[2200px] px-4 py-5 sm:px-6 lg:px-8 2xl:px-12">
         <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-black tracking-[-.04em] text-white sm:text-5xl">{displayName}</h1>
+            <h1 className="text-3xl font-black tracking-[-.04em] text-white sm:text-5xl 2xl:text-6xl">{displayName}</h1>
           </div>
           <div className="flex items-center gap-3">
-            <StatusPill status={room?.status ?? 'LOBBY'} connected={liveConnected} />
-            {room?.status === 'LOBBY' && <button disabled={busy} onClick={() => changeStatus('startJointSession')} className="flex items-center gap-2 rounded-xl bg-emerald-500 px-4 py-3 text-sm font-black text-white transition hover:bg-emerald-400 disabled:opacity-50"><Play className="h-4 w-4 fill-current" /> Iniciar</button>}
-            {room?.status === 'ACTIVE' && <button disabled={busy} onClick={() => changeStatus('finishJointSession')} className="flex items-center gap-2 rounded-xl border border-rose-400/30 bg-rose-400/10 px-4 py-3 text-sm font-black text-rose-100 transition hover:bg-rose-400/20 disabled:opacity-50"><CircleStop className="h-4 w-4" /> {busy ? 'Finalizando…' : 'Finalizar sesión'}</button>}
-            {room?.status === 'FINISHED' && <button onClick={prepareAnotherEvent} className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[.06] px-4 py-3 text-sm font-black text-white hover:bg-white/10"><Plus className="h-4 w-4" /> Nuevo</button>}
+            <StatusPill status={currentStatus} connected={liveConnected} />
+            {currentStatus === 'LOBBY' && <button disabled={busy || !liveConnected} onClick={() => changeStatus('startJointSession')} className="flex items-center gap-2 rounded-xl bg-emerald-500 px-5 py-3 text-base font-black text-white transition hover:bg-emerald-400 disabled:opacity-50"><Play className="h-5 w-5 fill-current" /> Iniciar</button>}
+            {currentStatus === 'ACTIVE' && <button disabled={busy || !liveConnected} onClick={() => changeStatus('finishJointSession')} className="flex items-center gap-2 rounded-xl border border-rose-400/30 bg-rose-400/10 px-5 py-3 text-base font-black text-rose-100 transition hover:bg-rose-400/20 disabled:opacity-50"><CircleStop className="h-5 w-5" /> {busy ? 'Finalizando…' : 'Finalizar sesión'}</button>}
+            {currentStatus === 'FINISHED' && <button onClick={prepareAnotherEvent} className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[.06] px-5 py-3 text-base font-black text-white hover:bg-white/10"><Plus className="h-5 w-5" /> Nuevo</button>}
           </div>
         </div>
 
         {error && <EventError message={error} />}
 
-        <div className="grid gap-5 lg:grid-cols-[minmax(340px,.78fr)_minmax(540px,1.22fr)]">
-          {room?.status === 'FINISHED' ? (
-            <WinnersPanel ranking={ranking} finishedAt={room.finishedAt} />
-          ) : (
-            <section className="relative overflow-hidden rounded-[2rem] border border-fuchsia-300/15 bg-gradient-to-br from-fuchsia-500/10 via-white/[.055] to-purple-500/10 p-5 sm:p-7">
-              <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-fuchsia-500/15 blur-3xl" />
-              <div className="relative flex h-full flex-col items-center text-center">
-                <div className="rounded-[1.75rem] bg-white p-4 shadow-2xl shadow-fuchsia-950/50 sm:p-5">
-                  {qrDataUrl ? <img src={qrDataUrl} alt="QR para unirse al evento con Pogo" className="aspect-square w-full max-w-[390px]" /> : <div className="grid aspect-square w-[320px] place-items-center"><QrCode className="h-16 w-16 animate-pulse text-slate-300" /></div>}
-                </div>
-                <h2 className="mt-5 text-2xl font-black text-white">Escanea con Pogo para participar</h2>
-                <p className="mt-2 text-sm text-white">Pogo Card → Escanear QR</p>
-                <div className="mt-6 flex w-full items-baseline justify-center gap-2 rounded-2xl border border-white/10 bg-black/20 px-5 py-4">
-                  <span className="text-5xl font-black tabular-nums text-white">{displayCount}</span>
-                  <span className="text-xl font-bold text-slate-400">/ {displayCapacity} participantes</span>
-                </div>
-              </div>
-            </section>
-          )}
+        {currentStatus === 'LOBBY' && (
+          <LobbyLayout
+            qrDataUrl={qrDataUrl}
+            participants={lobbyParticipants}
+            participantCount={displayCount}
+            capacity={displayCapacity}
+          />
+        )}
 
-          <section className="rounded-[2rem] border border-white/10 bg-white/[.05] p-5 shadow-2xl shadow-black/20 sm:p-7">
-            <div className="mb-5 flex items-center justify-between">
-              <div className="flex items-center gap-3"><div className="grid h-11 w-11 place-items-center rounded-2xl bg-amber-300/10 text-amber-300"><Trophy className="h-6 w-6" /></div><div><p className="text-xs font-black uppercase tracking-[.24em] text-slate-500">Clasificación</p><h2 className="text-2xl font-black text-white">{room?.status === 'FINISHED' ? 'Resultados finales' : 'Top 10'}</h2></div></div>
-              <span className="text-xs font-bold text-slate-500">Puntaje Pogo</span>
-            </div>
-            <div className="space-y-2.5">
-              {ranking.length === 0 ? (
-                <div className="grid min-h-[460px] place-items-center rounded-2xl border border-dashed border-white/10 bg-black/10 text-center"><div><Medal className="mx-auto h-12 w-12 text-slate-600" /><p className="mt-4 font-bold text-slate-300">El ranking aparecerá con el primer progreso.</p></div></div>
-              ) : ranking.map((participant, index) => (
-                <RankingRow key={participant.uid} participant={participant} position={index + 1} />
-              ))}
-            </div>
-          </section>
-        </div>
+        {currentStatus === 'ACTIVE' && (
+          <RankingPanel
+            ranking={ranking}
+            participantCount={displayCount}
+            capacity={displayCapacity}
+          />
+        )}
 
-        <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <Metric icon={Users} label="Participantes" value={`${displayCount}`} />
-          <Metric icon={CheckCircle2} label="Tops registrados" value={formatPoints(stats.totalTops)} />
-          <Metric icon={Trophy} label="Puntos acumulados" value={formatPoints(stats.totalPoints)} />
-          <Metric icon={Clock3} label="Último progreso" value={stats.lastUpdate ? formatTime(new Date(stats.lastUpdate)) : 'Esperando'} />
-        </div>
+        {currentStatus === 'FINISHED' && (
+          <div className="space-y-5">
+            <WinnersPanel ranking={ranking} finishedAt={room?.finishedAt} />
+            <RankingPanel
+              ranking={ranking}
+              participantCount={displayCount}
+              capacity={displayCapacity}
+              finished
+            />
+          </div>
+        )}
       </main>
     </EventShell>
   );
@@ -634,9 +706,118 @@ function EventError({message}: {message: string}) {
 }
 
 function StatusPill({status, connected}: {status: RoomStatus; connected: boolean}) {
-  const label = status === 'LOBBY' ? 'Esperando' : status === 'ACTIVE' ? 'En vivo' : 'Finalizado';
+  const statusLabel = status === 'LOBBY' ? 'Esperando' : status === 'ACTIVE' ? 'En vivo' : 'Finalizado';
+  const label = connected ? statusLabel : `Reconectando · ${statusLabel}`;
   const color = status === 'ACTIVE' ? 'text-emerald-200 bg-emerald-400/10 border-emerald-400/20' : status === 'FINISHED' ? 'text-slate-300 bg-white/5 border-white/10' : 'text-amber-200 bg-amber-400/10 border-amber-400/20';
   return <div className={`flex items-center gap-2 rounded-xl border px-3 py-2 text-xs font-black uppercase tracking-[.16em] ${color}`}><span className={`h-2 w-2 rounded-full ${connected ? 'bg-current' : 'bg-rose-400'} ${status === 'ACTIVE' && connected ? 'animate-pulse' : ''}`} />{label}</div>;
+}
+
+function LobbyLayout({
+  qrDataUrl,
+  participants,
+  participantCount,
+  capacity,
+}: {
+  qrDataUrl: string;
+  participants: EventParticipant[];
+  participantCount: number;
+  capacity: number;
+}) {
+  return (
+    <div className="grid gap-5 lg:grid-cols-[minmax(560px,1fr)_minmax(300px,.38fr)]">
+      <section className="relative grid min-h-[calc(100vh-190px)] place-items-center overflow-hidden rounded-[2rem] border border-fuchsia-300/15 bg-gradient-to-br from-fuchsia-500/10 via-white/[.055] to-purple-500/10 p-4 sm:p-6">
+        <div className="absolute -right-20 -top-20 h-80 w-80 rounded-full bg-fuchsia-500/15 blur-3xl" />
+        <div className="relative rounded-[2rem] bg-white p-3 shadow-2xl shadow-fuchsia-950/50 sm:p-4">
+          {qrDataUrl ? (
+            <img
+              src={qrDataUrl}
+              alt="QR para unirse al evento con Pogo"
+              className="aspect-square w-[min(68vh,880px)] max-w-full"
+            />
+          ) : (
+            <div className="grid aspect-square w-[min(68vh,880px)] max-w-full place-items-center">
+              <QrCode className="h-24 w-24 animate-pulse text-slate-300" />
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section className="flex min-h-[calc(100vh-190px)] flex-col rounded-[2rem] border border-white/10 bg-white/[.05] p-5 shadow-2xl shadow-black/20 sm:p-7">
+        <div className="border-b border-white/10 pb-5">
+          <p className="text-xs font-black uppercase tracking-[.24em] text-fuchsia-300">Participantes</p>
+          <div className="mt-2 flex items-baseline gap-2">
+            <span className="text-5xl font-black tabular-nums text-white 2xl:text-6xl">{participantCount}</span>
+            <span className="text-xl font-bold text-slate-400">/ {capacity}</span>
+          </div>
+        </div>
+
+        <div className="mt-4 min-h-0 flex-1 overflow-y-auto pr-1">
+          {participants.length === 0 ? (
+            <div className="grid h-full min-h-48 place-items-center rounded-2xl border border-dashed border-white/10 bg-black/10 px-5 text-center">
+              <div>
+                <Users className="mx-auto h-10 w-10 text-slate-600" />
+                <p className="mt-3 text-sm font-bold text-slate-400">Esperando participantes…</p>
+              </div>
+            </div>
+          ) : (
+            <ol className="space-y-2">
+              {participants.map((participant, index) => (
+                <li key={participant.uid} className="grid grid-cols-[32px_minmax(0,1fr)] items-center gap-2 rounded-xl border border-white/[.07] bg-black/10 px-3 py-2.5">
+                  <span className="text-center text-sm font-black tabular-nums text-slate-500">{index + 1}</span>
+                  <span className="truncate text-base font-bold text-slate-100">{participant.displayName}</span>
+                </li>
+              ))}
+            </ol>
+          )}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function RankingPanel({
+  ranking,
+  participantCount,
+  capacity,
+  finished = false,
+}: {
+  ranking: EventParticipant[];
+  participantCount: number;
+  capacity: number;
+  finished?: boolean;
+}) {
+  return (
+    <section className="min-h-[calc(100vh-190px)] rounded-[2rem] border border-white/10 bg-white/[.05] p-5 shadow-2xl shadow-black/20 sm:p-7 2xl:p-9">
+      <div className="mb-5 flex flex-wrap items-end justify-between gap-4 border-b border-white/10 pb-5">
+        <div className="flex items-center gap-4">
+          <div className="grid h-14 w-14 place-items-center rounded-2xl bg-amber-300/10 text-amber-300 2xl:h-16 2xl:w-16">
+            <Trophy className="h-8 w-8 2xl:h-9 2xl:w-9" />
+          </div>
+          <div>
+            <p className="text-xs font-black uppercase tracking-[.24em] text-slate-500 2xl:text-sm">Clasificación</p>
+            <h2 className="text-3xl font-black text-white 2xl:text-5xl">{finished ? 'Resultados finales' : 'Top 10'}</h2>
+          </div>
+        </div>
+        <div className="text-right">
+          <p className="text-[clamp(1.75rem,2.4vw,3.5rem)] font-black leading-none tabular-nums text-white">{participantCount} <span className="text-slate-500">/ {capacity}</span></p>
+          <p className="mt-1 text-sm font-black uppercase tracking-[.18em] text-slate-500">participantes</p>
+        </div>
+      </div>
+
+      <div className="space-y-2.5 2xl:space-y-3">
+        {ranking.length === 0 ? (
+          <div className="grid min-h-[calc(100vh-370px)] place-items-center rounded-2xl border border-dashed border-white/10 bg-black/10 text-center">
+            <div>
+              <Medal className="mx-auto h-16 w-16 text-slate-600" />
+              <p className="mt-5 text-2xl font-bold text-slate-300">El ranking aparecerá con el primer progreso.</p>
+            </div>
+          </div>
+        ) : ranking.map((participant, index) => (
+          <RankingRow key={participant.uid} participant={participant} position={index + 1} />
+        ))}
+      </div>
+    </section>
+  );
 }
 
 function WinnersPanel({ranking, finishedAt}: {ranking: EventParticipant[]; finishedAt?: Date}) {
@@ -688,16 +869,38 @@ function WinnerCard({participant, position}: {participant: EventParticipant; pos
 }
 
 function RankingRow({participant, position}: {participant: EventParticipant; position: number}) {
-  const podium = position === 1 ? 'border-amber-300/25 bg-amber-300/[.08]' : position === 2 ? 'border-slate-300/20 bg-slate-300/[.06]' : position === 3 ? 'border-orange-300/20 bg-orange-300/[.06]' : 'border-white/[.07] bg-black/10';
+  const podium = position === 1
+    ? 'border-amber-300/60 bg-gradient-to-r from-amber-300/25 via-amber-300/10 to-transparent shadow-lg shadow-amber-950/20'
+    : position === 2
+      ? 'border-slate-200/45 bg-gradient-to-r from-slate-200/20 via-slate-200/[.07] to-transparent'
+      : position === 3
+        ? 'border-orange-400/45 bg-gradient-to-r from-orange-400/20 via-orange-400/[.07] to-transparent'
+        : 'border-white/[.08] bg-black/15';
+  const positionStyle = position === 1
+    ? 'border-amber-200/50 bg-amber-300/20 text-amber-100'
+    : position === 2
+      ? 'border-slate-200/40 bg-slate-200/15 text-slate-100'
+      : position === 3
+        ? 'border-orange-300/40 bg-orange-400/15 text-orange-200'
+        : 'border-white/10 bg-white/[.04] text-slate-400';
+  const nameStyle = position === 1
+    ? 'text-amber-100'
+    : position === 2
+      ? 'text-slate-100'
+      : position === 3
+        ? 'text-orange-100'
+        : 'text-white';
   return (
-    <div className={`grid grid-cols-[42px_minmax(0,1fr)_auto] items-center gap-3 rounded-2xl border px-3.5 py-3 ${podium}`}>
-      <div className="text-center text-xl font-black tabular-nums text-slate-400">{position}</div>
-      <div className="min-w-0"><p className="truncate font-black text-white">{participant.displayName}</p><p className="mt-0.5 text-xs font-semibold text-slate-500">{participant.climbCount} tops · {participant.fallCount} caídas</p></div>
-      <div className="text-right"><p className="text-xl font-black tabular-nums text-white">{formatPoints(participant.totalPoints)}</p><p className="text-[10px] font-black uppercase tracking-[.16em] text-fuchsia-300">pts</p></div>
+    <div className={`grid grid-cols-[clamp(54px,5vw,88px)_minmax(0,1fr)_auto] items-center gap-[clamp(.75rem,1.5vw,2rem)] rounded-2xl border px-[clamp(.8rem,1.5vw,1.75rem)] py-[clamp(.65rem,1vh,1.15rem)] ${podium}`}>
+      <div className={`grid aspect-square w-[clamp(46px,4vw,72px)] place-items-center rounded-full border text-[clamp(1.35rem,2vw,2.5rem)] font-black tabular-nums ${positionStyle}`}>{position}</div>
+      <div className="min-w-0">
+        <p className={`truncate text-[clamp(1.45rem,2.1vw,3.25rem)] font-black leading-tight tracking-[-.025em] ${nameStyle}`}>{participant.displayName}</p>
+        <p className="mt-0.5 text-[clamp(.75rem,.85vw,1.15rem)] font-semibold text-slate-500">{participant.climbCount} tops · {participant.fallCount} caídas</p>
+      </div>
+      <div className="min-w-[clamp(110px,13vw,260px)] text-right">
+        <p className="text-[clamp(1.75rem,2.7vw,4rem)] font-black leading-none tabular-nums text-white">{formatPoints(participant.totalPoints)}</p>
+        <p className="mt-1 text-[clamp(.65rem,.7vw,.9rem)] font-black uppercase tracking-[.2em] text-fuchsia-300">pts</p>
+      </div>
     </div>
   );
-}
-
-function Metric({icon: Icon, label, value}: {icon: typeof Users; label: string; value: string}) {
-  return <div className="flex items-center gap-4 rounded-2xl border border-white/[.07] bg-white/[.04] p-4"><div className="grid h-10 w-10 place-items-center rounded-xl bg-fuchsia-400/10 text-fuchsia-300"><Icon className="h-5 w-5" /></div><div><p className="text-xs font-bold text-slate-500">{label}</p><p className="mt-0.5 text-lg font-black tabular-nums text-white">{value}</p></div></div>;
 }

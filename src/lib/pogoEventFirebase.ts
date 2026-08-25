@@ -8,7 +8,11 @@ import {
   getAuth,
   setPersistence,
 } from 'firebase/auth';
-import {getFirestore} from 'firebase/firestore';
+import {
+  initializeFirestore,
+  persistentLocalCache,
+  persistentMultipleTabManager,
+} from 'firebase/firestore';
 import {getFunctions} from 'firebase/functions';
 
 // Firebase Web configuration and reCAPTCHA site keys are public identifiers.
@@ -61,10 +65,15 @@ async function createServices() {
 
   const auth = getAuth(app);
   await setPersistence(auth, browserLocalPersistence);
+  const firestore = initializeFirestore(app, {
+    localCache: persistentLocalCache({
+      tabManager: persistentMultipleTabManager(),
+    }),
+  });
 
   return {
     auth,
-    firestore: getFirestore(app),
+    firestore,
     functions: getFunctions(
       app,
       import.meta.env.VITE_FIREBASE_FUNCTIONS_REGION || 'us-central1',
