@@ -41,8 +41,21 @@ firebase functions:secrets:set POGO_EVENT_ACCESS_KEY \
   --project climbscore-faf5d
 ```
 
-Usar al menos 12 caracteres aleatorios. Para rotar la clave, repetir el comando
-y volver a desplegar `authorizePogoEvent`. Los navegadores que ya estaban
+La cuenta de servicio que ejecuta la Function necesita firmar el custom token.
+Conceder `roles/iam.serviceAccountTokenCreator` sobre esa misma cuenta de
+servicio (no sobre todas las cuentas del proyecto):
+
+```bash
+gcloud iam service-accounts add-iam-policy-binding \
+  347116441390-compute@developer.gserviceaccount.com \
+  --member="serviceAccount:347116441390-compute@developer.gserviceaccount.com" \
+  --role="roles/iam.serviceAccountTokenCreator" \
+  --project=climbscore-faf5d
+```
+
+La clave puede ser breve y fácil de recordar para la operación presencial; la
+validación exige un mínimo de 7 caracteres. Para rotarla, repetir el comando y
+volver a desplegar `authorizePogoEvent`. Los navegadores que ya estaban
 autorizados conservan su sesión técnica; cerrar el panel con `Salir` obliga a
 ingresar la clave nuevamente.
 

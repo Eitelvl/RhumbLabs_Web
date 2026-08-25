@@ -447,7 +447,7 @@ export default function PogoEventPage() {
               id="event-access-key"
               type="password"
               autoComplete="current-password"
-              minLength={12}
+              minLength={7}
               maxLength={128}
               required
               autoFocus
