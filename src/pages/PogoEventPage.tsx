@@ -734,10 +734,10 @@ function LobbyLayout({
             <img
               src={qrDataUrl}
               alt="QR para unirse al evento con Pogo"
-              className="aspect-square w-[min(57vh,780px)] max-w-full"
+              className="aspect-square w-[min(65vh,900px)] max-w-full"
             />
           ) : (
-            <div className="grid aspect-square w-[min(57vh,780px)] max-w-full place-items-center">
+            <div className="grid aspect-square w-[min(65vh,900px)] max-w-full place-items-center">
               <QrCode className="h-24 w-24 animate-pulse text-slate-300" />
             </div>
           )}
