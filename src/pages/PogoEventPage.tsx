@@ -27,6 +27,7 @@ import {
   Timestamp,
   collection,
   doc,
+  getDoc,
   onSnapshot,
 } from 'firebase/firestore';
 import {httpsCallable} from 'firebase/functions';
@@ -99,7 +100,9 @@ function normalizeEventName(value?: string) {
 
 function readTransientEventSession(): EventSession | null {
   try {
-    const raw = sessionStorage.getItem(transientEventSessionKey);
+    const localValue = localStorage.getItem(transientEventSessionKey);
+    const tabValue = sessionStorage.getItem(transientEventSessionKey);
+    const raw = localValue ?? tabValue;
     if (!raw) return null;
     const value = JSON.parse(raw) as Partial<EventSession>;
     if (
@@ -107,8 +110,13 @@ function readTransientEventSession(): EventSession | null {
       !tokenPattern.test(value.inviteToken ?? '') ||
       !eventHostUidPattern.test(value.hostUid ?? '')
     ) {
+      localStorage.removeItem(transientEventSessionKey);
       sessionStorage.removeItem(transientEventSessionKey);
       return null;
+    }
+    if (!localValue && tabValue) {
+      localStorage.setItem(transientEventSessionKey, tabValue);
+      sessionStorage.removeItem(transientEventSessionKey);
     }
     return {
       sessionId: value.sessionId!,
@@ -121,14 +129,19 @@ function readTransientEventSession(): EventSession | null {
         : 'LOBBY',
     };
   } catch {
-    sessionStorage.removeItem(transientEventSessionKey);
+    try {
+      localStorage.removeItem(transientEventSessionKey);
+      sessionStorage.removeItem(transientEventSessionKey);
+    } catch {
+      // Browser storage can be blocked without preventing live event access.
+    }
     return null;
   }
 }
 
 function writeTransientEventSession(session: EventSession) {
   try {
-    sessionStorage.setItem(transientEventSessionKey, JSON.stringify(session));
+    localStorage.setItem(transientEventSessionKey, JSON.stringify(session));
   } catch {
     // The live event remains usable even when browser storage is unavailable.
   }
@@ -136,6 +149,7 @@ function writeTransientEventSession(session: EventSession) {
 
 function clearTransientEventSession() {
   try {
+    localStorage.removeItem(transientEventSessionKey);
     sessionStorage.removeItem(transientEventSessionKey);
   } catch {
     // Nothing else is required when browser storage is unavailable.
@@ -159,6 +173,16 @@ function asDate(value: unknown): Date | undefined {
 function finiteInteger(value: unknown, fallback = 0) {
   const number = Number(value);
   return Number.isFinite(number) ? Math.trunc(number) : fallback;
+}
+
+function scoreFromProgress(levels: unknown[], fallCount: number) {
+  const climbPoints = levels.reduce<number>((total, value) => {
+    const level = finiteInteger(value, -1);
+    if (level < 0 || level > 15) return total;
+    const scaleIndex = level % 8;
+    return total + (scaleIndex === 7 ? 100 : (scaleIndex + 1) * 10);
+  }, 0);
+  return climbPoints - Math.max(0, fallCount) * 10;
 }
 
 function asFinalRanking(value: unknown): EventParticipant[] | undefined {
@@ -384,11 +408,43 @@ export default function PogoEventPage() {
       stopRoom = onSnapshot(
         doc(firestore, 'jointSessions', eventSession.sessionId),
         {includeMetadataChanges: true},
-        (snapshot) => {
+        async (snapshot) => {
           const fromCache = snapshot.metadata.fromCache;
           if (!snapshot.exists()) {
             setLiveConnected(false);
             if (fromCache) return;
+            try {
+              const archived = await getDoc(doc(
+                firestore,
+                'pogoEventResults',
+                eventSession.sessionId,
+              ));
+              if (archived.exists()) {
+                const archivedData = archived.data();
+                setRoom({
+                  eventName: typeof archivedData.eventName === 'string'
+                    ? normalizeEventName(archivedData.eventName)
+                    : eventSession.eventName,
+                  status: 'FINISHED',
+                  participantCount: Math.max(
+                    0,
+                    Number(archivedData.participantCount ?? 0) + 1,
+                  ),
+                  maxParticipants: Math.min(100, Math.max(
+                    2,
+                    Number(archivedData.maxParticipants ?? 100),
+                  )),
+                  startedAt: asDate(archivedData.startedAt),
+                  finishedAt: asDate(archivedData.finishedAt),
+                  finalRanking: asFinalRanking(archivedData.finalRanking),
+                });
+                setLiveConnected(navigator.onLine);
+                return;
+              }
+            } catch (archiveError) {
+              setError(friendlyFirebaseError(archiveError));
+              return;
+            }
             setError('La sesión del evento expiró o ya no está disponible.');
             setRoom(null);
             clearTransientEventSession();
@@ -430,13 +486,14 @@ export default function PogoEventPage() {
           setParticipants(snapshot.docs.map((participantDocument) => {
             const data = participantDocument.data();
             const levels = Array.isArray(data.climbLevelIds) ? data.climbLevelIds : [];
+            const fallCount = Math.max(0, finiteInteger(data.fallCount));
             return {
               uid: typeof data.uid === 'string' ? data.uid : participantDocument.id,
               displayName: typeof data.displayName === 'string' && data.displayName.trim()
                 ? data.displayName.trim()
                 : 'Pogo Climber',
-              totalPoints: finiteInteger(data.totalPoints),
-              fallCount: Math.max(0, finiteInteger(data.fallCount)),
+              totalPoints: scoreFromProgress(levels, fallCount),
+              fallCount,
               climbCount: levels.length,
               joinedAtMillis: asDate(data.joinedAt)?.getTime() ?? Number.MAX_SAFE_INTEGER,
               updatedAtMillis: asDate(data.updatedAt)?.getTime() ?? 0,
@@ -500,7 +557,45 @@ export default function PogoEventPage() {
       const customToken = typeof data.customToken === 'string' ? data.customToken : '';
       if (!customToken) throw new Error('Invalid event authorization response');
       const credential = await signInWithCustomToken(auth, customToken);
-      if (eventSession?.hostUid !== credential.user.uid) {
+      const activeEvent = data.activeEvent && typeof data.activeEvent === 'object'
+        ? data.activeEvent as Record<string, unknown>
+        : null;
+      const recoveredSessionId = typeof activeEvent?.sessionId === 'string'
+        ? activeEvent.sessionId
+        : '';
+      const recoveredInviteToken = typeof activeEvent?.inviteToken === 'string'
+        ? activeEvent.inviteToken
+        : '';
+      const recoveredHostUid = typeof activeEvent?.hostUid === 'string'
+        ? activeEvent.hostUid
+        : '';
+      if (
+        sessionIdPattern.test(recoveredSessionId) &&
+        tokenPattern.test(recoveredInviteToken) &&
+        eventHostUidPattern.test(recoveredHostUid) &&
+        recoveredHostUid === credential.user.uid
+      ) {
+        const recoveredStatus = ['LOBBY', 'ACTIVE', 'FINISHED'].includes(
+          String(activeEvent?.status ?? ''),
+        )
+          ? activeEvent?.status as RoomStatus
+          : 'LOBBY';
+        const recoveredSession: EventSession = {
+          sessionId: recoveredSessionId,
+          inviteToken: recoveredInviteToken,
+          hostUid: recoveredHostUid,
+          eventName: normalizeEventName(
+            typeof activeEvent?.eventName === 'string' ? activeEvent.eventName : undefined,
+          ),
+          maxParticipants: Math.min(100, Math.max(
+            2,
+            finiteInteger(activeEvent?.maxParticipants, 100),
+          )),
+          lastKnownStatus: recoveredStatus,
+        };
+        writeTransientEventSession(recoveredSession);
+        setEventSession(recoveredSession);
+      } else if (eventSession?.hostUid !== credential.user.uid) {
         setEventSession(null);
       }
       setAccessKey('');
@@ -1006,8 +1101,7 @@ function CompleteRankingTable({
   return (
     <section className="flex min-h-[620px] flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-black/20 p-5 shadow-2xl shadow-black/20 sm:p-6 xl:min-h-0 2xl:p-7">
       <div className="shrink-0 border-b border-white/10 pb-5">
-        <p className="text-xs font-black uppercase tracking-[.22em] text-fuchsia-300">Todos los participantes</p>
-        <div className="mt-2 flex items-end justify-between gap-3">
+        <div className="flex items-end justify-between gap-3">
           <h3 className="text-2xl font-black text-white 2xl:text-3xl">Tabla completa</h3>
           <p className="pb-0.5 text-sm font-extrabold tabular-nums text-slate-300">{participantCount} en total</p>
         </div>
