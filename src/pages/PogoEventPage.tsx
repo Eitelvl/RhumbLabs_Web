@@ -11,6 +11,7 @@ import {
   Plus,
   QrCode,
   ShieldCheck,
+  TestTube2,
   Trophy,
   Users,
   Wifi,
@@ -74,6 +75,19 @@ interface EventParticipant {
   joinedAtMillis: number;
   updatedAtMillis: number;
 }
+
+type SimulationSize = 0 | 50 | 70;
+
+const simulationFirstNames = [
+  'Andrés', 'Antonia', 'Benjamín', 'Camila', 'Catalina', 'Cristóbal', 'Daniela',
+  'Diego', 'Emilia', 'Felipe', 'Fernanda', 'Gabriel', 'Ignacia', 'Isidora',
+  'Javiera', 'Joaquín', 'Josefa', 'Lucas', 'Martina', 'Matías',
+];
+
+const simulationLastNames = [
+  'Araya', 'Castillo', 'Contreras', 'Díaz', 'Flores', 'González', 'Herrera',
+  'Lagos', 'Martínez', 'Muñoz', 'Navarro', 'Pérez', 'Rojas', 'Silva',
+];
 
 function normalizeEventName(value?: string) {
   const name = value?.trim();
@@ -220,6 +234,43 @@ function formatTime(value?: Date) {
   }) ?? '—';
 }
 
+function createSimulatedParticipants(size: Exclude<SimulationSize, 0>): EventParticipant[] {
+  const now = Date.now();
+  return Array.from({length: size}, (_, index) => {
+    const climbCount = (index * 7 + 3) % 25;
+    const fallCount = (index * 5 + 1) % 18;
+    return {
+      uid: `simulated-participant-${index + 1}`,
+      displayName: `${simulationFirstNames[index % simulationFirstNames.length]} ${simulationLastNames[(index * 3) % simulationLastNames.length]}`,
+      totalPoints: climbCount * 100 + ((index * 37) % 95),
+      fallCount,
+      climbCount,
+      joinedAtMillis: now - (size - index) * 1_000,
+      updatedAtMillis: now,
+    };
+  });
+}
+
+function updateSimulatedParticipants(participants: EventParticipant[]) {
+  const updatesPerTick = Math.max(5, Math.round(participants.length / 8));
+  const updateIndexes = new Set<number>();
+  while (updateIndexes.size < updatesPerTick) {
+    updateIndexes.add(Math.floor(Math.random() * participants.length));
+  }
+  const now = Date.now();
+  return participants.map((participant, index) => {
+    if (!updateIndexes.has(index)) return participant;
+    const completedTop = Math.random() > 0.32;
+    return {
+      ...participant,
+      totalPoints: participant.totalPoints + (completedTop ? 100 : 8),
+      climbCount: participant.climbCount + (completedTop ? 1 : 0),
+      fallCount: participant.fallCount + (completedTop ? 0 : 1),
+      updatedAtMillis: now,
+    };
+  });
+}
+
 export default function PogoEventPage() {
   const [firebaseReady, setFirebaseReady] = useState(false);
   const [appCheckConfigured, setAppCheckConfigured] = useState(false);
@@ -236,6 +287,20 @@ export default function PogoEventPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [liveConnected, setLiveConnected] = useState(false);
+  const [simulationSize, setSimulationSize] = useState<SimulationSize>(0);
+  const [simulatedParticipants, setSimulatedParticipants] = useState<EventParticipant[]>([]);
+
+  useEffect(() => {
+    if (simulationSize === 0) {
+      setSimulatedParticipants([]);
+      return;
+    }
+    setSimulatedParticipants(createSimulatedParticipants(simulationSize));
+    const interval = window.setInterval(() => {
+      setSimulatedParticipants((current) => updateSimulatedParticipants(current));
+    }, 800);
+    return () => window.clearInterval(interval);
+  }, [simulationSize]);
 
   useEffect(() => {
     const handleOffline = () => setLiveConnected(false);
@@ -397,18 +462,22 @@ export default function PogoEventPage() {
     [eventSession?.hostUid, participants],
   );
 
-  const liveRanking = useMemo(() => [...eventParticipants]
+  const displayedParticipants = simulationSize > 0
+    ? simulatedParticipants
+    : eventParticipants;
+
+  const liveRanking = useMemo(() => [...displayedParticipants]
     .sort((first, second) => {
       const byPoints = second.totalPoints - first.totalPoints;
       return byPoints !== 0 ? byPoints : first.joinedAtMillis - second.joinedAtMillis;
     })
-    .slice(0, 10), [eventParticipants]);
+    .slice(0, 10), [displayedParticipants]);
 
-  const lobbyParticipants = useMemo(() => [...eventParticipants]
+  const lobbyParticipants = useMemo(() => [...displayedParticipants]
     .sort((first, second) => first.joinedAtMillis - second.joinedAtMillis),
-  [eventParticipants]);
+  [displayedParticipants]);
 
-  const ranking = room?.status === 'FINISHED' && room.finalRanking
+  const ranking = simulationSize === 0 && room?.status === 'FINISHED' && room.finalRanking
     ? room.finalRanking
     : liveRanking;
 
@@ -440,6 +509,7 @@ export default function PogoEventPage() {
   async function handleLogout() {
     const {auth} = await getPogoEventFirebase();
     clearTransientEventSession();
+    setSimulationSize(0);
     setEventSession(null);
     await signOut(auth);
   }
@@ -510,6 +580,7 @@ export default function PogoEventPage() {
     setEventSession(null);
     setRoom(null);
     setParticipants([]);
+    setSimulationSize(0);
     setError(null);
   }
 
@@ -615,11 +686,14 @@ export default function PogoEventPage() {
     );
   }
 
-  const displayCount = Math.max(
+  const displayCount = simulationSize || Math.max(
     Math.max(0, (room?.participantCount ?? 0) - 1),
     eventParticipants.length,
   );
-  const displayCapacity = room?.maxParticipants ?? eventSession.maxParticipants;
+  const displayCapacity = Math.max(
+    room?.maxParticipants ?? eventSession.maxParticipants,
+    simulationSize,
+  );
   const displayName = room?.eventName ?? eventSession.eventName;
   const currentStatus = room?.status ?? eventSession.lastKnownStatus;
 
@@ -630,7 +704,8 @@ export default function PogoEventPage() {
           <div>
             <h1 className="text-3xl font-black tracking-[-.04em] text-white sm:text-5xl 2xl:text-6xl">{displayName}</h1>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center justify-end gap-3">
+            <SimulationControls value={simulationSize} onChange={setSimulationSize} />
             <StatusPill status={currentStatus} connected={liveConnected} />
             {currentStatus === 'LOBBY' && <button disabled={busy || !liveConnected} onClick={() => changeStatus('startJointSession')} className="flex items-center gap-2 rounded-xl bg-emerald-500 px-5 py-3 text-base font-black text-white transition hover:bg-emerald-400 disabled:opacity-50"><Play className="h-5 w-5 fill-current" /> Iniciar</button>}
             {currentStatus === 'ACTIVE' && <button disabled={busy || !liveConnected} onClick={() => changeStatus('finishJointSession')} className="flex items-center gap-2 rounded-xl border border-rose-400/30 bg-rose-400/10 px-5 py-3 text-base font-black text-rose-100 transition hover:bg-rose-400/20 disabled:opacity-50"><CircleStop className="h-5 w-5" /> {busy ? 'Finalizando…' : 'Finalizar sesión'}</button>}
@@ -710,6 +785,31 @@ function StatusPill({status, connected}: {status: RoomStatus; connected: boolean
   const label = connected ? statusLabel : `Reconectando · ${statusLabel}`;
   const color = status === 'ACTIVE' ? 'text-emerald-200 bg-emerald-400/10 border-emerald-400/20' : status === 'FINISHED' ? 'text-slate-300 bg-white/5 border-white/10' : 'text-amber-200 bg-amber-400/10 border-amber-400/20';
   return <div className={`flex items-center gap-2 rounded-xl border px-3 py-2 text-xs font-black uppercase tracking-[.16em] ${color}`}><span className={`h-2 w-2 rounded-full ${connected ? 'bg-current' : 'bg-rose-400'} ${status === 'ACTIVE' && connected ? 'animate-pulse' : ''}`} />{label}</div>;
+}
+
+function SimulationControls({
+  value,
+  onChange,
+}: {
+  value: SimulationSize;
+  onChange: (value: SimulationSize) => void;
+}) {
+  return (
+    <label className={`flex items-center gap-2 rounded-xl border px-3 py-2 text-xs font-black uppercase tracking-[.12em] transition ${value > 0 ? 'border-cyan-300/40 bg-cyan-300/15 text-cyan-100' : 'border-white/10 bg-white/[.05] text-slate-300'}`}>
+      <TestTube2 className="h-4 w-4" />
+      <span className="hidden 2xl:inline">Modo prueba</span>
+      <select
+        aria-label="Cantidad de participantes de prueba"
+        value={value}
+        onChange={(event) => onChange(Number(event.target.value) as SimulationSize)}
+        className="cursor-pointer bg-transparent font-black text-inherit outline-none"
+      >
+        <option className="bg-slate-950 text-white" value={0}>Desactivado</option>
+        <option className="bg-slate-950 text-white" value={50}>50 usuarios</option>
+        <option className="bg-slate-950 text-white" value={70}>70 usuarios</option>
+      </select>
+    </label>
+  );
 }
 
 function LobbyLayout({
@@ -845,8 +945,8 @@ function RankingPanel({
   finished?: boolean;
 }) {
   return (
-    <section className="min-h-[calc(100vh-190px)] rounded-[2rem] border border-white/10 bg-white/[.05] p-5 shadow-2xl shadow-black/20 sm:p-7 2xl:p-9">
-      <div className="mb-5 flex flex-wrap items-end justify-between gap-4 border-b border-white/10 pb-5">
+    <section className={`rounded-[2rem] border border-white/10 bg-white/[.05] p-5 shadow-2xl shadow-black/20 sm:p-7 2xl:p-9 ${finished ? 'min-h-[calc(100vh-190px)]' : 'flex min-h-[calc(100vh-190px)] flex-col xl:h-[calc(100vh-190px)] xl:min-h-0'}`}>
+      <div className="mb-5 flex shrink-0 flex-wrap items-end justify-between gap-4 border-b border-white/10 pb-5">
         <div className="flex items-center gap-4">
           <div className="grid h-14 w-14 place-items-center rounded-2xl bg-amber-300/10 text-amber-300 2xl:h-16 2xl:w-16">
             <Trophy className="h-8 w-8 2xl:h-9 2xl:w-9" />
@@ -862,7 +962,7 @@ function RankingPanel({
         </div>
       </div>
 
-      <div className="space-y-2.5 2xl:space-y-3">
+      <div className={`space-y-2.5 2xl:space-y-3 ${finished ? '' : 'min-h-0 flex-1 overflow-y-auto pr-1'}`}>
         {ranking.length === 0 ? (
           <div className="grid min-h-[calc(100vh-370px)] place-items-center rounded-2xl border border-dashed border-white/10 bg-black/10 text-center">
             <div>
@@ -953,7 +1053,7 @@ function RankingRow({participant, position}: {participant: EventParticipant; pos
       <div className={`grid aspect-square w-[clamp(46px,4vw,72px)] place-items-center rounded-full border text-[clamp(1.35rem,2vw,2.5rem)] font-black tabular-nums ${positionStyle}`}>{position}</div>
       <div className="min-w-0">
         <p className={`truncate text-[clamp(1.45rem,2.1vw,3.25rem)] font-black leading-tight tracking-[-.025em] ${nameStyle}`}>{participant.displayName}</p>
-        <p className="mt-0.5 text-[clamp(.75rem,.85vw,1.15rem)] font-semibold text-slate-500">{participant.climbCount} tops · {participant.fallCount} caídas</p>
+        <p className="mt-1 text-[clamp(.95rem,1.05vw,1.35rem)] font-extrabold text-slate-200">{participant.climbCount} tops · {participant.fallCount} caídas</p>
       </div>
       <div className="min-w-[clamp(110px,13vw,260px)] text-right">
         <p className="text-[clamp(1.75rem,2.7vw,4rem)] font-black leading-none tabular-nums text-white">{formatPoints(participant.totalPoints)}</p>
