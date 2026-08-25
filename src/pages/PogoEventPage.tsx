@@ -35,9 +35,11 @@ import QRCode from 'qrcode';
 import {SafeImage} from '../components/SafeImage';
 import {getPogoEventFirebase} from '../lib/pogoEventFirebase';
 
-const sessionStorageKey = 'pogo.event.active-session.v2';
-const legacySessionStorageKey = 'pogo.event.active-session.v1';
 const operatorIdStorageKey = 'pogo.event.operator-id.v1';
+const obsoleteSessionStorageKeys = [
+  'pogo.event.active-session.v1',
+  'pogo.event.active-session.v2',
+];
 const sessionIdPattern = /^js_[a-f0-9]{32}$/;
 const tokenPattern = /^[A-Za-z0-9_-]{32,128}$/;
 const eventHostUidPattern = /^pogo_event_[a-f0-9]{48}$/;
@@ -45,7 +47,7 @@ const defaultEventName = 'Evento Pogo';
 
 type RoomStatus = 'LOBBY' | 'ACTIVE' | 'FINISHED';
 
-interface StoredEventSession {
+interface EventSession {
   sessionId: string;
   inviteToken: string;
   hostUid: string;
@@ -59,6 +61,7 @@ interface EventRoom {
   maxParticipants: number;
   startedAt?: Date;
   finishedAt?: Date;
+  finalRanking?: EventParticipant[];
 }
 
 interface EventParticipant {
@@ -79,35 +82,6 @@ function normalizeEventName(value?: string) {
   return name;
 }
 
-function readStoredSession(): StoredEventSession | null {
-  try {
-    // v1 sessions were created with account-based hosts. They cannot be
-    // administered by the technical identity obtained from the event key.
-    localStorage.removeItem(legacySessionStorageKey);
-    const raw = localStorage.getItem(sessionStorageKey);
-    if (!raw) return null;
-    const value = JSON.parse(raw) as Partial<StoredEventSession>;
-    if (
-      !sessionIdPattern.test(value.sessionId ?? '') ||
-      !tokenPattern.test(value.inviteToken ?? '') ||
-      !eventHostUidPattern.test(value.hostUid ?? '')
-    ) {
-      localStorage.removeItem(sessionStorageKey);
-      return null;
-    }
-    return {
-      sessionId: value.sessionId!,
-      inviteToken: value.inviteToken!,
-      hostUid: value.hostUid!,
-      eventName: normalizeEventName(value.eventName),
-      maxParticipants: Math.min(100, Math.max(2, value.maxParticipants ?? 100)),
-    };
-  } catch {
-    localStorage.removeItem(sessionStorageKey);
-    return null;
-  }
-}
-
 function readOrCreateOperatorId() {
   const stored = localStorage.getItem(operatorIdStorageKey)?.trim() ?? '';
   if (/^[A-Za-z0-9_-]{20,64}$/.test(stored)) return stored;
@@ -120,6 +94,32 @@ function readOrCreateOperatorId() {
 
 function asDate(value: unknown): Date | undefined {
   return value instanceof Timestamp ? value.toDate() : undefined;
+}
+
+function finiteInteger(value: unknown, fallback = 0) {
+  const number = Number(value);
+  return Number.isFinite(number) ? Math.trunc(number) : fallback;
+}
+
+function asFinalRanking(value: unknown): EventParticipant[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  return value.flatMap((entry) => {
+    if (!entry || typeof entry !== 'object') return [];
+    const data = entry as Record<string, unknown>;
+    const uid = typeof data.uid === 'string' ? data.uid : '';
+    if (!uid) return [];
+    return [{
+      uid,
+      displayName: typeof data.displayName === 'string' && data.displayName.trim()
+        ? data.displayName.trim()
+        : 'Pogo Climber',
+      totalPoints: finiteInteger(data.totalPoints),
+      fallCount: Math.max(0, finiteInteger(data.fallCount)),
+      climbCount: Math.max(0, finiteInteger(data.climbCount)),
+      joinedAtMillis: finiteInteger(data.joinedAtMillis, Number.MAX_SAFE_INTEGER),
+      updatedAtMillis: Math.max(0, finiteInteger(data.updatedAtMillis)),
+    }];
+  }).slice(0, 10);
 }
 
 function friendlyFirebaseError(error: unknown) {
@@ -183,7 +183,7 @@ export default function PogoEventPage() {
   const [accessKey, setAccessKey] = useState('');
   const [eventName, setEventName] = useState(defaultEventName);
   const [capacity, setCapacity] = useState(100);
-  const [eventSession, setEventSession] = useState<StoredEventSession | null>(readStoredSession);
+  const [eventSession, setEventSession] = useState<EventSession | null>(null);
   const [room, setRoom] = useState<EventRoom | null>(null);
   const [participants, setParticipants] = useState<EventParticipant[]>([]);
   const [qrDataUrl, setQrDataUrl] = useState('');
@@ -192,6 +192,7 @@ export default function PogoEventPage() {
   const [liveConnected, setLiveConnected] = useState(false);
 
   useEffect(() => {
+    obsoleteSessionStorageKeys.forEach((key) => localStorage.removeItem(key));
     let unsubscribe = () => {};
     getPogoEventFirebase()
       .then(({auth, appCheckConfigured: configured}) => {
@@ -207,11 +208,6 @@ export default function PogoEventPage() {
                 user.uid.startsWith('pogo_event_') &&
                 token.claims.pogoEventAdmin === true;
               setAuthorized(isAuthorized);
-              const storedSession = readStoredSession();
-              if (isAuthorized && storedSession?.hostUid !== user.uid) {
-                localStorage.removeItem(sessionStorageKey);
-                setEventSession(null);
-              }
             } catch (authError) {
               setError(friendlyFirebaseError(authError));
             }
@@ -276,6 +272,7 @@ export default function PogoEventPage() {
             maxParticipants: Math.min(100, Math.max(2, Number(data.maxParticipants ?? 100))),
             startedAt: asDate(data.startedAt),
             finishedAt: asDate(data.finishedAt),
+            finalRanking: asFinalRanking(data.finalRanking),
           });
           setLiveConnected(true);
         },
@@ -295,8 +292,8 @@ export default function PogoEventPage() {
               displayName: typeof data.displayName === 'string' && data.displayName.trim()
                 ? data.displayName.trim()
                 : 'Pogo Climber',
-              totalPoints: Math.trunc(Number(data.totalPoints ?? 0)),
-              fallCount: Math.max(0, Math.trunc(Number(data.fallCount ?? 0))),
+              totalPoints: finiteInteger(data.totalPoints),
+              fallCount: Math.max(0, finiteInteger(data.fallCount)),
               climbCount: levels.length,
               joinedAtMillis: asDate(data.joinedAt)?.getTime() ?? Number.MAX_SAFE_INTEGER,
               updatedAtMillis: asDate(data.updatedAt)?.getTime() ?? 0,
@@ -318,21 +315,30 @@ export default function PogoEventPage() {
     };
   }, [authorized, eventSession]);
 
-  const ranking = useMemo(() => [...participants]
+  const eventParticipants = useMemo(
+    () => participants.filter((participant) => participant.uid !== eventSession?.hostUid),
+    [eventSession?.hostUid, participants],
+  );
+
+  const liveRanking = useMemo(() => [...eventParticipants]
     .sort((first, second) => {
       const byPoints = second.totalPoints - first.totalPoints;
       return byPoints !== 0 ? byPoints : first.joinedAtMillis - second.joinedAtMillis;
     })
-    .slice(0, 10), [participants]);
+    .slice(0, 10), [eventParticipants]);
+
+  const ranking = room?.status === 'FINISHED' && room.finalRanking
+    ? room.finalRanking
+    : liveRanking;
 
   const stats = useMemo(() => ({
-    totalTops: participants.reduce((total, participant) => total + participant.climbCount, 0),
-    totalPoints: participants.reduce((total, participant) => total + participant.totalPoints, 0),
-    lastUpdate: participants.reduce(
+    totalTops: eventParticipants.reduce((total, participant) => total + participant.climbCount, 0),
+    totalPoints: eventParticipants.reduce((total, participant) => total + participant.totalPoints, 0),
+    lastUpdate: eventParticipants.reduce(
       (latest, participant) => Math.max(latest, participant.updatedAtMillis),
       0,
     ),
-  }), [participants]);
+  }), [eventParticipants]);
 
   async function handleAccessKey(event: FormEvent) {
     event.preventDefault();
@@ -349,7 +355,6 @@ export default function PogoEventPage() {
       if (!customToken) throw new Error('Invalid event authorization response');
       const credential = await signInWithCustomToken(auth, customToken);
       if (eventSession?.hostUid !== credential.user.uid) {
-        localStorage.removeItem(sessionStorageKey);
         setEventSession(null);
       }
       setAccessKey('');
@@ -395,7 +400,6 @@ export default function PogoEventPage() {
         eventName: eventName.trim() || defaultEventName,
         maxParticipants: capacity,
       };
-      localStorage.setItem(sessionStorageKey, JSON.stringify(createdSession));
       setEventSession(createdSession);
     } catch (creationError) {
       setError(friendlyFirebaseError(creationError));
@@ -419,7 +423,6 @@ export default function PogoEventPage() {
   }
 
   function prepareAnotherEvent() {
-    localStorage.removeItem(sessionStorageKey);
     setEventSession(null);
     setRoom(null);
     setParticipants([]);
@@ -528,7 +531,10 @@ export default function PogoEventPage() {
     );
   }
 
-  const displayCount = Math.max(room?.participantCount ?? 0, participants.length);
+  const displayCount = Math.max(
+    Math.max(0, (room?.participantCount ?? 0) - 1),
+    eventParticipants.length,
+  );
   const displayCapacity = room?.maxParticipants ?? eventSession.maxParticipants;
   const displayName = room?.eventName ?? eventSession.eventName;
 
