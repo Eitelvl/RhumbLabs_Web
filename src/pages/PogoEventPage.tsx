@@ -1,10 +1,8 @@
 import {FormEvent, useEffect, useMemo, useState} from 'react';
 import {
   ArrowLeft,
-  Camera,
   CheckCircle2,
   CircleStop,
-  Clock3,
   Crown,
   KeyRound,
   LogOut,
@@ -12,10 +10,8 @@ import {
   Play,
   Plus,
   QrCode,
-  ScanLine,
   ShieldCheck,
   Trophy,
-  UserRound,
   Users,
   Wifi,
 } from 'lucide-react';
@@ -629,7 +625,7 @@ export default function PogoEventPage() {
 
   return (
     <EventShell onLogout={handleLogout} compact>
-      <main className="mx-auto min-h-[calc(100vh-72px)] max-w-[2200px] px-4 py-5 sm:px-6 lg:px-8 2xl:px-12">
+      <main className={`mx-auto min-h-[calc(100vh-72px)] max-w-[2200px] px-4 py-5 sm:px-6 lg:px-8 2xl:px-12 ${currentStatus === 'LOBBY' ? 'xl:h-[calc(100vh-72px)] xl:overflow-hidden' : ''}`}>
         <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
           <div>
             <h1 className="text-3xl font-black tracking-[-.04em] text-white sm:text-5xl 2xl:text-6xl">{displayName}</h1>
@@ -728,27 +724,27 @@ function LobbyLayout({
   capacity: number;
 }) {
   return (
-    <div className="grid gap-5 xl:grid-cols-[minmax(300px,380px)_minmax(520px,1fr)_minmax(270px,340px)]">
+    <div className="grid gap-5 xl:h-[calc(100vh-220px)] xl:grid-cols-[minmax(300px,380px)_minmax(520px,1fr)_minmax(270px,340px)]">
       <LobbyInstructions />
 
-      <section className="relative grid min-h-[calc(100vh-190px)] place-items-center overflow-hidden rounded-[2rem] border border-fuchsia-300/15 bg-gradient-to-br from-fuchsia-500/10 via-white/[.055] to-purple-500/10 p-4 sm:p-6">
+      <section className="relative grid min-h-[620px] place-items-start overflow-hidden rounded-[2rem] border border-fuchsia-300/15 bg-gradient-to-br from-fuchsia-500/10 via-white/[.055] to-purple-500/10 p-4 sm:p-6 xl:h-full xl:min-h-0 xl:pt-[clamp(1rem,2.5vh,2.5rem)]">
         <div className="absolute -right-20 -top-20 h-80 w-80 rounded-full bg-fuchsia-500/15 blur-3xl" />
-        <div className="relative rounded-[2rem] bg-white p-3 shadow-2xl shadow-fuchsia-950/50 sm:p-4">
+        <div className="relative mx-auto rounded-[2rem] bg-white p-3 shadow-2xl shadow-fuchsia-950/50 sm:p-4">
           {qrDataUrl ? (
             <img
               src={qrDataUrl}
               alt="QR para unirse al evento con Pogo"
-              className="aspect-square w-[min(68vh,880px)] max-w-full"
+              className="aspect-square w-[min(57vh,780px)] max-w-full"
             />
           ) : (
-            <div className="grid aspect-square w-[min(68vh,880px)] max-w-full place-items-center">
+            <div className="grid aspect-square w-[min(57vh,780px)] max-w-full place-items-center">
               <QrCode className="h-24 w-24 animate-pulse text-slate-300" />
             </div>
           )}
         </div>
       </section>
 
-      <section className="flex min-h-[calc(100vh-190px)] flex-col rounded-[2rem] border border-white/10 bg-white/[.05] p-5 shadow-2xl shadow-black/20 sm:p-7">
+      <section className="flex min-h-[620px] flex-col rounded-[2rem] border border-white/10 bg-white/[.05] p-5 shadow-2xl shadow-black/20 sm:p-7 xl:h-full xl:min-h-0">
         <div className="border-b border-white/10 pb-5">
           <p className="text-xs font-black uppercase tracking-[.24em] text-fuchsia-300">Participantes</p>
           <div className="mt-2 flex items-baseline gap-2">
@@ -783,101 +779,58 @@ function LobbyLayout({
 
 function LobbyInstructions() {
   return (
-    <section className="flex min-h-[calc(100vh-190px)] flex-col rounded-[2rem] border border-white/10 bg-white/[.05] p-5 shadow-2xl shadow-black/20 sm:p-6">
+    <section className="flex min-h-[620px] flex-col rounded-[2rem] border border-white/10 bg-white/[.05] p-5 shadow-2xl shadow-black/20 sm:p-6 xl:h-full xl:min-h-0">
       <div>
         <p className="text-xs font-black uppercase tracking-[.24em] text-fuchsia-300">Antes de comenzar</p>
         <h2 className="mt-2 text-3xl font-black tracking-[-.035em] text-white">Cómo ingresar</h2>
-        <p className="mt-2 text-sm leading-6 text-slate-400">Sigue estos pasos en la aplicación Pogo.</p>
+        <p className="mt-2 text-base font-bold leading-6 text-white/80">Sigue estos pasos en la aplicación Pogo.</p>
       </div>
 
-      <div className="mt-5 space-y-4">
-        <InstructionStep
+      <ol className="mt-6 space-y-3 2xl:space-y-4">
+        <TextInstruction
           number={1}
-          icon={UserRound}
           title="Abre tu Perfil"
-          description="Toca Perfil abajo a la derecha y luego el ícono QR de la esquina superior."
-          imageSrc="/images/pogo-event-profile-guide.jpg"
-          imageAlt="Pantalla Perfil de Pogo con el botón QR destacado"
+          description="En Pogo, toca Perfil abajo a la derecha."
         />
-        <InstructionStep
+        <TextInstruction
           number={2}
-          icon={Camera}
-          title="Abre la cámara"
-          description="En Pogo ID, toca la cámara que aparece arriba a la derecha."
-          imageSrc="/images/pogo-event-id-guide.jpg"
-          imageAlt="Pantalla Pogo ID con el botón de cámara destacado"
+          title="Entra a Pogo ID"
+          description="Toca el ícono QR de la esquina superior derecha."
         />
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2">
-          <CompactInstruction
-            number={3}
-            icon={ScanLine}
-            title="Escanea"
-            description="Apunta la cámara al QR grande del centro."
-          />
-          <CompactInstruction
-            number={4}
-            icon={Clock3}
-            title="Espera"
-            description="Quédate en la sala hasta que se inicie el evento."
-          />
-        </div>
-      </div>
+        <TextInstruction
+          number={3}
+          title="Escanea el QR"
+          description="Toca la cámara y apunta al código grande del centro."
+        />
+        <TextInstruction
+          number={4}
+          title="Espera el inicio"
+          description="Quédate en la sala hasta que comience el evento."
+        />
+      </ol>
     </section>
   );
 }
 
-function InstructionStep({
+function TextInstruction({
   number,
-  icon: Icon,
-  title,
-  description,
-  imageSrc,
-  imageAlt,
-}: {
-  number: number;
-  icon: typeof UserRound;
-  title: string;
-  description: string;
-  imageSrc: string;
-  imageAlt: string;
-}) {
-  return (
-    <div className="overflow-hidden rounded-2xl border border-white/[.08] bg-black/15">
-      <div className="grid grid-cols-[38px_minmax(0,1fr)] gap-3 p-3.5">
-        <div className="grid h-9 w-9 place-items-center rounded-xl border border-fuchsia-300/20 bg-fuchsia-400/10 text-fuchsia-200">
-          <Icon className="h-5 w-5" />
-        </div>
-        <div>
-          <p className="text-xs font-black uppercase tracking-[.16em] text-fuchsia-300">Paso {number}</p>
-          <h3 className="mt-0.5 text-base font-black text-white">{title}</h3>
-          <p className="mt-1 text-xs leading-5 text-slate-400">{description}</p>
-        </div>
-      </div>
-      <img src={imageSrc} alt={imageAlt} className="h-36 w-full border-t border-white/[.08] object-cover object-top 2xl:h-44" />
-    </div>
-  );
-}
-
-function CompactInstruction({
-  number,
-  icon: Icon,
   title,
   description,
 }: {
   number: number;
-  icon: typeof ScanLine;
   title: string;
   description: string;
 }) {
   return (
-    <div className="rounded-2xl border border-white/[.08] bg-black/15 p-3.5">
-      <div className="flex items-center gap-2 text-fuchsia-200">
-        <Icon className="h-5 w-5" />
-        <span className="text-xs font-black uppercase tracking-[.14em]">Paso {number}</span>
+    <li className="grid grid-cols-[48px_minmax(0,1fr)] gap-3 rounded-2xl border border-white/10 bg-black/20 p-4 2xl:grid-cols-[56px_minmax(0,1fr)] 2xl:p-5">
+      <div className="grid h-12 w-12 place-items-center rounded-xl border border-fuchsia-300/30 bg-fuchsia-400/15 text-xl font-black tabular-nums text-white 2xl:h-14 2xl:w-14 2xl:text-2xl">
+        {number}
       </div>
-      <h3 className="mt-2 text-sm font-black text-white">{title}</h3>
-      <p className="mt-1 text-xs leading-5 text-slate-400">{description}</p>
-    </div>
+      <div>
+        <p className="text-lg font-black leading-tight text-white 2xl:text-xl">{title}</p>
+        <p className="mt-1.5 text-base font-bold leading-6 text-white/85 2xl:text-lg 2xl:leading-7">{description}</p>
+      </div>
+    </li>
   );
 }
 
