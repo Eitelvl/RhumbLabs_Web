@@ -781,8 +781,7 @@ function LobbyInstructions() {
   return (
     <section className="flex min-h-[620px] flex-col rounded-[2rem] border border-white/10 bg-white/[.05] p-5 shadow-2xl shadow-black/20 sm:p-6 xl:h-full xl:min-h-0">
       <div>
-        <p className="text-xs font-black uppercase tracking-[.24em] text-fuchsia-300">Antes de comenzar</p>
-        <h2 className="mt-2 text-3xl font-black tracking-[-.035em] text-white">Cómo ingresar</h2>
+        <h2 className="text-3xl font-black tracking-[-.035em] text-white">Cómo ingresar</h2>
         <p className="mt-2 text-base font-bold leading-6 text-white/80">Sigue estos pasos en la aplicación Pogo.</p>
       </div>
 
