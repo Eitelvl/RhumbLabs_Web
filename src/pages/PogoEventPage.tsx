@@ -1,8 +1,10 @@
 import {FormEvent, useEffect, useMemo, useState} from 'react';
 import {
   ArrowLeft,
+  Camera,
   CheckCircle2,
   CircleStop,
+  Clock3,
   Crown,
   KeyRound,
   LogOut,
@@ -10,8 +12,10 @@ import {
   Play,
   Plus,
   QrCode,
+  ScanLine,
   ShieldCheck,
   Trophy,
+  UserRound,
   Users,
   Wifi,
 } from 'lucide-react';
@@ -724,7 +728,9 @@ function LobbyLayout({
   capacity: number;
 }) {
   return (
-    <div className="grid gap-5 lg:grid-cols-[minmax(560px,1fr)_minmax(300px,.38fr)]">
+    <div className="grid gap-5 xl:grid-cols-[minmax(300px,380px)_minmax(520px,1fr)_minmax(270px,340px)]">
+      <LobbyInstructions />
+
       <section className="relative grid min-h-[calc(100vh-190px)] place-items-center overflow-hidden rounded-[2rem] border border-fuchsia-300/15 bg-gradient-to-br from-fuchsia-500/10 via-white/[.055] to-purple-500/10 p-4 sm:p-6">
         <div className="absolute -right-20 -top-20 h-80 w-80 rounded-full bg-fuchsia-500/15 blur-3xl" />
         <div className="relative rounded-[2rem] bg-white p-3 shadow-2xl shadow-fuchsia-950/50 sm:p-4">
@@ -771,6 +777,106 @@ function LobbyLayout({
           )}
         </div>
       </section>
+    </div>
+  );
+}
+
+function LobbyInstructions() {
+  return (
+    <section className="flex min-h-[calc(100vh-190px)] flex-col rounded-[2rem] border border-white/10 bg-white/[.05] p-5 shadow-2xl shadow-black/20 sm:p-6">
+      <div>
+        <p className="text-xs font-black uppercase tracking-[.24em] text-fuchsia-300">Antes de comenzar</p>
+        <h2 className="mt-2 text-3xl font-black tracking-[-.035em] text-white">Cómo ingresar</h2>
+        <p className="mt-2 text-sm leading-6 text-slate-400">Sigue estos pasos en la aplicación Pogo.</p>
+      </div>
+
+      <div className="mt-5 space-y-4">
+        <InstructionStep
+          number={1}
+          icon={UserRound}
+          title="Abre tu Perfil"
+          description="Toca Perfil abajo a la derecha y luego el ícono QR de la esquina superior."
+          imageSrc="/images/pogo-event-profile-guide.jpg"
+          imageAlt="Pantalla Perfil de Pogo con el botón QR destacado"
+        />
+        <InstructionStep
+          number={2}
+          icon={Camera}
+          title="Abre la cámara"
+          description="En Pogo ID, toca la cámara que aparece arriba a la derecha."
+          imageSrc="/images/pogo-event-id-guide.jpg"
+          imageAlt="Pantalla Pogo ID con el botón de cámara destacado"
+        />
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2">
+          <CompactInstruction
+            number={3}
+            icon={ScanLine}
+            title="Escanea"
+            description="Apunta la cámara al QR grande del centro."
+          />
+          <CompactInstruction
+            number={4}
+            icon={Clock3}
+            title="Espera"
+            description="Quédate en la sala hasta que se inicie el evento."
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function InstructionStep({
+  number,
+  icon: Icon,
+  title,
+  description,
+  imageSrc,
+  imageAlt,
+}: {
+  number: number;
+  icon: typeof UserRound;
+  title: string;
+  description: string;
+  imageSrc: string;
+  imageAlt: string;
+}) {
+  return (
+    <div className="overflow-hidden rounded-2xl border border-white/[.08] bg-black/15">
+      <div className="grid grid-cols-[38px_minmax(0,1fr)] gap-3 p-3.5">
+        <div className="grid h-9 w-9 place-items-center rounded-xl border border-fuchsia-300/20 bg-fuchsia-400/10 text-fuchsia-200">
+          <Icon className="h-5 w-5" />
+        </div>
+        <div>
+          <p className="text-xs font-black uppercase tracking-[.16em] text-fuchsia-300">Paso {number}</p>
+          <h3 className="mt-0.5 text-base font-black text-white">{title}</h3>
+          <p className="mt-1 text-xs leading-5 text-slate-400">{description}</p>
+        </div>
+      </div>
+      <img src={imageSrc} alt={imageAlt} className="h-36 w-full border-t border-white/[.08] object-cover object-top 2xl:h-44" />
+    </div>
+  );
+}
+
+function CompactInstruction({
+  number,
+  icon: Icon,
+  title,
+  description,
+}: {
+  number: number;
+  icon: typeof ScanLine;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="rounded-2xl border border-white/[.08] bg-black/15 p-3.5">
+      <div className="flex items-center gap-2 text-fuchsia-200">
+        <Icon className="h-5 w-5" />
+        <span className="text-xs font-black uppercase tracking-[.14em]">Paso {number}</span>
+      </div>
+      <h3 className="mt-2 text-sm font-black text-white">{title}</h3>
+      <p className="mt-1 text-xs leading-5 text-slate-400">{description}</p>
     </div>
   );
 }
