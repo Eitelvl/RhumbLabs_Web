@@ -4,7 +4,7 @@ import {
   initializeAppCheck,
 } from 'firebase/app-check';
 import {
-  browserSessionPersistence,
+  browserLocalPersistence,
   getAuth,
   setPersistence,
 } from 'firebase/auth';
@@ -60,7 +60,7 @@ async function createServices() {
   }
 
   const auth = getAuth(app);
-  await setPersistence(auth, browserSessionPersistence);
+  await setPersistence(auth, browserLocalPersistence);
 
   return {
     auth,

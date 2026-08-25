@@ -5,7 +5,7 @@ import {
   CircleStop,
   Clock3,
   Crown,
-  LogIn,
+  KeyRound,
   LogOut,
   Medal,
   Play,
@@ -18,11 +18,9 @@ import {
 } from 'lucide-react';
 import {Link} from 'react-router-dom';
 import {
-  GoogleAuthProvider,
   getIdTokenResult,
   onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signInWithPopup,
+  signInWithCustomToken,
   signOut,
 } from 'firebase/auth';
 import {
@@ -38,6 +36,7 @@ import {SafeImage} from '../components/SafeImage';
 import {getPogoEventFirebase} from '../lib/pogoEventFirebase';
 
 const sessionStorageKey = 'pogo.event.active-session.v1';
+const operatorIdStorageKey = 'pogo.event.operator-id.v1';
 const sessionIdPattern = /^js_[a-f0-9]{32}$/;
 const tokenPattern = /^[A-Za-z0-9_-]{32,128}$/;
 const defaultEventName = 'Evento Pogo';
@@ -101,6 +100,16 @@ function readStoredSession(): StoredEventSession | null {
   }
 }
 
+function readOrCreateOperatorId() {
+  const stored = localStorage.getItem(operatorIdStorageKey)?.trim() ?? '';
+  if (/^[A-Za-z0-9_-]{20,64}$/.test(stored)) return stored;
+
+  const bytes = crypto.getRandomValues(new Uint8Array(24));
+  const operatorId = Array.from(bytes, (value) => value.toString(16).padStart(2, '0')).join('');
+  localStorage.setItem(operatorIdStorageKey, operatorId);
+  return operatorId;
+}
+
 function asDate(value: unknown): Date | undefined {
   return value instanceof Timestamp ? value.toDate() : undefined;
 }
@@ -110,7 +119,7 @@ function friendlyFirebaseError(error: unknown) {
     ? String(error.code)
     : '';
   if (code.includes('permission-denied')) {
-    return 'Esta cuenta no tiene permiso para administrar eventos de Pogo.';
+    return 'No tienes permiso para administrar esta sesión del evento.';
   }
   if (code.includes('failed-precondition')) {
     return 'Finaliza o abandona la sesión compartida actual antes de crear el evento.';
@@ -118,17 +127,14 @@ function friendlyFirebaseError(error: unknown) {
   if (code.includes('resource-exhausted')) {
     return 'La sala alcanzó su capacidad máxima.';
   }
-  if (code.includes('invalid-credential') || code.includes('wrong-password')) {
-    return 'Correo o contraseña incorrectos.';
+  if (code.includes('invalid-argument')) {
+    return 'Ingresa una clave de evento válida.';
   }
-  if (code.includes('popup-closed-by-user')) {
-    return 'Se cerró la ventana de Google antes de completar el ingreso.';
+  if (code.includes('invalid-credential')) {
+    return 'No pudimos validar el acceso al evento. Inténtalo nuevamente.';
   }
-  if (code.includes('popup-blocked')) {
-    return 'El navegador bloqueó la ventana de Google. Habilita las ventanas emergentes e inténtalo nuevamente.';
-  }
-  if (code.includes('unauthorized-domain')) {
-    return 'Este dominio no está autorizado para iniciar sesión con Google.';
+  if (code.includes('not-found')) {
+    return 'El acceso por clave todavía no está habilitado en el servidor.';
   }
   if (code.includes('too-many-requests')) {
     return 'Demasiados intentos. Espera un momento y vuelve a intentarlo.';
@@ -137,6 +143,16 @@ function friendlyFirebaseError(error: unknown) {
     return 'No pudimos conectar con Firebase. Revisa la conexión e inténtalo nuevamente.';
   }
   return 'No pudimos completar la acción. Inténtalo nuevamente.';
+}
+
+function friendlyAccessError(error: unknown) {
+  const code = typeof error === 'object' && error !== null && 'code' in error
+    ? String(error.code)
+    : '';
+  if (code.includes('permission-denied')) {
+    return 'La clave del evento no es válida.';
+  }
+  return friendlyFirebaseError(error);
 }
 
 function formatPoints(value: number) {
@@ -154,11 +170,9 @@ export default function PogoEventPage() {
   const [firebaseReady, setFirebaseReady] = useState(false);
   const [appCheckConfigured, setAppCheckConfigured] = useState(false);
   const [configurationError, setConfigurationError] = useState<string | null>(null);
-  const [signedIn, setSignedIn] = useState(false);
   const [authorized, setAuthorized] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [accessKey, setAccessKey] = useState('');
   const [eventName, setEventName] = useState(defaultEventName);
   const [capacity, setCapacity] = useState(100);
   const [eventSession, setEventSession] = useState<StoredEventSession | null>(readStoredSession);
@@ -176,13 +190,15 @@ export default function PogoEventPage() {
         setAppCheckConfigured(configured);
         setFirebaseReady(true);
         unsubscribe = onAuthStateChanged(auth, async (user) => {
-          setSignedIn(Boolean(user));
           setAuthorized(false);
           setAuthLoading(true);
           if (user) {
             try {
               const token = await getIdTokenResult(user, true);
-              setAuthorized(token.claims.pogoEventAdmin === true);
+              setAuthorized(
+                user.uid.startsWith('pogo_event_') &&
+                token.claims.pogoEventAdmin === true,
+              );
             } catch (authError) {
               setError(friendlyFirebaseError(authError));
             }
@@ -305,31 +321,23 @@ export default function PogoEventPage() {
     ),
   }), [participants]);
 
-  async function handleLogin(event: FormEvent) {
+  async function handleAccessKey(event: FormEvent) {
     event.preventDefault();
     setBusy(true);
     setError(null);
     try {
-      const {auth} = await getPogoEventFirebase();
-      await signInWithEmailAndPassword(auth, email.trim(), password);
-      setPassword('');
-    } catch (loginError) {
-      setError(friendlyFirebaseError(loginError));
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  async function handleGoogleLogin() {
-    setBusy(true);
-    setError(null);
-    try {
-      const {auth} = await getPogoEventFirebase();
-      const provider = new GoogleAuthProvider();
-      provider.setCustomParameters({prompt: 'select_account'});
-      await signInWithPopup(auth, provider);
-    } catch (loginError) {
-      setError(friendlyFirebaseError(loginError));
+      const {auth, functions} = await getPogoEventFirebase();
+      const result = await httpsCallable(functions, 'authorizePogoEvent')({
+        accessKey: accessKey.trim(),
+        operatorId: readOrCreateOperatorId(),
+      });
+      const data = result.data as Record<string, unknown>;
+      const customToken = typeof data.customToken === 'string' ? data.customToken : '';
+      if (!customToken) throw new Error('Invalid event authorization response');
+      await signInWithCustomToken(auth, customToken);
+      setAccessKey('');
+    } catch (accessError) {
+      setError(friendlyAccessError(accessError));
     } finally {
       setBusy(false);
     }
@@ -415,7 +423,7 @@ export default function PogoEventPage() {
     return <EventShell><EventLoading /></EventShell>;
   }
 
-  if (!signedIn) {
+  if (!authorized) {
     return (
       <EventShell>
         <div className="mx-auto grid min-h-[calc(100vh-88px)] max-w-6xl items-center gap-12 px-6 py-14 lg:grid-cols-[1.1fr_.9fr]">
@@ -430,47 +438,28 @@ export default function PogoEventPage() {
               Crea una sesión compatible con Pogo, proyecta el QR y sigue el Top 10 sin interrumpir a quienes están escalando.
             </p>
           </div>
-          <form onSubmit={handleLogin} className="rounded-[2rem] border border-white/10 bg-white/[.055] p-7 shadow-2xl shadow-fuchsia-950/30 backdrop-blur-xl sm:p-9">
-            <LogIn className="mb-5 h-9 w-9 text-fuchsia-300" />
-            <h2 className="text-2xl font-black text-white">Administración del evento</h2>
-            <p className="mt-2 text-sm leading-6 text-slate-400">Ingresa con la cuenta Google que tiene el rol pogoEventAdmin.</p>
-            <button
-              type="button"
-              disabled={busy}
-              onClick={handleGoogleLogin}
-              className="mt-7 flex w-full items-center justify-center gap-3 rounded-2xl border border-white/15 bg-white px-5 py-4 font-black text-slate-900 shadow-lg shadow-black/20 transition hover:bg-slate-100 disabled:cursor-wait disabled:opacity-60"
-            >
-              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white font-black text-blue-600 shadow-sm" aria-hidden="true">G</span>
-              {busy ? 'Conectando con Google…' : 'Ingresar con Google'}
-            </button>
-            <div className="my-6 flex items-center gap-4 text-xs font-bold uppercase tracking-[.18em] text-slate-500" aria-hidden="true">
-              <span className="h-px flex-1 bg-white/10" />
-              o usa contraseña
-              <span className="h-px flex-1 bg-white/10" />
-            </div>
-            <label className="block text-sm font-bold text-slate-200" htmlFor="event-email">Correo</label>
-            <input id="event-email" type="email" autoComplete="username" required value={email} onChange={(event) => setEmail(event.target.value)} className="mt-2 w-full rounded-2xl border border-white/10 bg-black/25 px-4 py-3.5 text-white outline-none transition focus:border-fuchsia-400/60 focus:ring-4 focus:ring-fuchsia-500/10" />
-            <label className="mt-5 block text-sm font-bold text-slate-200" htmlFor="event-password">Contraseña</label>
-            <input id="event-password" type="password" autoComplete="current-password" required value={password} onChange={(event) => setPassword(event.target.value)} className="mt-2 w-full rounded-2xl border border-white/10 bg-black/25 px-4 py-3.5 text-white outline-none transition focus:border-fuchsia-400/60 focus:ring-4 focus:ring-fuchsia-500/10" />
+          <form onSubmit={handleAccessKey} className="rounded-[2rem] border border-white/10 bg-white/[.055] p-7 shadow-2xl shadow-fuchsia-950/30 backdrop-blur-xl sm:p-9">
+            <KeyRound className="mb-5 h-9 w-9 text-fuchsia-300" />
+            <h2 className="text-2xl font-black text-white">Iniciar sesión compartida</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-400">Ingresa la clave entregada para administrar el evento. No necesitas una cuenta.</p>
+            <label className="mt-7 block text-sm font-bold text-slate-200" htmlFor="event-access-key">Clave del evento</label>
+            <input
+              id="event-access-key"
+              type="password"
+              autoComplete="current-password"
+              minLength={12}
+              maxLength={128}
+              required
+              autoFocus
+              value={accessKey}
+              onChange={(event) => setAccessKey(event.target.value)}
+              className="mt-2 w-full rounded-2xl border border-white/10 bg-black/25 px-4 py-3.5 text-white outline-none transition focus:border-fuchsia-400/60 focus:ring-4 focus:ring-fuchsia-500/10"
+            />
             {error && <EventError message={error} />}
             <button disabled={busy} className="mt-7 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-fuchsia-500 to-purple-600 px-5 py-4 font-black text-white shadow-lg shadow-fuchsia-950/40 transition hover:brightness-110 disabled:cursor-wait disabled:opacity-60">
-              <ShieldCheck className="h-5 w-5" /> {busy ? 'Verificando…' : 'Ingresar al panel'}
+              <KeyRound className="h-5 w-5" /> {busy ? 'Verificando…' : 'Continuar con la clave'}
             </button>
           </form>
-        </div>
-      </EventShell>
-    );
-  }
-
-  if (!authorized) {
-    return (
-      <EventShell onLogout={handleLogout}>
-        <div className="mx-auto flex min-h-[70vh] max-w-2xl items-center px-6 py-16">
-          <div className="w-full rounded-[2rem] border border-rose-400/20 bg-rose-400/5 p-8 text-center">
-            <CircleStop className="mx-auto mb-5 h-12 w-12 text-rose-300" />
-            <h1 className="text-3xl font-black text-white">Acceso no autorizado</h1>
-            <p className="mt-4 text-slate-300">La cuenta inició sesión correctamente, pero no tiene el rol administrativo de eventos.</p>
-          </div>
         </div>
       </EventShell>
     );

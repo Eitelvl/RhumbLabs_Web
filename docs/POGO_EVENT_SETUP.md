@@ -1,7 +1,9 @@
 # Evento Pogo: configuración operativa
 
 La ruta `/pogo/event` usa el mismo proyecto Firebase y las mismas sesiones
-compartidas que Pogo. No usa Firebase Admin SDK ni secretos en el navegador.
+compartidas que Pogo. La persona operadora ingresa con una clave de evento, sin
+crear ni usar una cuenta. La clave se valida en Cloud Functions y nunca se
+incluye en el navegador ni en el build de Vite.
 
 ## 1. Configurar la Web App de Firebase
 
@@ -13,6 +15,8 @@ La Web App `Rhumb Labs Pogo Event` ya está registrada en el proyecto
    módulo Firebase. Las variables `VITE_FIREBASE_*` descritas en `.env.example`
    permiten reemplazarla en otros entornos.
 2. Autorizar los dominios de producción y preview en Firebase Authentication.
+   La autenticación técnica posterior a la clave usa un custom token y no
+   muestra ningún formulario de cuenta.
 
 ## 2. Activar App Check
 
@@ -26,24 +30,26 @@ La Web App `Rhumb Labs Pogo Event` ya está registrada en el proyecto
    token mostrado por Firebase y registrarlo como debug token. No llevar esa
    variable a producción.
 
-## 3. Autorizar a la persona operadora
+## 3. Configurar la clave del evento
 
-La cuenta debe existir en Firebase Authentication. Desde un entorno privilegiado
-con Application Default Credentials:
+Configurar una clave fuerte en Secret Manager desde el proyecto Android
+canónico. El CLI la solicitará sin guardarla en el historial del shell:
 
 ```bash
 cd functions
-GOOGLE_CLOUD_PROJECT=climbscore-faf5d \
-  npm run admin:event -- operador@rhumblabs.com true
+firebase functions:secrets:set POGO_EVENT_ACCESS_KEY \
+  --project climbscore-faf5d
 ```
 
-El script conserva los demás custom claims. Para revocar el acceso, repetir con
-`false`. La persona debe volver a iniciar sesión para recibir un ID token nuevo.
+Usar al menos 12 caracteres aleatorios. Para rotar la clave, repetir el comando
+y volver a desplegar `authorizePogoEvent`. Los navegadores que ya estaban
+autorizados conservan su sesión técnica; cerrar el panel con `Salir` obliga a
+ingresar la clave nuevamente.
 
 ## 4. Desplegar en orden
 
-1. Desplegar `firestore.rules` y `createJointSession` desde el proyecto Android
-   canónico.
+1. Desplegar `authorizePogoEvent`, las Functions de sesiones compartidas y
+   `firestore.rules` desde el proyecto Android canónico.
 2. Desplegar la web de Rhumb Labs con sus variables `VITE_FIREBASE_*`.
 3. Abrir `/pogo/event`, crear una sala, iniciar el evento y verificar el QR con
    el lector interno de Pogo.
@@ -55,4 +61,5 @@ El script conserva los demás custom claims. Para revocar el acceso, repetir con
 - `Finalizar` conserva el ranking en Firestore hasta que la limpieza programada
   elimine la sala por su expiración de 12 horas.
 - El navegador conserva localmente el ID y token de la sala para recuperar el
-  panel después de recargar. El token deja de servir para unirse al finalizar.
+  panel después de recargar. También conserva una identidad técnica aleatoria;
+  no contiene la clave. El token de invitación deja de servir al finalizar.
