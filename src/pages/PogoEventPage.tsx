@@ -35,10 +35,12 @@ import QRCode from 'qrcode';
 import {SafeImage} from '../components/SafeImage';
 import {getPogoEventFirebase} from '../lib/pogoEventFirebase';
 
-const sessionStorageKey = 'pogo.event.active-session.v1';
+const sessionStorageKey = 'pogo.event.active-session.v2';
+const legacySessionStorageKey = 'pogo.event.active-session.v1';
 const operatorIdStorageKey = 'pogo.event.operator-id.v1';
 const sessionIdPattern = /^js_[a-f0-9]{32}$/;
 const tokenPattern = /^[A-Za-z0-9_-]{32,128}$/;
+const eventHostUidPattern = /^pogo_event_[a-f0-9]{48}$/;
 const defaultEventName = 'Evento Pogo';
 
 type RoomStatus = 'LOBBY' | 'ACTIVE' | 'FINISHED';
@@ -46,6 +48,7 @@ type RoomStatus = 'LOBBY' | 'ACTIVE' | 'FINISHED';
 interface StoredEventSession {
   sessionId: string;
   inviteToken: string;
+  hostUid: string;
   eventName: string;
   maxParticipants: number;
 }
@@ -78,12 +81,16 @@ function normalizeEventName(value?: string) {
 
 function readStoredSession(): StoredEventSession | null {
   try {
+    // v1 sessions were created with account-based hosts. They cannot be
+    // administered by the technical identity obtained from the event key.
+    localStorage.removeItem(legacySessionStorageKey);
     const raw = localStorage.getItem(sessionStorageKey);
     if (!raw) return null;
     const value = JSON.parse(raw) as Partial<StoredEventSession>;
     if (
       !sessionIdPattern.test(value.sessionId ?? '') ||
-      !tokenPattern.test(value.inviteToken ?? '')
+      !tokenPattern.test(value.inviteToken ?? '') ||
+      !eventHostUidPattern.test(value.hostUid ?? '')
     ) {
       localStorage.removeItem(sessionStorageKey);
       return null;
@@ -91,6 +98,7 @@ function readStoredSession(): StoredEventSession | null {
     return {
       sessionId: value.sessionId!,
       inviteToken: value.inviteToken!,
+      hostUid: value.hostUid!,
       eventName: normalizeEventName(value.eventName),
       maxParticipants: Math.min(100, Math.max(2, value.maxParticipants ?? 100)),
     };
@@ -195,10 +203,15 @@ export default function PogoEventPage() {
           if (user) {
             try {
               const token = await getIdTokenResult(user, true);
-              setAuthorized(
+              const isAuthorized =
                 user.uid.startsWith('pogo_event_') &&
-                token.claims.pogoEventAdmin === true,
-              );
+                token.claims.pogoEventAdmin === true;
+              setAuthorized(isAuthorized);
+              const storedSession = readStoredSession();
+              if (isAuthorized && storedSession?.hostUid !== user.uid) {
+                localStorage.removeItem(sessionStorageKey);
+                setEventSession(null);
+              }
             } catch (authError) {
               setError(friendlyFirebaseError(authError));
             }
@@ -334,7 +347,11 @@ export default function PogoEventPage() {
       const data = result.data as Record<string, unknown>;
       const customToken = typeof data.customToken === 'string' ? data.customToken : '';
       if (!customToken) throw new Error('Invalid event authorization response');
-      await signInWithCustomToken(auth, customToken);
+      const credential = await signInWithCustomToken(auth, customToken);
+      if (eventSession?.hostUid !== credential.user.uid) {
+        localStorage.removeItem(sessionStorageKey);
+        setEventSession(null);
+      }
       setAccessKey('');
     } catch (accessError) {
       setError(friendlyAccessError(accessError));
@@ -353,7 +370,7 @@ export default function PogoEventPage() {
     setBusy(true);
     setError(null);
     try {
-      const {functions} = await getPogoEventFirebase();
+      const {auth, functions} = await getPogoEventFirebase();
       const result = await httpsCallable(functions, 'createJointSession')({
         eventMode: true,
         eventName: eventName.trim() || defaultEventName,
@@ -362,12 +379,19 @@ export default function PogoEventPage() {
       const data = result.data as Record<string, unknown>;
       const sessionId = typeof data.sessionId === 'string' ? data.sessionId : '';
       const inviteToken = typeof data.inviteToken === 'string' ? data.inviteToken : '';
-      if (!sessionIdPattern.test(sessionId) || !tokenPattern.test(inviteToken)) {
+      const hostUid = typeof data.hostUid === 'string' ? data.hostUid : '';
+      if (
+        !sessionIdPattern.test(sessionId) ||
+        !tokenPattern.test(inviteToken) ||
+        !eventHostUidPattern.test(hostUid) ||
+        hostUid !== auth.currentUser?.uid
+      ) {
         throw new Error('Invalid joint session response');
       }
       const createdSession = {
         sessionId,
         inviteToken,
+        hostUid,
         eventName: eventName.trim() || defaultEventName,
         maxParticipants: capacity,
       };
