@@ -1265,7 +1265,7 @@ function WinnersPresentation({
         <header className="flex shrink-0 items-center justify-between gap-5 border-b border-white/10 pb-[clamp(.75rem,1.5vh,1.25rem)]">
           <div className="min-w-0">
             <p className="text-[clamp(.65rem,.85vw,.9rem)] font-black uppercase tracking-[.28em] text-amber-200/80">Ganadores del evento</p>
-            <h1 className="mt-1 truncate text-[clamp(1.8rem,3vw,4rem)] font-black leading-none tracking-[-.045em] text-white">{eventName}</h1>
+            <h1 className="mt-1 truncate text-[clamp(1.8rem,3vw,4rem)] font-black leading-[1.15] tracking-[-.045em] text-white">{eventName}</h1>
           </div>
           <div className="flex shrink-0 items-center gap-3">
             <div className="hidden text-right sm:block">
