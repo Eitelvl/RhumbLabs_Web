@@ -4,17 +4,22 @@ import {
   CheckCircle2,
   CircleStop,
   Crown,
+  Edit3,
   KeyRound,
+  ListOrdered,
   LogOut,
+  Maximize2,
   Medal,
   Play,
   Plus,
   QrCode,
   ShieldCheck,
   TestTube2,
+  Trash2,
   Trophy,
   Users,
   Wifi,
+  X,
 } from 'lucide-react';
 import {Link} from 'react-router-dom';
 import {
@@ -42,6 +47,7 @@ const obsoleteSessionStorageKeys = [
   'pogo.event.active-session.v1',
   'pogo.event.active-session.v2',
 ];
+const manualResultsStorageKey = 'pogo.event.manual-results.v1';
 const sessionIdPattern = /^js_[a-f0-9]{32}$/;
 const tokenPattern = /^[A-Za-z0-9_-]{32,128}$/;
 const eventHostUidPattern = /^pogo_event_[a-f0-9]{48}$/;
@@ -75,6 +81,23 @@ interface EventParticipant {
   climbCount: number;
   joinedAtMillis: number;
   updatedAtMillis: number;
+}
+
+interface ManualResultEntry {
+  id: string;
+  displayName: string;
+  points: string;
+}
+
+interface ManualResultsDraft {
+  eventName: string;
+  entries: ManualResultEntry[];
+}
+
+interface PresentedResults {
+  eventName: string;
+  ranking: EventParticipant[];
+  finishedAt?: Date;
 }
 
 type SimulationSize = 0 | 50 | 70;
@@ -258,6 +281,88 @@ function formatTime(value?: Date) {
   }) ?? '—';
 }
 
+function createManualResultEntry(index: number): ManualResultEntry {
+  return {
+    id: `manual-${Date.now()}-${index}-${Math.random().toString(36).slice(2, 9)}`,
+    displayName: '',
+    points: '',
+  };
+}
+
+function createDefaultManualEntries() {
+  return Array.from({length: 3}, (_, index) => createManualResultEntry(index));
+}
+
+function readManualResultsDraft(): ManualResultsDraft {
+  const fallback = {
+    eventName: defaultEventName,
+    entries: createDefaultManualEntries(),
+  };
+  try {
+    const raw = localStorage.getItem(manualResultsStorageKey);
+    if (!raw) return fallback;
+    const value = JSON.parse(raw) as Partial<ManualResultsDraft>;
+    const entries = Array.isArray(value.entries)
+      ? value.entries.flatMap((entry, index) => {
+        if (!entry || typeof entry !== 'object') return [];
+        const result = entry as Partial<ManualResultEntry>;
+        return [{
+          id: typeof result.id === 'string' && result.id
+            ? result.id
+            : createManualResultEntry(index).id,
+          displayName: typeof result.displayName === 'string'
+            ? result.displayName.slice(0, 100)
+            : '',
+          points: typeof result.points === 'string'
+            ? result.points.slice(0, 12)
+            : '',
+        }];
+      }).slice(0, 100)
+      : [];
+    while (entries.length < 3) entries.push(createManualResultEntry(entries.length));
+    return {
+      eventName: typeof value.eventName === 'string'
+        ? value.eventName.slice(0, 120)
+        : defaultEventName,
+      entries,
+    };
+  } catch {
+    return fallback;
+  }
+}
+
+function writeManualResultsDraft(draft: ManualResultsDraft) {
+  try {
+    localStorage.setItem(manualResultsStorageKey, JSON.stringify(draft));
+  } catch {
+    // The editor remains usable when browser storage is unavailable.
+  }
+}
+
+function isManualEntryComplete(entry: ManualResultEntry) {
+  return entry.displayName.trim().length > 0 && /^-?\d+$/.test(entry.points.trim());
+}
+
+function isManualEntryEmpty(entry: ManualResultEntry) {
+  return entry.displayName.trim().length === 0 && entry.points.trim().length === 0;
+}
+
+function manualEntriesToRanking(entries: ManualResultEntry[]): EventParticipant[] {
+  const now = Date.now();
+  return entries.flatMap((entry, index) => {
+    if (!isManualEntryComplete(entry)) return [];
+    return [{
+      uid: entry.id,
+      displayName: entry.displayName.trim(),
+      totalPoints: finiteInteger(entry.points),
+      fallCount: 0,
+      climbCount: 0,
+      joinedAtMillis: now + index,
+      updatedAtMillis: now,
+    }];
+  });
+}
+
 function createSimulatedParticipants(size: Exclude<SimulationSize, 0>): EventParticipant[] {
   const now = Date.now();
   return Array.from({length: size}, (_, index) => {
@@ -296,6 +401,7 @@ function updateSimulatedParticipants(participants: EventParticipant[]) {
 }
 
 export default function PogoEventPage() {
+  const [initialManualDraft] = useState(readManualResultsDraft);
   const [firebaseReady, setFirebaseReady] = useState(false);
   const [appCheckConfigured, setAppCheckConfigured] = useState(false);
   const [configurationError, setConfigurationError] = useState<string | null>(null);
@@ -313,6 +419,22 @@ export default function PogoEventPage() {
   const [liveConnected, setLiveConnected] = useState(false);
   const [simulationSize, setSimulationSize] = useState<SimulationSize>(0);
   const [simulatedParticipants, setSimulatedParticipants] = useState<EventParticipant[]>([]);
+  const [manualMode, setManualMode] = useState(false);
+  const [manualEventName, setManualEventName] = useState(initialManualDraft.eventName);
+  const [manualEntries, setManualEntries] = useState(initialManualDraft.entries);
+  const [presentedResults, setPresentedResults] = useState<PresentedResults | null>(null);
+
+  useEffect(() => {
+    writeManualResultsDraft({eventName: manualEventName, entries: manualEntries});
+  }, [manualEntries, manualEventName]);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      if (!document.fullscreenElement) setPresentedResults(null);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
 
   useEffect(() => {
     if (simulationSize === 0) {
@@ -675,12 +797,62 @@ export default function PogoEventPage() {
     }
   }
 
+  function updateManualEntry(id: string, field: 'displayName' | 'points', value: string) {
+    setManualEntries((current) => current.map((entry) => entry.id === id
+      ? {...entry, [field]: value}
+      : entry));
+  }
+
+  function addManualEntry() {
+    setManualEntries((current) => current.length >= 100
+      ? current
+      : [...current, createManualResultEntry(current.length)]);
+  }
+
+  function removeManualEntry(id: string) {
+    setManualEntries((current) => current.length <= 3
+      ? current
+      : current.filter((entry) => entry.id !== id));
+  }
+
+  function resetManualResults() {
+    const shouldReset = window.confirm(
+      '¿Limpiar todo el borrador manual? Esta acción elimina nombres y puntajes ingresados.',
+    );
+    if (!shouldReset) return;
+    setManualEventName(defaultEventName);
+    setManualEntries(createDefaultManualEntries());
+  }
+
+  function openWinnersPresentation(results: PresentedResults) {
+    setPresentedResults(results);
+    document.documentElement.requestFullscreen?.().catch(() => {
+      // The in-page presentation still fills the viewport when native fullscreen is blocked.
+    });
+  }
+
+  function presentManualResults() {
+    openWinnersPresentation({
+      eventName: manualEventName.trim() || defaultEventName,
+      ranking: manualEntriesToRanking(manualEntries),
+      finishedAt: new Date(),
+    });
+  }
+
+  async function closeWinnersPresentation() {
+    setPresentedResults(null);
+    if (document.fullscreenElement) {
+      await document.exitFullscreen().catch(() => undefined);
+    }
+  }
+
   function prepareAnotherEvent() {
     clearTransientEventSession();
     setEventSession(null);
     setRoom(null);
     setParticipants([]);
     setSimulationSize(0);
+    setManualMode(false);
     setError(null);
   }
 
@@ -747,6 +919,35 @@ export default function PogoEventPage() {
     );
   }
 
+  if (presentedResults) {
+    return (
+      <WinnersPresentation
+        eventName={presentedResults.eventName}
+        ranking={presentedResults.ranking}
+        finishedAt={presentedResults.finishedAt}
+        onClose={closeWinnersPresentation}
+      />
+    );
+  }
+
+  if (manualMode && !eventSession) {
+    return (
+      <EventShell onLogout={handleLogout} compact>
+        <ManualResultsEditor
+          eventName={manualEventName}
+          entries={manualEntries}
+          onEventNameChange={setManualEventName}
+          onEntryChange={updateManualEntry}
+          onAddEntry={addManualEntry}
+          onRemoveEntry={removeManualEntry}
+          onReset={resetManualResults}
+          onBack={() => setManualMode(false)}
+          onPresent={presentManualResults}
+        />
+      </EventShell>
+    );
+  }
+
   if (!eventSession) {
     return (
       <EventShell onLogout={handleLogout}>
@@ -768,19 +969,36 @@ export default function PogoEventPage() {
               ))}
             </div>
           </div>
-          <form onSubmit={createEvent} className="rounded-[2rem] border border-white/10 bg-white/[.055] p-7 shadow-2xl shadow-fuchsia-950/30 backdrop-blur-xl sm:p-9">
-            <Plus className="mb-5 h-9 w-9 text-fuchsia-300" />
-            <h2 className="text-2xl font-black text-white">Nuevo evento</h2>
-            <label className="mt-7 block text-sm font-bold text-slate-200" htmlFor="event-name">Nombre del evento</label>
-            <input id="event-name" maxLength={120} value={eventName} onChange={(event) => setEventName(event.target.value)} className="mt-2 w-full rounded-2xl border border-white/10 bg-black/25 px-4 py-3.5 text-white outline-none transition focus:border-fuchsia-400/60 focus:ring-4 focus:ring-fuchsia-500/10" />
-            <label className="mt-5 block text-sm font-bold text-slate-200" htmlFor="event-capacity">Capacidad máxima</label>
-            <input id="event-capacity" type="number" min={2} max={100} value={capacity} onChange={(event) => setCapacity(Math.min(100, Math.max(2, Number(event.target.value) || 2)))} className="mt-2 w-full rounded-2xl border border-white/10 bg-black/25 px-4 py-3.5 text-white outline-none transition focus:border-fuchsia-400/60 focus:ring-4 focus:ring-fuchsia-500/10" />
-            {!appCheckConfigured && <p className="mt-4 text-xs leading-5 text-amber-200">App Check no tiene site key configurada; las Functions de producción rechazarán la creación.</p>}
-            {error && <EventError message={error} />}
-            <button disabled={busy || !appCheckConfigured} className="mt-7 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-fuchsia-500 to-purple-600 px-5 py-4 font-black text-white shadow-lg shadow-fuchsia-950/40 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50">
-              <Plus className="h-5 w-5" /> {busy ? 'Creando…' : 'Crear evento'}
+          <div className="space-y-4">
+            <form onSubmit={createEvent} className="rounded-[2rem] border border-white/10 bg-white/[.055] p-7 shadow-2xl shadow-fuchsia-950/30 backdrop-blur-xl sm:p-9">
+              <Plus className="mb-5 h-9 w-9 text-fuchsia-300" />
+              <h2 className="text-2xl font-black text-white">Nuevo evento en vivo</h2>
+              <label className="mt-7 block text-sm font-bold text-slate-200" htmlFor="event-name">Nombre del evento</label>
+              <input id="event-name" maxLength={120} value={eventName} onChange={(event) => setEventName(event.target.value)} className="mt-2 w-full rounded-2xl border border-white/10 bg-black/25 px-4 py-3.5 text-white outline-none transition focus:border-fuchsia-400/60 focus:ring-4 focus:ring-fuchsia-500/10" />
+              <label className="mt-5 block text-sm font-bold text-slate-200" htmlFor="event-capacity">Capacidad máxima</label>
+              <input id="event-capacity" type="number" min={2} max={100} value={capacity} onChange={(event) => setCapacity(Math.min(100, Math.max(2, Number(event.target.value) || 2)))} className="mt-2 w-full rounded-2xl border border-white/10 bg-black/25 px-4 py-3.5 text-white outline-none transition focus:border-fuchsia-400/60 focus:ring-4 focus:ring-fuchsia-500/10" />
+              {!appCheckConfigured && <p className="mt-4 text-xs leading-5 text-amber-200">App Check no tiene site key configurada; las Functions de producción rechazarán la creación.</p>}
+              {error && <EventError message={error} />}
+              <button disabled={busy || !appCheckConfigured} className="mt-7 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-fuchsia-500 to-purple-600 px-5 py-4 font-black text-white shadow-lg shadow-fuchsia-950/40 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50">
+                <Plus className="h-5 w-5" /> {busy ? 'Creando…' : 'Crear evento en vivo'}
+              </button>
+            </form>
+
+            <button
+              type="button"
+              onClick={() => setManualMode(true)}
+              className="group flex w-full items-center gap-4 rounded-[1.5rem] border border-amber-300/20 bg-gradient-to-r from-amber-300/10 to-fuchsia-500/[.07] p-5 text-left transition hover:border-amber-200/35 hover:bg-amber-300/[.13]"
+            >
+              <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-amber-200/20 bg-amber-300/10 text-amber-200">
+                <Edit3 className="h-6 w-6" />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-lg font-black text-white">Ingresar resultados manualmente</span>
+                <span className="mt-1 block text-sm leading-5 text-slate-400">Anota las posiciones y proyecta los ganadores sin crear una sala.</span>
+              </span>
+              <ArrowLeft className="h-5 w-5 rotate-180 text-slate-500 transition group-hover:translate-x-1 group-hover:text-white" />
             </button>
-          </form>
+          </div>
         </div>
       </EventShell>
     );
@@ -809,6 +1027,7 @@ export default function PogoEventPage() {
             <StatusPill status={currentStatus} connected={liveConnected} />
             {currentStatus === 'LOBBY' && <button disabled={busy || !liveConnected} onClick={() => changeStatus('startJointSession')} className="flex items-center gap-2 rounded-xl bg-emerald-500 px-5 py-3 text-base font-black text-white transition hover:bg-emerald-400 disabled:opacity-50"><Play className="h-5 w-5 fill-current" /> Iniciar</button>}
             {currentStatus === 'ACTIVE' && <button disabled={busy || !liveConnected} onClick={() => changeStatus('finishJointSession')} className="flex items-center gap-2 rounded-xl border border-rose-400/30 bg-rose-400/10 px-5 py-3 text-base font-black text-rose-100 transition hover:bg-rose-400/20 disabled:opacity-50"><CircleStop className="h-5 w-5" /> {busy ? 'Finalizando…' : 'Finalizar sesión'}</button>}
+            {currentStatus === 'FINISHED' && ranking.length > 0 && <button onClick={() => openWinnersPresentation({eventName: displayName, ranking: completeRanking, finishedAt: room?.finishedAt})} className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-400 to-fuchsia-500 px-5 py-3 text-base font-black text-[#19091c] shadow-lg shadow-fuchsia-950/30 transition hover:brightness-110"><Maximize2 className="h-5 w-5" /> Presentar ganadores</button>}
             {currentStatus === 'FINISHED' && <button onClick={prepareAnotherEvent} className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[.06] px-5 py-3 text-base font-black text-white hover:bg-white/10"><Plus className="h-5 w-5" /> Nuevo</button>}
           </div>
         </div>
@@ -847,6 +1066,290 @@ export default function PogoEventPage() {
         )}
       </main>
     </EventShell>
+  );
+}
+
+function ManualResultsEditor({
+  eventName,
+  entries,
+  onEventNameChange,
+  onEntryChange,
+  onAddEntry,
+  onRemoveEntry,
+  onReset,
+  onBack,
+  onPresent,
+}: {
+  eventName: string;
+  entries: ManualResultEntry[];
+  onEventNameChange: (value: string) => void;
+  onEntryChange: (id: string, field: 'displayName' | 'points', value: string) => void;
+  onAddEntry: () => void;
+  onRemoveEntry: (id: string) => void;
+  onReset: () => void;
+  onBack: () => void;
+  onPresent: () => void;
+}) {
+  const podiumIsComplete = entries.slice(0, 3).every(isManualEntryComplete);
+  const hasPartialEntry = entries.slice(3).some((entry) => (
+    !isManualEntryEmpty(entry) && !isManualEntryComplete(entry)
+  ));
+  const completedCount = entries.filter(isManualEntryComplete).length;
+  const canPresent = podiumIsComplete && !hasPartialEntry;
+
+  return (
+    <main className="mx-auto min-h-[calc(100vh-72px)] max-w-6xl px-4 py-6 sm:px-6 sm:py-9 lg:px-8">
+      <div className="flex flex-wrap items-start justify-between gap-5">
+        <div>
+          <button type="button" onClick={onBack} className="mb-5 flex items-center gap-2 text-sm font-black text-slate-400 transition hover:text-white">
+            <ArrowLeft className="h-4 w-4" /> Volver a tipos de evento
+          </button>
+          <div className="flex items-center gap-4">
+            <div className="grid h-14 w-14 place-items-center rounded-2xl border border-amber-200/20 bg-amber-300/10 text-amber-200">
+              <ListOrdered className="h-7 w-7" />
+            </div>
+            <div>
+              <p className="text-xs font-black uppercase tracking-[.22em] text-amber-200/80">Carga manual</p>
+              <h1 className="text-3xl font-black tracking-[-.04em] text-white sm:text-5xl">Resultados del evento</h1>
+            </div>
+          </div>
+          <p className="mt-5 max-w-2xl text-base leading-7 text-slate-400">
+            Las filas definen el orden final: anota nombre y puntaje desde el primer lugar hacia abajo. El borrador queda guardado en este navegador.
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-3">
+          <button type="button" onClick={onReset} className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[.05] px-5 py-4 font-black text-slate-300 transition hover:bg-rose-400/10 hover:text-rose-200">
+            <Trash2 className="h-5 w-5" /> Limpiar borrador
+          </button>
+          <button
+            type="button"
+            disabled={!canPresent}
+            onClick={onPresent}
+            className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-amber-400 to-fuchsia-500 px-6 py-4 font-black text-[#19091c] shadow-xl shadow-fuchsia-950/30 transition hover:brightness-110 disabled:cursor-not-allowed disabled:grayscale disabled:opacity-40"
+          >
+            <Maximize2 className="h-5 w-5" /> Presentar ganadores
+          </button>
+        </div>
+      </div>
+
+      <section className="mt-8 overflow-hidden rounded-[2rem] border border-white/10 bg-white/[.05] shadow-2xl shadow-black/20">
+        <div className="grid gap-5 border-b border-white/10 p-5 sm:p-7 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+          <label className="block">
+            <span className="text-sm font-black text-slate-200">Nombre del evento</span>
+            <input
+              type="text"
+              value={eventName}
+              maxLength={120}
+              onChange={(event) => onEventNameChange(event.target.value)}
+              placeholder={defaultEventName}
+              className="mt-2 w-full rounded-2xl border border-white/10 bg-black/25 px-4 py-3.5 text-lg font-bold text-white outline-none transition placeholder:text-slate-600 focus:border-fuchsia-400/60 focus:ring-4 focus:ring-fuchsia-500/10"
+            />
+          </label>
+          <div className="rounded-2xl border border-white/10 bg-black/20 px-5 py-3 text-right">
+            <p className="text-2xl font-black tabular-nums text-white">{completedCount}</p>
+            <p className="text-[10px] font-black uppercase tracking-[.18em] text-slate-500">resultados listos</p>
+          </div>
+        </div>
+
+        <div className="hidden grid-cols-[64px_minmax(0,1fr)_minmax(140px,220px)_44px] gap-3 px-5 pb-2 pt-5 text-[11px] font-black uppercase tracking-[.16em] text-slate-500 sm:grid sm:px-7">
+          <span className="text-center">Pos.</span>
+          <span>Competidor</span>
+          <span>Puntaje</span>
+          <span />
+        </div>
+
+        <ol className="space-y-2 px-4 py-5 sm:px-7 sm:pb-7 sm:pt-2">
+          {entries.map((entry, index) => {
+            const position = index + 1;
+            const isPodium = position <= 3;
+            const positionStyle = position === 1
+              ? 'border-amber-200/40 bg-amber-300/15 text-amber-100'
+              : position === 2
+                ? 'border-slate-200/30 bg-slate-200/10 text-slate-100'
+                : position === 3
+                  ? 'border-orange-300/30 bg-orange-300/10 text-orange-200'
+                  : 'border-white/10 bg-white/[.04] text-slate-400';
+            return (
+              <li key={entry.id} className={`grid gap-3 rounded-2xl border p-3 sm:grid-cols-[64px_minmax(0,1fr)_minmax(140px,220px)_44px] sm:items-center ${isPodium ? 'border-white/[.12] bg-white/[.045]' : 'border-white/[.06] bg-black/10'}`}>
+                <div className="flex items-center gap-3 sm:block">
+                  <span className="text-[10px] font-black uppercase tracking-[.15em] text-slate-600 sm:hidden">Posición</span>
+                  <span className={`grid h-11 w-11 place-items-center rounded-xl border text-lg font-black tabular-nums sm:mx-auto ${positionStyle}`}>{position}</span>
+                </div>
+                <label className="block">
+                  <span className="mb-1.5 block text-xs font-black text-slate-400 sm:hidden">Competidor</span>
+                  <input
+                    type="text"
+                    value={entry.displayName}
+                    maxLength={100}
+                    required={isPodium}
+                    onChange={(event) => onEntryChange(entry.id, 'displayName', event.target.value)}
+                    placeholder={isPodium ? `Nombre del ${position}.° lugar` : 'Nombre del competidor'}
+                    className="w-full rounded-xl border border-white/10 bg-black/25 px-4 py-3 font-bold text-white outline-none transition placeholder:text-slate-600 focus:border-fuchsia-400/60 focus:ring-4 focus:ring-fuchsia-500/10"
+                  />
+                </label>
+                <label className="block">
+                  <span className="mb-1.5 block text-xs font-black text-slate-400 sm:hidden">Puntaje</span>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    value={entry.points}
+                    required={isPodium}
+                    onChange={(event) => {
+                      const value = event.target.value;
+                      if (/^-?\d*$/.test(value) && value.length <= 12) {
+                        onEntryChange(entry.id, 'points', value);
+                      }
+                    }}
+                    placeholder="0"
+                    className="w-full rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-right text-lg font-black tabular-nums text-white outline-none transition placeholder:text-slate-600 focus:border-fuchsia-400/60 focus:ring-4 focus:ring-fuchsia-500/10"
+                  />
+                </label>
+                <button
+                  type="button"
+                  disabled={isPodium}
+                  onClick={() => onRemoveEntry(entry.id)}
+                  aria-label={`Eliminar posición ${position}`}
+                  className="grid h-11 w-11 place-items-center justify-self-end rounded-xl text-slate-600 transition hover:bg-rose-400/10 hover:text-rose-300 disabled:cursor-not-allowed disabled:opacity-20"
+                >
+                  <Trash2 className="h-5 w-5" />
+                </button>
+              </li>
+            );
+          })}
+        </ol>
+
+        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-white/10 p-5 sm:px-7">
+          <div>
+            {!podiumIsComplete && <p className="text-sm font-bold text-amber-200">Completa nombre y puntaje de los tres primeros lugares.</p>}
+            {podiumIsComplete && hasPartialEntry && <p className="text-sm font-bold text-amber-200">Completa o elimina las filas que tienen datos pendientes.</p>}
+            {canPresent && <p className="text-sm font-bold text-emerald-300">Todo listo para proyectar.</p>}
+          </div>
+          <button
+            type="button"
+            disabled={entries.length >= 100}
+            onClick={onAddEntry}
+            className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[.06] px-5 py-3 font-black text-white transition hover:bg-white/10 disabled:opacity-40"
+          >
+            <Plus className="h-5 w-5" /> Agregar competidor
+          </button>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+function WinnersPresentation({
+  eventName,
+  ranking,
+  finishedAt,
+  onClose,
+}: {
+  eventName: string;
+  ranking: EventParticipant[];
+  finishedAt?: Date;
+  onClose: () => void | Promise<void>;
+}) {
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && !document.fullscreenElement) onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
+  return (
+    <main className="relative min-h-screen overflow-y-auto bg-[#09050f] text-white selection:bg-fuchsia-400/30 lg:h-screen lg:overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(251,191,36,.18),transparent_30%),radial-gradient(circle_at_78%_82%,rgba(217,70,239,.18),transparent_34%),linear-gradient(135deg,rgba(255,255,255,.025),transparent_55%)]" />
+      <div className="relative flex min-h-screen flex-col px-[clamp(1rem,2vw,2.75rem)] py-[clamp(1rem,2vh,1.75rem)] lg:h-screen">
+        <header className="flex shrink-0 items-center justify-between gap-5 border-b border-white/10 pb-[clamp(.75rem,1.5vh,1.25rem)]">
+          <div className="min-w-0">
+            <p className="text-[clamp(.65rem,.85vw,.9rem)] font-black uppercase tracking-[.28em] text-amber-200/80">Ganadores del evento</p>
+            <h1 className="mt-1 truncate text-[clamp(1.8rem,3vw,4rem)] font-black leading-none tracking-[-.045em] text-white">{eventName}</h1>
+          </div>
+          <div className="flex shrink-0 items-center gap-3">
+            <div className="hidden text-right sm:block">
+              <p className="text-sm font-black text-slate-300">Resultados finales</p>
+              <p className="mt-0.5 text-xs font-bold text-slate-500">{finishedAt ? formatTime(finishedAt) : 'Evento finalizado'}</p>
+            </div>
+            <button type="button" onClick={onClose} aria-label="Cerrar presentación" className="grid h-11 w-11 place-items-center rounded-xl border border-white/10 bg-white/[.06] text-slate-300 transition hover:bg-white/10 hover:text-white">
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+        </header>
+
+        <div className="grid min-h-0 flex-1 gap-[clamp(1rem,1.5vw,1.75rem)] pt-[clamp(1rem,2vh,1.75rem)] lg:grid-cols-[minmax(0,72fr)_minmax(300px,28fr)]">
+          <section className="relative flex min-h-[620px] flex-col overflow-hidden rounded-[clamp(1.5rem,2vw,2.5rem)] border border-amber-200/20 bg-gradient-to-br from-amber-300/[.09] via-white/[.045] to-fuchsia-500/[.09] p-[clamp(1rem,2vw,2.5rem)] lg:min-h-0">
+            <div className="pointer-events-none absolute -left-16 -top-16 h-64 w-64 rounded-full bg-amber-300/10 blur-3xl" />
+            <div className="relative flex shrink-0 items-center justify-center gap-3 text-center">
+              <Crown className="h-[clamp(2rem,3vw,4rem)] w-[clamp(2rem,3vw,4rem)] text-amber-200" />
+              <h2 className="text-[clamp(2rem,4vw,5.5rem)] font-black leading-none tracking-[-.055em] text-white">Nuestro podio</h2>
+            </div>
+
+            {ranking.length === 0 ? (
+              <div className="relative grid min-h-0 flex-1 place-items-center text-center">
+                <p className="text-2xl font-bold text-slate-300">No hay resultados para presentar.</p>
+              </div>
+            ) : (
+              <div className="relative mt-[clamp(1rem,3vh,3rem)] grid min-h-0 flex-1 gap-[clamp(.75rem,1.2vw,1.5rem)] sm:grid-cols-3 sm:items-end">
+                {ranking.slice(0, 3).map((participant, index) => (
+                  <PresentationWinnerCard key={participant.uid} participant={participant} position={index + 1} />
+                ))}
+              </div>
+            )}
+          </section>
+
+          <section className="flex min-h-[520px] flex-col overflow-hidden rounded-[clamp(1.5rem,2vw,2.5rem)] border border-white/10 bg-black/25 p-[clamp(1rem,1.5vw,1.75rem)] lg:min-h-0">
+            <div className="shrink-0 border-b border-white/10 pb-4">
+              <p className="text-[10px] font-black uppercase tracking-[.22em] text-fuchsia-300">Clasificación final</p>
+              <div className="mt-1 flex items-end justify-between gap-3">
+                <h2 className="text-[clamp(1.5rem,2vw,2.5rem)] font-black text-white">Resto del ranking</h2>
+                <p className="pb-1 text-sm font-black tabular-nums text-slate-400">{ranking.length} total</p>
+              </div>
+            </div>
+            <div className="mt-4 min-h-0 flex-1 overflow-y-auto pr-1">
+              {ranking.length <= 3 ? (
+                <div className="grid h-full min-h-44 place-items-center rounded-2xl border border-dashed border-white/10 bg-white/[.025] px-5 text-center">
+                  <div>
+                    <Medal className="mx-auto h-10 w-10 text-slate-600" />
+                    <p className="mt-3 font-bold text-slate-400">El podio está completo.</p>
+                  </div>
+                </div>
+              ) : (
+                <ol className="space-y-2">
+                  {ranking.slice(3).map((participant, index) => (
+                    <CompleteRankingRow key={participant.uid} participant={participant} position={index + 4} />
+                  ))}
+                </ol>
+              )}
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+  );
+}
+
+function PresentationWinnerCard({participant, position}: {participant: EventParticipant; position: number}) {
+  const style = position === 1
+    ? 'border-amber-200/45 bg-gradient-to-b from-amber-300/20 to-amber-300/[.07] sm:order-2 sm:h-[min(54vh,650px)]'
+    : position === 2
+      ? 'border-slate-200/25 bg-gradient-to-b from-slate-200/[.13] to-slate-200/[.045] sm:order-1 sm:h-[min(46vh,560px)]'
+      : 'border-orange-300/25 bg-gradient-to-b from-orange-300/[.13] to-orange-300/[.045] sm:order-3 sm:h-[min(41vh,500px)]';
+  const accent = position === 1
+    ? 'text-amber-200 border-amber-200/35 bg-amber-300/15'
+    : position === 2
+      ? 'text-slate-100 border-slate-200/25 bg-slate-200/10'
+      : 'text-orange-200 border-orange-300/25 bg-orange-300/10';
+
+  return (
+    <article className={`flex min-h-[250px] flex-col items-center justify-center rounded-[clamp(1.25rem,1.7vw,2rem)] border p-[clamp(1rem,1.8vw,2.25rem)] text-center shadow-2xl shadow-black/20 ${style}`}>
+      <div className={`grid h-[clamp(3.5rem,5vw,6.5rem)] w-[clamp(3.5rem,5vw,6.5rem)] place-items-center rounded-full border text-[clamp(1.5rem,2.5vw,3.5rem)] font-black tabular-nums ${accent}`}>{position}</div>
+      <p className={`mt-[clamp(.75rem,2vh,1.5rem)] text-[clamp(.65rem,.85vw,1rem)] font-black uppercase tracking-[.22em] ${accent.split(' ')[0]}`}>{position}.° lugar</p>
+      <h3 className="mt-[clamp(.5rem,1.2vh,1rem)] max-w-full break-words text-[clamp(1.35rem,2.5vw,3.75rem)] font-black leading-[.98] tracking-[-.04em] text-white">{participant.displayName}</h3>
+      <p className="mt-[clamp(1rem,2.5vh,2rem)] text-[clamp(2rem,3.8vw,5.5rem)] font-black leading-none tabular-nums text-white">{formatPoints(participant.totalPoints)}</p>
+      <p className="mt-2 text-[clamp(.6rem,.75vw,.85rem)] font-black uppercase tracking-[.24em] text-fuchsia-300">puntos</p>
+    </article>
   );
 }
 
