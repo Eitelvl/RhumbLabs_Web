@@ -1306,9 +1306,16 @@ function WinnersPresentation({
         <div className={`grid min-h-0 flex-1 gap-[clamp(1rem,1.5vw,1.75rem)] pt-[clamp(1rem,2vh,1.75rem)] ${showCompleteRanking ? 'lg:grid-cols-[minmax(0,72fr)_minmax(300px,28fr)]' : 'lg:grid-cols-1'}`}>
           <section className="relative flex min-h-[620px] flex-col overflow-hidden rounded-[clamp(1.5rem,2vw,2.5rem)] border border-amber-200/20 bg-gradient-to-br from-amber-300/[.09] via-white/[.045] to-fuchsia-500/[.09] p-[clamp(1rem,2vw,2.5rem)] lg:min-h-0">
             <div className="pointer-events-none absolute -left-16 -top-16 h-64 w-64 rounded-full bg-amber-300/10 blur-3xl" />
-            <div className="relative flex shrink-0 items-center justify-center gap-3 text-center">
-              <Crown className="h-[clamp(2rem,3vw,4rem)] w-[clamp(2rem,3vw,4rem)] text-amber-200" />
-              <h2 className="text-[clamp(2rem,4vw,5.5rem)] font-black leading-none tracking-[-.055em] text-white">Nuestro podio</h2>
+            <div className="relative flex shrink-0 items-center justify-center gap-[clamp(.75rem,1.5vw,2rem)] text-center">
+              <div className="relative h-[clamp(3.6rem,6vw,7.2rem)] w-[clamp(9rem,15vw,18rem)] shrink-0 overflow-hidden" role="img" aria-label="Pogo">
+                <SafeImage
+                  src="/images/pogo-logo.png"
+                  alt=""
+                  aria-hidden="true"
+                  className="absolute left-1/2 top-1/2 w-[127%] max-w-none -translate-x-[50.9%] -translate-y-[54.3%] object-contain"
+                />
+              </div>
+              <h2 className="text-[clamp(2rem,4vw,5.5rem)] font-black leading-none tracking-[-.055em] text-white">Podio final</h2>
             </div>
 
             {ranking.length === 0 ? (
