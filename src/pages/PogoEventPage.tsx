@@ -5,11 +5,14 @@ import {
   CircleStop,
   Crown,
   Edit3,
+  Eye,
+  EyeOff,
   KeyRound,
   ListOrdered,
   LogOut,
   Maximize2,
   Medal,
+  Minimize2,
   Play,
   Plus,
   QrCode,
@@ -427,14 +430,6 @@ export default function PogoEventPage() {
   useEffect(() => {
     writeManualResultsDraft({eventName: manualEventName, entries: manualEntries});
   }, [manualEntries, manualEventName]);
-
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      if (!document.fullscreenElement) setPresentedResults(null);
-    };
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
-  }, []);
 
   useEffect(() => {
     if (simulationSize === 0) {
@@ -1250,13 +1245,22 @@ function WinnersPresentation({
   finishedAt?: Date;
   onClose: () => void | Promise<void>;
 }) {
+  const [isFullscreen, setIsFullscreen] = useState(Boolean(document.fullscreenElement));
+  const [showCompleteRanking, setShowCompleteRanking] = useState(true);
+
   useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && !document.fullscreenElement) onClose();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
+    const handleFullscreenChange = () => setIsFullscreen(Boolean(document.fullscreenElement));
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
+  async function toggleFullscreen() {
+    if (document.fullscreenElement) {
+      await document.exitFullscreen().catch(() => undefined);
+      return;
+    }
+    await document.documentElement.requestFullscreen?.().catch(() => undefined);
+  }
 
   return (
     <main className="relative min-h-screen overflow-y-auto bg-[#09050f] text-white selection:bg-fuchsia-400/30 lg:h-screen lg:overflow-hidden">
@@ -1272,13 +1276,34 @@ function WinnersPresentation({
               <p className="text-sm font-black text-slate-300">Resultados finales</p>
               <p className="mt-0.5 text-xs font-bold text-slate-500">{finishedAt ? formatTime(finishedAt) : 'Evento finalizado'}</p>
             </div>
+            <button
+              type="button"
+              onClick={toggleFullscreen}
+              aria-label={isFullscreen ? 'Salir de pantalla completa' : 'Volver a pantalla completa'}
+              title={isFullscreen ? 'Salir de pantalla completa' : 'Volver a pantalla completa'}
+              className="flex h-11 items-center gap-2 rounded-xl border border-white/10 bg-white/[.06] px-3 text-sm font-black text-slate-300 transition hover:bg-white/10 hover:text-white"
+            >
+              {isFullscreen ? <Minimize2 className="h-5 w-5" /> : <Maximize2 className="h-5 w-5" />}
+              <span className="hidden 2xl:inline">{isFullscreen ? 'Salir de pantalla completa' : 'Pantalla completa'}</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowCompleteRanking((current) => !current)}
+              aria-pressed={!showCompleteRanking}
+              aria-label={showCompleteRanking ? 'Ocultar resto de competidores' : 'Mostrar resto de competidores'}
+              title={showCompleteRanking ? 'Ocultar resto de competidores' : 'Mostrar resto de competidores'}
+              className="flex h-11 items-center gap-2 rounded-xl border border-white/10 bg-white/[.06] px-3 text-sm font-black text-slate-300 transition hover:bg-white/10 hover:text-white"
+            >
+              {showCompleteRanking ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+              <span className="hidden 2xl:inline">{showCompleteRanking ? 'Ocultar resto' : 'Mostrar resto'}</span>
+            </button>
             <button type="button" onClick={onClose} aria-label="Cerrar presentación" className="grid h-11 w-11 place-items-center rounded-xl border border-white/10 bg-white/[.06] text-slate-300 transition hover:bg-white/10 hover:text-white">
               <X className="h-5 w-5" />
             </button>
           </div>
         </header>
 
-        <div className="grid min-h-0 flex-1 gap-[clamp(1rem,1.5vw,1.75rem)] pt-[clamp(1rem,2vh,1.75rem)] lg:grid-cols-[minmax(0,72fr)_minmax(300px,28fr)]">
+        <div className={`grid min-h-0 flex-1 gap-[clamp(1rem,1.5vw,1.75rem)] pt-[clamp(1rem,2vh,1.75rem)] ${showCompleteRanking ? 'lg:grid-cols-[minmax(0,72fr)_minmax(300px,28fr)]' : 'lg:grid-cols-1'}`}>
           <section className="relative flex min-h-[620px] flex-col overflow-hidden rounded-[clamp(1.5rem,2vw,2.5rem)] border border-amber-200/20 bg-gradient-to-br from-amber-300/[.09] via-white/[.045] to-fuchsia-500/[.09] p-[clamp(1rem,2vw,2.5rem)] lg:min-h-0">
             <div className="pointer-events-none absolute -left-16 -top-16 h-64 w-64 rounded-full bg-amber-300/10 blur-3xl" />
             <div className="relative flex shrink-0 items-center justify-center gap-3 text-center">
@@ -1299,31 +1324,35 @@ function WinnersPresentation({
             )}
           </section>
 
-          <section className="flex min-h-[520px] flex-col overflow-hidden rounded-[clamp(1.5rem,2vw,2.5rem)] border border-white/10 bg-black/25 p-[clamp(1rem,1.5vw,1.75rem)] lg:min-h-0">
-            <div className="shrink-0 border-b border-white/10 pb-4">
-              <p className="text-[10px] font-black uppercase tracking-[.22em] text-fuchsia-300">Clasificación final</p>
-              <div className="mt-1 flex items-end justify-between gap-3">
-                <h2 className="text-[clamp(1.5rem,2vw,2.5rem)] font-black text-white">Resto del ranking</h2>
-                <p className="pb-1 text-sm font-black tabular-nums text-slate-400">{ranking.length} total</p>
-              </div>
-            </div>
-            <div className="mt-4 min-h-0 flex-1 overflow-y-auto pr-1">
-              {ranking.length <= 3 ? (
-                <div className="grid h-full min-h-44 place-items-center rounded-2xl border border-dashed border-white/10 bg-white/[.025] px-5 text-center">
-                  <div>
-                    <Medal className="mx-auto h-10 w-10 text-slate-600" />
-                    <p className="mt-3 font-bold text-slate-400">El podio está completo.</p>
-                  </div>
+          {showCompleteRanking && (
+            <section className="flex min-h-[520px] flex-col overflow-hidden rounded-[clamp(1.5rem,2vw,2.5rem)] border border-white/10 bg-black/25 p-[clamp(1rem,1.5vw,1.75rem)] lg:min-h-0">
+              <div className="shrink-0 border-b border-white/10 pb-4">
+                <p className="text-[10px] font-black uppercase tracking-[.22em] text-fuchsia-300">Clasificación final</p>
+                <div className="mt-1 flex items-end justify-between gap-3">
+                  <h2 className="text-[clamp(1.5rem,2vw,2.5rem)] font-black text-white">Resto del ranking</h2>
+                  <p className="pb-1 text-sm font-black tabular-nums text-slate-400">
+                    {Math.max(0, ranking.length - 3)} {ranking.length === 4 ? 'restante' : 'restantes'}
+                  </p>
                 </div>
-              ) : (
-                <ol className="space-y-2">
-                  {ranking.slice(3).map((participant, index) => (
-                    <CompleteRankingRow key={participant.uid} participant={participant} position={index + 4} />
-                  ))}
-                </ol>
-              )}
-            </div>
-          </section>
+              </div>
+              <div className="mt-4 min-h-0 flex-1 overflow-y-auto pr-1">
+                {ranking.length <= 3 ? (
+                  <div className="grid h-full min-h-44 place-items-center rounded-2xl border border-dashed border-white/10 bg-white/[.025] px-5 text-center">
+                    <div>
+                      <Medal className="mx-auto h-10 w-10 text-slate-600" />
+                      <p className="mt-3 font-bold text-slate-400">El podio está completo.</p>
+                    </div>
+                  </div>
+                ) : (
+                  <ol className="space-y-2">
+                    {ranking.slice(3).map((participant, index) => (
+                      <CompleteRankingRow key={participant.uid} participant={participant} position={index + 4} />
+                    ))}
+                  </ol>
+                )}
+              </div>
+            </section>
+          )}
         </div>
       </div>
     </main>
