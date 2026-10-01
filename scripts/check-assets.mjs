@@ -70,7 +70,7 @@ const absoluteAssetPattern = /\/(?:images\/[^\s'"`)]+|favicon\.ico|apple-touch-i
 const forbiddenPathPattern = /(?:\.\.\/|\.\/)?public\/[^\s'"`)]+|\/static\/[^\s'"`)]+|src\/assets\/[^\s'"`)]+/g;
 
 for (const file of files) {
-  const relativeFile = path.relative(root, file);
+  const relativeFile = path.relative(root, file).split(path.sep).join('/');
   if (relativeFile === 'scripts/check-assets.mjs') continue;
   if (!textExtensions.has(path.extname(file).toLowerCase())) continue;
 

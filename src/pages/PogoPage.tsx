@@ -1,9 +1,8 @@
 import TopBar from '../components/TopBar';
 import Footer from '../components/Footer';
-import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { DeviceMockup } from '../components/DeviceMockup';
-import { Activity, MapPin, TrendingUp, NotebookPen, Mountain, Instagram, ArrowUpRight, Sparkles, Smartphone, QrCode } from 'lucide-react';
+import { Activity, MapPin, TrendingUp, NotebookPen, Mountain, Instagram, ArrowUpRight, Sparkles, Smartphone } from 'lucide-react';
 import { useRef } from 'react';
 import { SafeImage } from '../components/SafeImage';
 
@@ -66,14 +65,6 @@ export default function PogoPage() {
               transition={{ duration: 0.8, delay: 0.3 }}
               className="flex flex-wrap items-center justify-center gap-4"
             >
-              <Link
-                to="/pogo/event"
-                className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-fuchsia-600 to-purple-600 text-white font-semibold shadow-[0_0_40px_rgba(168,85,247,0.3)] hover:brightness-110 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
-              >
-                <QrCode className="w-6 h-6" aria-hidden="true" />
-                Abrir Evento Pogo
-              </Link>
-
               <a
                 href="https://play.google.com/store/apps/details?id=com.rhumblabs.pogo&hl=es_419"
                 target="_blank"
