@@ -78,23 +78,16 @@ export default function PogoPage() {
                 <svg viewBox="0 0 24 24" className="w-6 h-6 fill-[#3DDC84]" xmlns="http://www.w3.org/2000/svg">
                   <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4483-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993.0004.5511-.4482.9997-.9993.9997zm-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997zm11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0216 3.503C15.5902 8.244 13.8533 7.85 12 7.85c-1.8533 0-3.5902.394-5.1375 1.1002L4.841 5.447a.416.416 0 00-.5676-.1521.416.416 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3432-4.1021-2.6889-7.5743-6.1185-9.44z"/>
                 </svg>
-                Download for Android
+                Download for Android<sup className="text-[0.55em] align-super">™</sup>
               </a>
 
               <a
                 href={POGO_APP_STORE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex flex-col items-center justify-center gap-3 px-3 py-1 text-text-primary font-medium"
+                className="inline-flex items-center gap-3 px-8 py-4 bg-card-element border border-card-border rounded-full text-text-primary font-medium shadow-[0_0_40px_rgba(168,85,247,0.15)] hover:bg-bg-secondary hover:border-purple-500/50 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
               >
-                <span>Download for iOS</span>
-                <SafeImage
-                  src="/images/app-store-badge.svg"
-                  alt="Download on the App Store"
-                  width={120}
-                  height={40}
-                  className="block w-[120px] h-10"
-                />
+                Download for iOS
               </a>
             </motion.div>
           </div>
@@ -325,8 +318,10 @@ export default function PogoPage() {
                  <span className="text-border-subtle">•</span>
                  <span>@app.pogoclimb</span>
                </div>
-               <p className="mt-6 text-[10px] text-text-secondary">
-                 Apple, the Apple Logo, and App Store are trademarks of Apple Inc., registered in the U.S. and other countries.
+               <p className="mt-6 max-w-2xl text-[10px] leading-relaxed text-text-secondary">
+                 Android is a trademark of Google LLC. The Android robot is reproduced or modified from work created and shared by Google and used according to terms described in the{' '}
+                 <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2">Creative Commons 3.0 Attribution License</a>.
+                 {' '}App Store is a trademark of Apple Inc.
                </p>
              </div>
           </div>
